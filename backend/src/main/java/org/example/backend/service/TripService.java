@@ -1,6 +1,7 @@
 package org.example.backend.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.backend.exception.TripNotFoundException;
 import org.example.backend.model.Trip;
 import org.example.backend.model.TripDto;
 import org.example.backend.repo.TripRepo;
@@ -28,5 +29,13 @@ public class TripService {
         );
 
           return tripRepo.save(newTrip);
+    }
+
+    public String deleteTrip(String id) {
+        if(!tripRepo.existsById(id)){
+            throw new TripNotFoundException(id);
+        }
+        tripRepo.deleteById(id);
+        return id;
     }
 }
