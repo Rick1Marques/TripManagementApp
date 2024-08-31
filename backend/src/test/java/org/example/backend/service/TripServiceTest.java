@@ -60,4 +60,24 @@ class TripServiceTest {
 
 
     }
+
+    @Test
+    @DirtiesContext
+    void deleteTrip() {
+
+        Destination destination1 = new Destination("Germany", "Berlin", "Berlin", LocalDateTime.now());
+
+        Trip trip1 = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(destination1));
+
+        when(tripRepoMock.existsById(trip1.id())).thenReturn(true);
+        doNothing().when(tripRepoMock).deleteById(trip1.id());
+
+        String result = tripService.deleteTrip("1");
+
+        verify(tripRepoMock).existsById(trip1.id());
+        verify(tripRepoMock).deleteById(trip1.id());
+
+        assertEquals(trip1.id(), result);
+
+    }
 }

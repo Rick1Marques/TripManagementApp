@@ -1,13 +1,20 @@
 package org.example.backend.controller;
 
+import org.example.backend.model.Destination;
+import org.example.backend.model.Trip;
+import org.example.backend.repo.TripRepo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -17,6 +24,8 @@ class TripControllerTest {
 
     @Autowired
     MockMvc mvc;
+    @Autowired
+    private TripRepo tripRepo;
 
     @Test
     void getAllTrips() throws Exception {
@@ -78,4 +87,21 @@ class TripControllerTest {
                 ))
                 .andExpect(jsonPath("$.id").exists());
     }
+
+    @Test
+    @DirtiesContext
+    void deleteTrip() throws Exception {
+
+        Destination destination1 = new Destination("Germany", "Berlin", "Berlin", LocalDateTime.now());
+
+        Trip trip1 = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(destination1));
+
+        tripRepo.save(trip1);
+
+        mvc.perform(MockMvcRequestBuilders
+                        .delete("/api/trips/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+
 }
