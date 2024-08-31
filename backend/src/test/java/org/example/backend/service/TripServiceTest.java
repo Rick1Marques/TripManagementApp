@@ -1,5 +1,6 @@
 package org.example.backend.service;
 
+import org.example.backend.exception.TripNotFoundException;
 import org.example.backend.model.Destination;
 import org.example.backend.model.Trip;
 import org.example.backend.model.TripDto;
@@ -63,7 +64,7 @@ class TripServiceTest {
 
     @Test
     @DirtiesContext
-    void deleteTrip() {
+    void deleteTrip_whenIdExists() {
 
         Destination destination1 = new Destination("Germany", "Berlin", "Berlin", LocalDateTime.now());
 
@@ -79,5 +80,21 @@ class TripServiceTest {
 
         assertEquals(trip1.id(), result);
 
+    }
+
+    @Test
+    @DirtiesContext
+    void deleteTrip_idNotFound() {
+
+
+        String nonExistentId = "999";
+
+        when(tripRepoMock.existsById(nonExistentId)).thenReturn(false);
+
+        assertThrows(TripNotFoundException.class, () -> {
+            tripService.deleteTrip(nonExistentId);
+        });
+
+        verify(tripRepoMock).existsById(nonExistentId);
     }
 }
