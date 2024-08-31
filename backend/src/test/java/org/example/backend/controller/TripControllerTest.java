@@ -118,4 +118,51 @@ class TripControllerTest {
                         """));
     }
 
+    @Test
+    @DirtiesContext
+    void getTripById() throws Exception {
+        Destination destination1 = new Destination("Germany", "Berlin", "Berlin", LocalDateTime.parse("2024-05-20T00:00:00"));
+
+        Trip trip1 = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(destination1));
+
+        tripRepo.save(trip1);
+
+        mvc.perform(MockMvcRequestBuilders
+                .get("/api/trips/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("""
+{
+                                    "title": "Business Trip",
+                                    "description": "Meeting with clients",
+                                    "reason": "Business",
+                                    "destinations": [
+                                         {
+                                            "country": "Germany",
+                                            "city": "Berlin",
+                                            "region": "Berlin",
+                                            "date": "2024-05-20T00:00:00"
+                                        }
+                                    ]
+                                }
+
+"""
+
+                ));
+    }
+
+    @Test
+    @DirtiesContext
+    void getNonExistentTripById() throws Exception {
+        String nonExistentTripId = "999";
+
+        mvc.perform(MockMvcRequestBuilders.get("/api/trips/" + nonExistentTripId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json("""
+                        {
+                            "message": "Trip not found with id: 999"
+                        }
+                        """));
+    }
+
 }
