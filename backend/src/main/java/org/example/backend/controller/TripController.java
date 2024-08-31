@@ -24,4 +24,9 @@ public class TripController {
     public Trip postTrip(@RequestBody TripDto newTripEntries){
         return tripService.addTrip(newTripEntries);
     }
+
+    @DeleteMapping("{id}")
+    public String deleteTrip(@PathVariable String id){
+        return tripService.deleteTrip(id);
+    }
 }
