@@ -2,10 +2,9 @@ package org.example.backend.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backend.model.Trip;
+import org.example.backend.model.TripDto;
 import org.example.backend.service.TripService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,5 +18,10 @@ public class TripController {
     @GetMapping
     public List<Trip> getAllTrips(){
         return tripService.findAllTrips();
+    }
+
+    @PostMapping
+    public Trip postTrip(@RequestBody TripDto newTripEntries){
+        return tripService.addTrip(newTripEntries);
     }
 }
