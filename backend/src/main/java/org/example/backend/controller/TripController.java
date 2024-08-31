@@ -20,6 +20,12 @@ public class TripController {
         return tripService.findAllTrips();
     }
 
+
+    @GetMapping("{id}")
+    public Trip getTripById(@PathVariable String id){
+        return tripService.findTripById(id);
+    }
+
     @PostMapping
     public Trip postTrip(@RequestBody TripDto newTripEntries){
         return tripService.addTrip(newTripEntries);

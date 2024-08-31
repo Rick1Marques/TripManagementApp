@@ -28,14 +28,18 @@ public class TripService {
                 newTripEntries.destinations()
         );
 
-          return tripRepo.save(newTrip);
+        return tripRepo.save(newTrip);
     }
 
-    public String deleteTrip(String id) {
-        if(!tripRepo.existsById(id)){
+    public String deleteTrip(String id) throws TripNotFoundException {
+        if (!tripRepo.existsById(id)) {
             throw new TripNotFoundException(id);
         }
         tripRepo.deleteById(id);
         return id;
+    }
+
+    public Trip findTripById(String id) throws TripNotFoundException {
+        return tripRepo.findById(id).orElseThrow(() -> new TripNotFoundException(id));
     }
 }
