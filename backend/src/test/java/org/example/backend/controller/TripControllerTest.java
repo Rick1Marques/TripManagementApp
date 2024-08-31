@@ -103,5 +103,19 @@ class TripControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    @Test
+    @DirtiesContext
+    void deleteNonExistentTrip() throws Exception {
+        String nonExistentTripId = "999";
+
+        mvc.perform(MockMvcRequestBuilders.delete("/api/trips/" + nonExistentTripId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json("""
+                        {
+                            "message": "Trip not found with id: 999"
+                        }
+                        """));
+    }
 
 }
