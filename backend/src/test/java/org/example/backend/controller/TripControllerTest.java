@@ -118,4 +118,65 @@ class TripControllerTest {
                         """));
     }
 
+
+    @Test
+    @DirtiesContext
+    void putTrip() throws Exception {
+        Destination oldDestination = new Destination("Germany", "Berlin", "Berlin", LocalDateTime.now());
+        Trip oldTrip = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(oldDestination));
+
+        tripRepo.save(oldTrip);
+
+        mvc.perform(MockMvcRequestBuilders
+                .put("/api/trips")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+{
+                                    "id": "1",
+                                    "title": "Business Trip",
+                                    "description": "Meeting with clients",
+                                    "reason": "Business",
+                                    "destinations": [
+                                        {
+                                            "country": "Germany",
+                                            "city": "Berlin",
+                                            "region": "Berlin",
+                                            "date": "2024-05-20T00:00:00"
+                                        },
+                                        {
+                                            "country": "France",
+                                            "city": "Paris",
+                                            "region": "Île-de-France",
+                                            "date": "2024-05-25T00:00:00"
+                                        }
+                                    ]
+                                }
+"""
+                ))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("""
+{
+                                    "id": "1",
+                                    "title": "Business Trip",
+                                    "description": "Meeting with clients",
+                                    "reason": "Business",
+                                    "destinations": [
+                                        {
+                                            "country": "Germany",
+                                            "city": "Berlin",
+                                            "region": "Berlin",
+                                            "date": "2024-05-20T00:00:00"
+                                        },
+                                        {
+                                            "country": "France",
+                                            "city": "Paris",
+                                            "region": "Île-de-France",
+                                            "date": "2024-05-25T00:00:00"
+                                        }
+                                    ]
+                                }
+"""
+
+                ));
+    }
 }

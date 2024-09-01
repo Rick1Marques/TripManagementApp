@@ -10,6 +10,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -97,4 +98,46 @@ class TripServiceTest {
 
         verify(tripRepoMock).existsById(nonExistentId);
     }
+
+
+    @Test
+    @DirtiesContext
+    void updateTrip_whenIdExists() {
+        Destination oldDestination = new Destination("Germany", "Berlin", "Berlin", LocalDateTime.now());
+        Destination updatedDestination = new Destination("Germany", "Hamburg", "Hamburg", LocalDateTime.now());
+
+        Trip oldTrip = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(oldDestination));
+        Trip updatedTrip = new Trip("1", "Business Trip", "Meeting with CEO", "Business", List.of(updatedDestination));
+
+        when(tripRepoMock.findById("1")).thenReturn(Optional.of(oldTrip));
+        when(tripRepoMock.save(updatedTrip)).thenReturn(updatedTrip);
+
+        Trip result = tripService.updateTrip(updatedTrip);
+
+        assertEquals(updatedTrip, result);
+
+        verify(tripRepoMock).findById("1");
+        verify(tripRepoMock).save(updatedTrip);
+
+    }
+
+    @Test
+    @DirtiesContext
+    void updateTrip_idNotFound() {
+
+        String nonExistentId = "999";
+
+        Destination updatedDestination = new Destination("Germany", "Hamburg", "Hamburg", LocalDateTime.now());
+
+        Trip updatedTrip = new Trip(nonExistentId, "Business Trip", "Meeting with CEO", "Business", List.of(updatedDestination));
+
+        when(tripRepoMock.findById(nonExistentId)).thenThrow(new TripNotFoundException(nonExistentId));
+
+        assertThrows(TripNotFoundException.class, () -> {
+            tripService.updateTrip(updatedTrip);
+        });
+
+        verify(tripRepoMock).findById(nonExistentId);
+    }
+
 }
