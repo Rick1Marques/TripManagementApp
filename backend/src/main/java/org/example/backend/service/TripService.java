@@ -39,12 +39,8 @@ public class TripService {
         return id;
     }
 
-
-    public Trip findTripById(String id) throws TripNotFoundException {
-        return tripRepo.findById(id).orElseThrow(() -> new TripNotFoundException(id));
-
     public Trip updateTrip(Trip trip) {
-        Trip oldTrip = tripRepo.findById(trip.id()).orElseThrow(()-> new TripNotFoundException(trip.id()));
+        Trip oldTrip = tripRepo.findById(trip.id()).orElseThrow(() -> new TripNotFoundException(trip.id()));
         Trip updatedTrip = oldTrip
                 .withTitle(trip.title())
                 .withDescription(trip.description())
@@ -52,6 +48,9 @@ public class TripService {
                 .withDestinations(trip.destinations());
 
         return tripRepo.save(updatedTrip);
+    }
 
+    public Trip findTripById(String id) throws TripNotFoundException {
+        return tripRepo.findById(id).orElseThrow(() -> new TripNotFoundException(id));
     }
 }

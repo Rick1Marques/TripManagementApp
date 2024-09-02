@@ -129,10 +129,28 @@ class TripControllerTest {
         tripRepo.save(trip1);
 
         mvc.perform(MockMvcRequestBuilders
-                .get("/api/trips/1"))
+                        .get("/api/trips/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
 {
+                                    "title": "Business Trip",
+                                    "description": "Meeting with clients",
+                                    "reason": "Business",
+                                    "destinations": [
+                                         {
+                                            "country": "Germany",
+                                            "city": "Berlin",
+                                            "region": "Berlin",
+                                            "date": "2024-05-20T00:00:00"
+                                        }
+                                    ]
+                                }
+"""
+
+                ));
+    }
+
+
 
 
     @Test
@@ -144,9 +162,9 @@ class TripControllerTest {
         tripRepo.save(oldTrip);
 
         mvc.perform(MockMvcRequestBuilders
-                .put("/api/trips")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
+                        .put("/api/trips")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
 {
                                     "id": "1",
                                     "title": "Business Trip",
@@ -168,30 +186,29 @@ class TripControllerTest {
                                     ]
                                 }
 """
-                ))
+                        ))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
 {
                                     "id": "1",
-
                                     "title": "Business Trip",
                                     "description": "Meeting with clients",
                                     "reason": "Business",
                                     "destinations": [
-
-                                         {
-
                                         {
-
                                             "country": "Germany",
                                             "city": "Berlin",
                                             "region": "Berlin",
                                             "date": "2024-05-20T00:00:00"
-
+                                        },
+                                        {
+                                            "country": "France",
+                                            "city": "Paris",
+                                            "region": "Île-de-France",
+                                            "date": "2024-05-25T00:00:00"
                                         }
                                     ]
                                 }
-
 """
 
                 ));
@@ -210,21 +227,6 @@ class TripControllerTest {
                             "message": "Trip not found with id: 999"
                         }
                         """));
-    }
-
-
-                                        },
-                                        {
-                                            "country": "France",
-                                            "city": "Paris",
-                                            "region": "Île-de-France",
-                                            "date": "2024-05-25T00:00:00"
-                                        }
-                                    ]
-                                }
-"""
-
-                ));
     }
 
 }

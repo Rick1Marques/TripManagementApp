@@ -100,7 +100,6 @@ class TripServiceTest {
 
     @Test
     @DirtiesContext
-
     void findTripById_whenIdExists() {
 
         Destination destination1 = new Destination("Germany", "Berlin", "Berlin", LocalDateTime.now());
@@ -116,6 +115,10 @@ class TripServiceTest {
 
         verify(tripRepoMock).findById("1");
 
+    }
+
+    @Test
+    @DirtiesContext
     void updateTrip_whenIdExists() {
         Destination oldDestination = new Destination("Germany", "Berlin", "Berlin", LocalDateTime.now());
         Destination updatedDestination = new Destination("Germany", "Hamburg", "Hamburg", LocalDateTime.now());
@@ -138,7 +141,6 @@ class TripServiceTest {
 
     @Test
     @DirtiesContext
-
     void findTripById_idNotFound() {
         String nonExistentId = "999";
         when(tripRepoMock.findById(nonExistentId)).thenReturn(Optional.empty());
@@ -149,8 +151,8 @@ class TripServiceTest {
         verify(tripRepoMock).findById(nonExistentId);
     }
 
-
-
+    @Test
+    @DirtiesContext
     void updateTrip_idNotFound() {
 
         String nonExistentId = "999";
