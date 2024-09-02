@@ -25,6 +25,11 @@ public class TripController {
         return tripService.addTrip(newTripEntries);
     }
 
+    @PutMapping()
+    public Trip putTrip(@RequestBody Trip trip){
+        return tripService.updateTrip(trip);
+    }
+
     @DeleteMapping("{id}")
     public String deleteTrip(@PathVariable String id){
         return tripService.deleteTrip(id);

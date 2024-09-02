@@ -38,4 +38,15 @@ public class TripService {
         tripRepo.deleteById(id);
         return id;
     }
+
+    public Trip updateTrip(Trip trip) {
+        Trip oldTrip = tripRepo.findById(trip.id()).orElseThrow(()-> new TripNotFoundException(trip.id()));
+        Trip updatedTrip = oldTrip
+                .withTitle(trip.title())
+                .withDescription(trip.description())
+                .withReason(trip.reason())
+                .withDestinations(trip.destinations());
+
+        return tripRepo.save(updatedTrip);
+    }
 }
