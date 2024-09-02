@@ -20,8 +20,7 @@ public class TripController {
         return tripService.findAllTrips();
     }
 
-
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public Trip getTripById(@PathVariable String id){
         return tripService.findTripById(id);
     }
@@ -36,7 +35,7 @@ public class TripController {
         return tripService.updateTrip(trip);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public String deleteTrip(@PathVariable String id){
         return tripService.deleteTrip(id);
     }
