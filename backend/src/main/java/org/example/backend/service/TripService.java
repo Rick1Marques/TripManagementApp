@@ -28,11 +28,11 @@ public class TripService {
                 newTripEntries.destinations()
         );
 
-          return tripRepo.save(newTrip);
+        return tripRepo.save(newTrip);
     }
 
-    public String deleteTrip(String id) {
-        if(!tripRepo.existsById(id)){
+    public String deleteTrip(String id) throws TripNotFoundException {
+        if (!tripRepo.existsById(id)) {
             throw new TripNotFoundException(id);
         }
         tripRepo.deleteById(id);
@@ -40,7 +40,7 @@ public class TripService {
     }
 
     public Trip updateTrip(Trip trip) {
-        Trip oldTrip = tripRepo.findById(trip.id()).orElseThrow(()-> new TripNotFoundException(trip.id()));
+        Trip oldTrip = tripRepo.findById(trip.id()).orElseThrow(() -> new TripNotFoundException(trip.id()));
         Trip updatedTrip = oldTrip
                 .withTitle(trip.title())
                 .withDescription(trip.description())
@@ -48,5 +48,9 @@ public class TripService {
                 .withDestinations(trip.destinations());
 
         return tripRepo.save(updatedTrip);
+    }
+
+    public Trip findTripById(String id) throws TripNotFoundException {
+        return tripRepo.findById(id).orElseThrow(() -> new TripNotFoundException(id));
     }
 }

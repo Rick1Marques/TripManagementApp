@@ -50,7 +50,7 @@ class TripServiceTest {
         List<Destination> listDestinations = List.of(destination1, destination2);
 
         Trip trip1 = new Trip(null, "Business Trip", "Meeting with clients", "Business", listDestinations);
-        TripDto trip1Dto = new TripDto( "Business Trip", "Meeting with clients", "Business", listDestinations);
+        TripDto trip1Dto = new TripDto("Business Trip", "Meeting with clients", "Business", listDestinations);
 
         when(tripRepoMock.save(trip1)).thenReturn(trip1);
 
@@ -86,8 +86,6 @@ class TripServiceTest {
     @Test
     @DirtiesContext
     void deleteTrip_idNotFound() {
-
-
         String nonExistentId = "999";
 
         when(tripRepoMock.existsById(nonExistentId)).thenReturn(false);
@@ -99,6 +97,25 @@ class TripServiceTest {
         verify(tripRepoMock).existsById(nonExistentId);
     }
 
+
+    @Test
+    @DirtiesContext
+    void findTripById_whenIdExists() {
+
+        Destination destination1 = new Destination("Germany", "Berlin", "Berlin", LocalDateTime.now());
+
+        Trip trip1 = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(destination1));
+
+
+        when(tripRepoMock.findById("1")).thenReturn(Optional.of(trip1));
+
+        Trip result = tripService.findTripById("1");
+
+        assertEquals(trip1, result);
+
+        verify(tripRepoMock).findById("1");
+
+    }
 
     @Test
     @DirtiesContext
@@ -119,6 +136,19 @@ class TripServiceTest {
         verify(tripRepoMock).findById("1");
         verify(tripRepoMock).save(updatedTrip);
 
+
+    }
+
+    @Test
+    @DirtiesContext
+    void findTripById_idNotFound() {
+        String nonExistentId = "999";
+        when(tripRepoMock.findById(nonExistentId)).thenReturn(Optional.empty());
+
+        assertThrows(TripNotFoundException.class, () -> {
+            tripService.findTripById(nonExistentId);
+        });
+        verify(tripRepoMock).findById(nonExistentId);
     }
 
     @Test
@@ -139,5 +169,6 @@ class TripServiceTest {
 
         verify(tripRepoMock).findById(nonExistentId);
     }
+
 
 }
