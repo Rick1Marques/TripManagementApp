@@ -1,29 +1,12 @@
-import {useEffect, useState} from "react";
-import {Trip} from "../../model/Trip.ts";
-import axios from "axios";
 import {getTimeGroupedTrips} from "../../util/getTimeGroupedTrips.ts";
 import {getLastAndNextTrips} from "../../util/getLastAndNextTrips.ts";
 import {getDifferenceInDays} from "../../util/getDifferenceInDays.ts";
 import {getCurrentDestination} from "../../util/getCurrentDestination.ts";
+import {useFetchTrips} from "../../hooks/useFetchTrips.ts";
 
 export default function PageHome() {
-    const [trips, setTrips] = useState<Trip[] | null>(null)
 
-    useEffect(() => {
-        async function fetchTrips() {
-            try {
-                const response = await axios.get("/api/trips")
-                if (response.status === 200) {
-                    const tripsData = await response.data
-                    setTrips(tripsData)
-                }
-            } catch (err) {
-                console.error(err)
-            }
-        }
-
-        fetchTrips()
-    }, [])
+    const [trips] = useFetchTrips()
 
     if (!trips) {
         return (
@@ -33,7 +16,6 @@ export default function PageHome() {
 
     const {onGoingTrip} = getTimeGroupedTrips(trips)
     const {lastTrip, nextTrip} = getLastAndNextTrips(trips)
-    console.log(onGoingTrip)
 
     if (!onGoingTrip) {
         return (

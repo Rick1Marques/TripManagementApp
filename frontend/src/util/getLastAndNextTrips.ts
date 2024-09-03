@@ -8,13 +8,13 @@ export function getLastAndNextTrips(trips: Trip[]) {
         const currentTripDate = current.destinations[0].date
         const latestTripDate = latest.destinations[0].date
         return currentTripDate > latestTripDate ? current : latest
-    })
+    }, pastTrips[0])
 
     const nextTrip = futureTrips.reduce((latest, current) => {
         const currentTripDate = current.destinations[0].date
         const latestTripDate = latest.destinations[0].date
         return currentTripDate < latestTripDate ? current : latest
-    })
+    }, futureTrips[0])
 
     return {lastTrip, nextTrip}
 
