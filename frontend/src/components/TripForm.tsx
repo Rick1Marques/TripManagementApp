@@ -9,9 +9,28 @@ import {useState} from "react";
 import {getOrdinalSuffix} from "../util/getOrdinalSuffix.ts";
 import {FormControl, FormLabel, TextField, Typography} from '@mui/material';
 
+
+type InputData = {
+    country: string,
+    city: string,
+    coordinates: { lat: string, long: string }
+    date: string,
+}
+
+const emptyInputData: InputData = {
+    country: "",
+    city: "",
+    coordinates: {lat: "", long: ""},
+    date: ""
+}
+
 export default function TripForm() {
     const [open, setOpen] = React.useState(false);
-    const [destinationsInputs, setDestinationsInputs] = useState([{id: Date.now(), type: `1st Destination`}])
+    const [destinationsInputs, setDestinationsInputs] = useState<{
+        id: number,
+        type: string,
+        inputData: InputData
+    }[]>([{id: Date.now(), type: "1st destination", inputData: emptyInputData}])
     const [destinationCounter, setDestinationCounter] = useState(1)
 
     const handleClickOpen = () => {
@@ -22,7 +41,7 @@ export default function TripForm() {
         setOpen(false);
     };
 
-    function updateDestinationTypes(destinations: { id: number; type: string }[]) {
+    function updateDestinationTypes(destinations: { id: number, type: string, inputData: InputData }[]) {
         return destinations.map((destination, index) => ({
             ...destination,
             type: `${getOrdinalSuffix(index + 1)} destination`,
@@ -30,11 +49,15 @@ export default function TripForm() {
     }
 
     function handleAddNewInput() {
-        setDestinationCounter(prevCount => prevCount + 1); // Increment the counter
+        setDestinationCounter(prevCount => prevCount + 1);
         setDestinationsInputs(prevState => {
             const updatedDestinations = [
                 ...prevState,
-                {id: Date.now(), type: `${getOrdinalSuffix(destinationCounter + 1)} destination`}
+                {
+                    id: Date.now(),
+                    type: `${getOrdinalSuffix(destinationCounter + 1)} destination`,
+                    inputData: emptyInputData
+                }
             ];
             return updateDestinationTypes(updatedDestinations);
         });
@@ -47,6 +70,14 @@ export default function TripForm() {
         });
     }
 
+    function handleDestinationsInputsChange(id: number, data: InputData) {
+        setDestinationsInputs(prevState =>
+            prevState.map(destination => destination.id === id
+                ? {...destination, inputData: data} : destination)
+        )
+    }
+
+    console.log(destinationsInputs)
 
     return (
         <React.Fragment>
@@ -64,8 +95,6 @@ export default function TripForm() {
                         const formJson = Object.fromEntries((formData as any).entries());
 
 
-                        const email = formJson.email;
-                        console.log(email);
                         handleClose();
                     },
                 }}
@@ -106,8 +135,11 @@ export default function TripForm() {
                         </FormLabel>
                         <TripFormDestinationInput destinationType="Starting Point"/>
                         {destinationsInputs.map((destination) =>
-                            <TripFormDestinationInput key={destination.id} handleDeleteInput={handleDeleteInput}
-                                                      id={destination.id} destinationType={destination.type}/>
+                            <TripFormDestinationInput key={destination.id}
+                                                      handleDeleteInput={handleDeleteInput}
+                                                      handleInputChange={handleDestinationsInputsChange}
+                                                      id={destination.id}
+                                                      destinationType={destination.type}/>
                         )}
                         <TripFormDestinationInput destinationType="Home"/>
                         <Button onClick={handleAddNewInput}>Add Destination</Button>
