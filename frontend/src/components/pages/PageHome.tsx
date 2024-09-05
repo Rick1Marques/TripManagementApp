@@ -14,11 +14,10 @@ export default function PageHome() {
             <h1>Loading...</h1>
         )
     }
-
     const {onGoingTrip} = getTimeGroupedTrips(trips)
     const {lastTrip, nextTrip} = getLastAndNextTrips(trips)
 
-    if (!onGoingTrip) {
+    if (onGoingTrip.length === 0) {
         return (
             <>
                 <section>

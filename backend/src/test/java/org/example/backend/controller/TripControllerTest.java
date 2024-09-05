@@ -42,32 +42,32 @@ class TripControllerTest {
                 .post("/api/trips")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
- {
-                                    "title": "Business Trip",
-                                    "description": "Meeting with clients",
-                                    "reason": "Business",
-                                    "destinations": [
-                                        {
-                                            "country": "Germany",
-                                            "city": "Berlin",
-                                            "coordinates": {
-                                            "latitude": "1",
-                                            "longitude": "2"
-                                            },
-                                            "date": "2024-05-20T00:00:00"
-                                        },
-                                        {
-                                            "country": "France",
-                                            "city": "Paris",
-                                            "coordinates": {
-                                            "latitude":  "1",
-                                            "longitude": "2"
-                                            },
-                                            "date": "2024-05-25T00:00:00"
-                                        }
-                                    ]
-                                }
-"""
+                         {
+                                                            "title": "Business Trip",
+                                                            "description": "Meeting with clients",
+                                                            "reason": "Business",
+                                                            "destinations": [
+                                                                {
+                                                                    "country": "Germany",
+                                                                    "city": "Berlin",
+                                                                    "coordinates": {
+                                                                    "latitude": "1",
+                                                                    "longitude": "2"
+                                                                    },
+                                                                    "date": "2024-05-20T00:00:00"
+                                                                },
+                                                                {
+                                                                    "country": "France",
+                                                                    "city": "Paris",
+                                                                    "coordinates": {
+                                                                    "latitude":  "1",
+                                                                    "longitude": "2"
+                                                                    },
+                                                                    "date": "2024-05-25T00:00:00"
+                                                                }
+                                                            ]
+                                                        }
+                        """
                 ))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
