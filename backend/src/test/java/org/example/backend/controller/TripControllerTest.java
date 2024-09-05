@@ -1,5 +1,6 @@
 package org.example.backend.controller;
 
+import org.example.backend.model.Coordinates;
 import org.example.backend.model.Destination;
 import org.example.backend.model.Trip;
 import org.example.backend.repo.TripRepo;
@@ -49,13 +50,19 @@ class TripControllerTest {
                                         {
                                             "country": "Germany",
                                             "city": "Berlin",
-                                            "region": "Berlin",
+                                            "coordinates": {
+                                            "latitude": "1",
+                                            "longitude": "2"
+                                            },
                                             "date": "2024-05-20T00:00:00"
                                         },
                                         {
                                             "country": "France",
                                             "city": "Paris",
-                                            "region": "Île-de-France",
+                                            "coordinates": {
+                                            "latitude":  "1",
+                                            "longitude": "2"
+                                            },
                                             "date": "2024-05-25T00:00:00"
                                         }
                                     ]
@@ -72,13 +79,19 @@ class TripControllerTest {
                                          {
                                             "country": "Germany",
                                             "city": "Berlin",
-                                            "region": "Berlin",
+                                            "coordinates": {
+                                            "latitude":  "1",
+                                            "longitude": "2"
+                                            },
                                             "date": "2024-05-20T00:00:00"
                                         },
                                         {
                                             "country": "France",
                                             "city": "Paris",
-                                            "region": "Île-de-France",
+                                            "coordinates": {
+                                            "latitude":  "1",
+                                            "longitude": "2"
+                                            },
                                             "date": "2024-05-25T00:00:00"
                                         }
                                     ]
@@ -92,7 +105,7 @@ class TripControllerTest {
     @DirtiesContext
     void deleteTrip() throws Exception {
 
-        Destination destination1 = new Destination("Germany", "Berlin", "Berlin", LocalDateTime.now());
+        Destination destination1 = new Destination("Germany", "Berlin", new Coordinates("1","2"), LocalDateTime.now());
 
         Trip trip1 = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(destination1));
 
@@ -122,7 +135,7 @@ class TripControllerTest {
     @Test
     @DirtiesContext
     void getTripById() throws Exception {
-        Destination destination1 = new Destination("Germany", "Berlin", "Berlin", LocalDateTime.parse("2024-05-20T00:00:00"));
+        Destination destination1 = new Destination("Germany", "Berlin",new Coordinates("1","2") , LocalDateTime.parse("2024-05-20T00:00:00"));
 
         Trip trip1 = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(destination1));
 
@@ -140,7 +153,10 @@ class TripControllerTest {
                                          {
                                             "country": "Germany",
                                             "city": "Berlin",
-                                            "region": "Berlin",
+                                            "coordinates": {
+                                            "latitude":  "1",
+                                            "longitude": "2"
+                                            },
                                             "date": "2024-05-20T00:00:00"
                                         }
                                     ]
@@ -156,7 +172,7 @@ class TripControllerTest {
     @Test
     @DirtiesContext
     void putTrip() throws Exception {
-        Destination oldDestination = new Destination("Germany", "Berlin", "Berlin", LocalDateTime.now());
+        Destination oldDestination = new Destination("Germany", "Berlin", new Coordinates("1","2"), LocalDateTime.now());
         Trip oldTrip = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(oldDestination));
 
         tripRepo.save(oldTrip);
@@ -174,13 +190,19 @@ class TripControllerTest {
                                         {
                                             "country": "Germany",
                                             "city": "Berlin",
-                                            "region": "Berlin",
+                                            "coordinates": {
+                                            "latitude":  "1",
+                                            "longitude": "2"
+                                            },
                                             "date": "2024-05-20T00:00:00"
                                         },
                                         {
                                             "country": "France",
                                             "city": "Paris",
-                                            "region": "Île-de-France",
+                                            "coordinates": {
+                                            "latitude":  "1",
+                                            "longitude": "2"
+                                            },
                                             "date": "2024-05-25T00:00:00"
                                         }
                                     ]
@@ -189,27 +211,33 @@ class TripControllerTest {
                         ))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
-{
-                                    "id": "1",
-                                    "title": "Business Trip",
-                                    "description": "Meeting with clients",
-                                    "reason": "Business",
-                                    "destinations": [
-                                        {
-                                            "country": "Germany",
-                                            "city": "Berlin",
-                                            "region": "Berlin",
-                                            "date": "2024-05-20T00:00:00"
-                                        },
-                                        {
-                                            "country": "France",
-                                            "city": "Paris",
-                                            "region": "Île-de-France",
-                                            "date": "2024-05-25T00:00:00"
-                                        }
-                                    ]
-                                }
-"""
+                        {
+                                                            "id": "1",
+                                                            "title": "Business Trip",
+                                                            "description": "Meeting with clients",
+                                                            "reason": "Business",
+                                                            "destinations": [
+                                                                {
+                                                                    "country": "Germany",
+                                                                    "city": "Berlin",
+                                                                    "coordinates": {
+                                                                    "latitude":  "1",
+                                                                    "longitude": "2"
+                                                                    },
+                                                                    "date": "2024-05-20T00:00:00"
+                                                                },
+                                                                {
+                                                                    "country": "France",
+                                                                    "city": "Paris",
+                                                                    "coordinates": {
+                                                                    "latitude":  "1",
+                                                                    "longitude": "2"
+                                                                    },
+                                                                    "date": "2024-05-25T00:00:00"
+                                                                }
+                                                            ]
+                                                        }
+                        """
 
                 ));
     }

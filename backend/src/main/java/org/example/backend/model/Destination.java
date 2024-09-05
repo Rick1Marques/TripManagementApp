@@ -5,7 +5,9 @@ import java.time.LocalDateTime;
 public record Destination(
         String country,
         String city,
-        String region,
+        Coordinates coordinates,
         LocalDateTime date
 ) {
 }
+
+

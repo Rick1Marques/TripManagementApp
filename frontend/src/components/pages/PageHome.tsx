@@ -3,6 +3,7 @@ import {getLastAndNextTrips} from "../../util/getLastAndNextTrips.ts";
 import {getDifferenceInDays} from "../../util/getDifferenceInDays.ts";
 import {getCurrentDestination} from "../../util/getCurrentDestination.ts";
 import {useFetchTrips} from "../../hooks/useFetchTrips.ts";
+import TripForm from "../TripForm.tsx";
 
 export default function PageHome() {
 
@@ -32,6 +33,7 @@ export default function PageHome() {
                     <p>Date: {lastTrip.destinations[0].date} - {lastTrip.destinations[lastTrip.destinations.length - 1].date
                     }</p>
                 </section>
+                 <TripForm/>
 
             </>
         )
@@ -44,6 +46,7 @@ export default function PageHome() {
                 <h2>Day {getDifferenceInDays(new Date(), new Date(currentlyTrip.destinations[0].date))}</h2>
                 <h3>{currentDestination!.city}</h3>
                 <h3>{currentDestination!.country}</h3>
+                 <TripForm/>
             </>
         )
     }
