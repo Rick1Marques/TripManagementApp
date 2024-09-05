@@ -18,7 +18,7 @@ export default function PageHome() {
     const {onGoingTrip} = getTimeGroupedTrips(trips)
     const {lastTrip, nextTrip} = getLastAndNextTrips(trips)
 
-    // if (!onGoingTrip) {
+    if (!onGoingTrip) {
         return (
             <>
                 <section>
@@ -37,17 +37,18 @@ export default function PageHome() {
 
             </>
         )
-    // } else {
-    //     const currentlyTrip = onGoingTrip[0];
-    //     const currentDestination = getCurrentDestination(currentlyTrip.destinations)
-    //     return (
-    //         <>
-    //             <h1>{currentlyTrip.title}</h1>
-    //             <h2>Day {getDifferenceInDays(new Date(), new Date(currentlyTrip.destinations[0].date))}</h2>
-    //             <h3>{currentDestination!.city}</h3>
-    //             <h3>{currentDestination!.country}</h3>
-    //         </>
-    //     )
-    // }
+    } else {
+        const currentlyTrip = onGoingTrip[0];
+        const currentDestination = getCurrentDestination(currentlyTrip.destinations)
+        return (
+            <>
+                <h1>{currentlyTrip.title}</h1>
+                <h2>Day {getDifferenceInDays(new Date(), new Date(currentlyTrip.destinations[0].date))}</h2>
+                <h3>{currentDestination!.city}</h3>
+                <h3>{currentDestination!.country}</h3>
+                 <TripForm/>
+            </>
+        )
+    }
 
 }

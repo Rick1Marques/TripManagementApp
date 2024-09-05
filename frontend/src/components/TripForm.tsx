@@ -17,6 +17,11 @@ type InputData = {
     date: string,
 }
 
+type DestinationsInput = {
+    id: number,
+    type: string,
+    inputData: InputData
+}
 const emptyInputData: InputData = {
     country: "",
     city: "",
@@ -24,14 +29,17 @@ const emptyInputData: InputData = {
     date: ""
 }
 
+
 export default function TripForm() {
     const [open, setOpen] = React.useState(false);
-    const [destinationsInputs, setDestinationsInputs] = useState<{
-        id: number,
-        type: string,
-        inputData: InputData
-    }[]>([{id: Date.now(), type: "1st destination", inputData: emptyInputData}])
+    const [destinationsInputs, setDestinationsInputs] = useState<DestinationsInput[]>([{
+        id: Date.now(),
+        type: "1st destination",
+        inputData: emptyInputData
+    }])
     const [destinationCounter, setDestinationCounter] = useState(1)
+    const [startingPoint, setStartingPoint] = useState<InputData>(emptyInputData)
+    const [home, setHome] = useState<InputData>(emptyInputData)
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -40,6 +48,21 @@ export default function TripForm() {
     const handleClose = () => {
         setOpen(false);
     };
+
+    function handleStartingPointChange(data: InputData) {
+        setStartingPoint(data);
+    }
+
+    function handleHomeChange(data: InputData) {
+        setHome(data);
+    }
+
+    function handleDestinationsInputsChange(id: number, data: InputData) {
+        setDestinationsInputs(prevState =>
+            prevState.map(destination => destination.id === id
+                ? {...destination, inputData: data} : destination)
+        )
+    }
 
     function updateDestinationTypes(destinations: { id: number, type: string, inputData: InputData }[]) {
         return destinations.map((destination, index) => ({
@@ -70,14 +93,6 @@ export default function TripForm() {
         });
     }
 
-    function handleDestinationsInputsChange(id: number, data: InputData) {
-        setDestinationsInputs(prevState =>
-            prevState.map(destination => destination.id === id
-                ? {...destination, inputData: data} : destination)
-        )
-    }
-
-    console.log(destinationsInputs)
 
     return (
         <React.Fragment>
@@ -91,9 +106,12 @@ export default function TripForm() {
                     component: 'form',
                     onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
                         event.preventDefault();
-                        const formData = new FormData(event.currentTarget);
-                        const formJson = Object.fromEntries((formData as any).entries());
-
+                        const combinedDestinations = [
+                            {id: Date.now(), type: 'Starting Point', inputData: startingPoint},
+                            ...destinationsInputs,
+                            {id: Date.now(), type: 'Home', inputData: home}
+                        ];
+                        console.log(combinedDestinations)
 
                         handleClose();
                     },
@@ -103,7 +121,6 @@ export default function TripForm() {
                 <DialogContent>
                     <FormControl sx={{m: "5% 0"}} fullWidth>
                         <TextField
-                            required
                             margin="dense"
                             id="titel"
                             name="titel"
@@ -112,7 +129,6 @@ export default function TripForm() {
                             variant="outlined"
                         />
                         <TextField
-                            required
                             margin="dense"
                             id="reason"
                             name="reason"
@@ -133,15 +149,22 @@ export default function TripForm() {
                         <FormLabel>
                             <Typography variant="h5">Destinations</Typography>
                         </FormLabel>
-                        <TripFormDestinationInput destinationType="Starting Point"/>
+                        <TripFormDestinationInput destinationType="Starting Point"
+                                                  id={0}
+                                                  handleInputChange={(id, data) => handleStartingPointChange(data)}
+                        />
                         {destinationsInputs.map((destination) =>
-                            <TripFormDestinationInput key={destination.id}
-                                                      handleDeleteInput={handleDeleteInput}
+                            <TripFormDestinationInput destinationType={destination.type}
                                                       handleInputChange={handleDestinationsInputsChange}
+                                                      handleDeleteInput={handleDeleteInput}
+                                                      key={destination.id}
                                                       id={destination.id}
-                                                      destinationType={destination.type}/>
+                            />
                         )}
-                        <TripFormDestinationInput destinationType="Home"/>
+                        <TripFormDestinationInput destinationType="Home"
+                                                  id={1}
+                                                  handleInputChange={(id, data)=>handleHomeChange(data)}
+                        />
                         <Button onClick={handleAddNewInput}>Add Destination</Button>
                     </FormControl>
                 </DialogContent>
