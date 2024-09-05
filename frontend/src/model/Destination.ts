@@ -1,6 +1,6 @@
 export type Destination = {
     country: string,
     city: string,
-    region: string,
+    coordinates: {latitude: string, longitude: string}
     date: string
 }
