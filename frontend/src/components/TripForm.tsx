@@ -5,15 +5,16 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TripFormDestinationInput from "./TripFormDestinationInput.tsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {getOrdinalSuffix} from "../util/getOrdinalSuffix.ts";
 import {FormControl, FormLabel, TextField, Typography} from '@mui/material';
+import axios from "axios";
 
 
 type InputData = {
     country: string,
     city: string,
-    coordinates: { lat: string, long: string }
+    coordinates: { latitude: string, longitude: string }
     date: string,
 }
 
@@ -25,7 +26,7 @@ type DestinationsInput = {
 const emptyInputData: InputData = {
     country: "",
     city: "",
-    coordinates: {lat: "", long: ""},
+    coordinates: {latitude: "", longitude: ""},
     date: ""
 }
 
@@ -40,6 +41,7 @@ export default function TripForm() {
     const [destinationCounter, setDestinationCounter] = useState(1)
     const [startingPoint, setStartingPoint] = useState<InputData>(emptyInputData)
     const [home, setHome] = useState<InputData>(emptyInputData)
+    const [formData, setFormData] = useState()
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -57,10 +59,10 @@ export default function TripForm() {
         setHome(data);
     }
 
-    function handleDestinationsInputsChange(id: number, data: InputData) {
+    function handleDestinationsInputsChange(id: number, inputData: InputData) {
         setDestinationsInputs(prevState =>
             prevState.map(destination => destination.id === id
-                ? {...destination, inputData: data} : destination)
+                ? {...destination, inputData: inputData} : destination)
         )
     }
 
@@ -94,6 +96,20 @@ export default function TripForm() {
     }
 
 
+    useEffect(() => {
+        async function postTrip(){
+            try {
+            const response = await axios.post("/api/trips", formData)
+                console.log("Trip added with success!!!", response.data)
+
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        postTrip()
+    }, [formData])
+
     return (
         <React.Fragment>
             <Button variant="outlined" onClick={handleClickOpen}>
@@ -106,13 +122,21 @@ export default function TripForm() {
                     component: 'form',
                     onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
                         event.preventDefault();
+                        const formData = new FormData(event.currentTarget);
                         const combinedDestinations = [
                             {id: Date.now(), type: 'Starting Point', inputData: startingPoint},
                             ...destinationsInputs,
                             {id: Date.now(), type: 'Home', inputData: home}
                         ];
-                        console.log(combinedDestinations)
+                        const destinations = combinedDestinations.map(destination => destination.inputData)
 
+                        const newTrip = {
+                            title: formData.get('title'),
+                            description: formData.get('description'),
+                            reason: formData.get('reason'),
+                            destinations: destinations
+                        }
+                        setFormData(newTrip)
                         handleClose();
                     },
                 }}
@@ -121,14 +145,16 @@ export default function TripForm() {
                 <DialogContent>
                     <FormControl sx={{m: "5% 0"}} fullWidth>
                         <TextField
+                            required
                             margin="dense"
-                            id="titel"
-                            name="titel"
-                            label="Titel"
+                            id="title"
+                            name="title"
+                            label="Title"
                             type="text"
                             variant="outlined"
                         />
                         <TextField
+                            required
                             margin="dense"
                             id="reason"
                             name="reason"
@@ -137,6 +163,7 @@ export default function TripForm() {
                             variant="outlined"
                         />
                         <TextField
+                            required
                             margin="dense"
                             id="description"
                             label="Description"
@@ -163,14 +190,14 @@ export default function TripForm() {
                         )}
                         <TripFormDestinationInput destinationType="Home"
                                                   id={1}
-                                                  handleInputChange={(id, data)=>handleHomeChange(data)}
+                                                  handleInputChange={(id, data) => handleHomeChange(data)}
                         />
                         <Button onClick={handleAddNewInput}>Add Destination</Button>
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button type="submit">Subscribe</Button>
+                    <Button type="submit">Add new Trip</Button>
                 </DialogActions>
             </Dialog>
         </React.Fragment>

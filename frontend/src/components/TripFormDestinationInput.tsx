@@ -14,7 +14,7 @@ import {ChangeEvent, useEffect, useState} from "react";
 type InputData = {
     country: string,
     city: string,
-    coordinates: { lat: string, long: string }
+    coordinates: { latitude: string, longitude: string }
     date: string,
 }
 
@@ -36,11 +36,12 @@ export default function TripFormDestinationInput({
     const cities = City.getCitiesOfCountry(selectedCountry)
     const [selectedCity, setSelectedCity] = useState<string>("")
     const [selectedDate, setSelectedDate] = useState<string>("")
-    const [coordinates, setCoordinates] = useState<{ lat: string, long:string }>({lat: "", long: ""})
+    const [coordinates, setCoordinates] = useState<{ latitude: string, longitude:string }>({latitude: "", longitude: ""})
 
     useEffect(() => {
+        const countryName = selectedCountry ? Country.getCountryByCode(selectedCountry)!.name : "";
         const data: InputData = {
-            country: selectedCountry,
+            country: countryName,
             city: selectedCity,
             coordinates,
             date: selectedDate,
@@ -61,9 +62,9 @@ export default function TripFormDestinationInput({
 
     function handleChangeSelectedCity(event: SelectChangeEvent<string>) {
         const data = event.target.value.split("_")
-        const [city, lat, long] = data
+        const [city, latitude, longitude] = data
         setSelectedCity(city)
-        setCoordinates({lat: Number(lat).toFixed(4), long:  Number(long).toFixed(4)})
+        setCoordinates({latitude: Number(latitude).toFixed(4), longitude:  Number(longitude).toFixed(4)})
     }
 
 
@@ -110,7 +111,6 @@ export default function TripFormDestinationInput({
                     label="Date"
                     variant="standard"
                     margin="dense"
-                    name="date"
                     onChange={handleChangeSelectedDate}
                     slotProps={{
                         inputLabel: {
