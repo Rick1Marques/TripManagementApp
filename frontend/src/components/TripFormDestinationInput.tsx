@@ -9,7 +9,7 @@ import {
     Typography
 } from "@mui/material";
 import {City, Country} from "country-state-city";
-import {ChangeEvent, useEffect, useRef, useState} from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 
 type InputData = {
     country: string,
@@ -120,7 +120,7 @@ export default function TripFormDestinationInput({
                     sx={{mt: 2}}
                 />
             </FormControl>
-            {(handleDeleteInput && id) &&
+            {(handleDeleteInput) &&
                 <Button onClick={() => handleDeleteInput(id)}>Delete</Button>
             }
         </FormControl>
