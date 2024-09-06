@@ -4,32 +4,18 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import TripFormDestinationInput from "./TripFormDestinationInput.tsx";
 import {useEffect, useState} from "react";
 import {getOrdinalSuffix} from "../util/getOrdinalSuffix.ts";
 import {FormControl, FormLabel, TextField, Typography} from '@mui/material';
 import axios from "axios";
-
-
-type InputData = {
-    country: string,
-    city: string,
-    coordinates: { latitude: string, longitude: string }
-    date: string,
-}
+import CountryCityDateInputs from "./CountryCityDateInputs.tsx";
+import {emptyInputData, InputData} from "../model/CountryCityDateData.ts";
 
 type DestinationsInput = {
     id: number,
     type: string,
     inputData: InputData
 }
-const emptyInputData: InputData = {
-    country: "",
-    city: "",
-    coordinates: {latitude: "", longitude: ""},
-    date: ""
-}
-
 
 export default function TripForm() {
     const [open, setOpen] = React.useState(false);
@@ -59,7 +45,7 @@ export default function TripForm() {
         setHome(data);
     }
 
-    function handleDestinationsInputsChange(id: number, inputData: InputData) {
+    function handleDestinationsInputsChange(id: number | null, inputData: InputData) {
         setDestinationsInputs(prevState =>
             prevState.map(destination => destination.id === id
                 ? {...destination, inputData: inputData} : destination)
@@ -100,14 +86,15 @@ export default function TripForm() {
         async function postTrip(){
             try {
             const response = await axios.post("/api/trips", formData)
-                console.log("Trip added with success!!!", response.data)
+                console.log("Trip added with success!", response.data)
 
             } catch (err) {
                 console.log(err)
             }
         }
-
+if(formData){
         postTrip()
+}
     }, [formData])
 
     return (
@@ -134,7 +121,8 @@ export default function TripForm() {
                             title: formData.get('title'),
                             description: formData.get('description'),
                             reason: formData.get('reason'),
-                            destinations: destinations
+                            destinations: destinations,
+                            events: []
                         }
                         setFormData(newTrip)
                         handleClose();
@@ -176,21 +164,21 @@ export default function TripForm() {
                         <FormLabel>
                             <Typography variant="h5">Destinations</Typography>
                         </FormLabel>
-                        <TripFormDestinationInput destinationType="Starting Point"
+                        <CountryCityDateInputs name="Starting Point"
                                                   id={0}
-                                                  handleInputChange={(id, data) => handleStartingPointChange(data)}
+                                                  handleInputChange={(_id, data) => handleStartingPointChange(data)}
                         />
                         {destinationsInputs.map((destination) =>
-                            <TripFormDestinationInput destinationType={destination.type}
+                            <CountryCityDateInputs name={destination.type}
                                                       handleInputChange={handleDestinationsInputsChange}
                                                       handleDeleteInput={handleDeleteInput}
                                                       key={destination.id}
                                                       id={destination.id}
                             />
                         )}
-                        <TripFormDestinationInput destinationType="Home"
+                        <CountryCityDateInputs name="Home"
                                                   id={1}
-                                                  handleInputChange={(id, data) => handleHomeChange(data)}
+                                                  handleInputChange={(_id, data) => handleHomeChange(data)}
                         />
                         <Button onClick={handleAddNewInput}>Add Destination</Button>
                     </FormControl>

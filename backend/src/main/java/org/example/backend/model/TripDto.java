@@ -6,6 +6,7 @@ public record TripDto(
         String title,
         String description,
         String reason,
-        List<Destination> destinations
+        List<Destination> destinations,
+        List<Event> events
 ) {
 }

@@ -19,24 +19,27 @@ type InputData = {
 }
 
 type TripFormDestinationInputProps = {
-    id: number,
-    destinationType: string
+    id?: number,
+    name: string
     handleDeleteInput?: (id: number) => void,
-    handleInputChange: (id: number, inputData: InputData) => void
+    handleInputChange: (id: number | null, inputData: InputData) => void
 }
 
-export default function TripFormDestinationInput({
-                                                     id,
-                                                     destinationType,
-                                                     handleDeleteInput,
-                                                     handleInputChange
-                                                 }: TripFormDestinationInputProps) {
+export default function CountryCityDateInputs({
+                                                  id,
+                                                  name,
+                                                  handleDeleteInput,
+                                                  handleInputChange
+                                              }: TripFormDestinationInputProps) {
     const countries = Country.getAllCountries()
     const [selectedCountry, setSelectedCountry] = useState<string>("")
     const cities = City.getCitiesOfCountry(selectedCountry)
     const [selectedCity, setSelectedCity] = useState<string>("")
     const [selectedDate, setSelectedDate] = useState<string>("")
-    const [coordinates, setCoordinates] = useState<{ latitude: string, longitude:string }>({latitude: "", longitude: ""})
+    const [coordinates, setCoordinates] = useState<{ latitude: string, longitude: string }>({
+        latitude: "",
+        longitude: ""
+    })
 
     useEffect(() => {
         const countryName = selectedCountry ? Country.getCountryByCode(selectedCountry)!.name : "";
@@ -48,7 +51,11 @@ export default function TripFormDestinationInput({
         };
 
         if (selectedCountry || selectedCity || selectedDate) {
-            handleInputChange(id, data);
+            if (id) {
+                handleInputChange(id, data);
+            } else {
+                handleInputChange(null, data)
+            }
         }
     }, [selectedCountry, selectedCity, selectedDate, coordinates, id]);
 
@@ -64,14 +71,14 @@ export default function TripFormDestinationInput({
         const data = event.target.value.split("_")
         const [city, latitude, longitude] = data
         setSelectedCity(city)
-        setCoordinates({latitude: Number(latitude).toFixed(4), longitude:  Number(longitude).toFixed(4)})
+        setCoordinates({latitude: Number(latitude).toFixed(4), longitude: Number(longitude).toFixed(4)})
     }
 
 
     return (
         <FormControl fullWidth>
             <FormLabel sx={{m: "2% 0"}}>
-                <Typography variant="h6">{destinationType}</Typography>
+                <Typography variant="h6">{name}</Typography>
             </FormLabel>
             <FormControl>
                 <InputLabel id="country">Country</InputLabel>

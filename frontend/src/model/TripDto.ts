@@ -4,5 +4,6 @@ export type TripDto = {
     title: string,
     description: string,
     reason: string,
-    destinations: Destination[]
+    destinations: Destination[],
+    events: Event[]
 }

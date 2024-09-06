@@ -31,8 +31,8 @@ class TripServiceTest {
         Destination destination1 = new Destination("Germany", "Berlin", coordinates1, LocalDateTime.now());
         Destination destination2 = new Destination("France", "Paris", coordinates2, LocalDateTime.now());
 
-        Trip trip1 = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(destination1));
-        Trip trip2 = new Trip("2", "Vacation", "Family vacation", "Leisure", List.of(destination2));
+        Trip trip1 = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(destination1), List.of());
+        Trip trip2 = new Trip("2", "Vacation", "Family vacation", "Leisure", List.of(destination2), List.of());
 
         List<Trip> listTrips = List.of(trip1, trip2);
 
@@ -56,8 +56,8 @@ class TripServiceTest {
 
         List<Destination> listDestinations = List.of(destination1, destination2);
 
-        Trip trip1 = new Trip(null, "Business Trip", "Meeting with clients", "Business", listDestinations);
-        TripDto trip1Dto = new TripDto("Business Trip", "Meeting with clients", "Business", listDestinations);
+        Trip trip1 = new Trip(null, "Business Trip", "Meeting with clients", "Business", listDestinations, List.of());
+        TripDto trip1Dto = new TripDto("Business Trip", "Meeting with clients", "Business", listDestinations, List.of());
 
         when(tripRepoMock.save(trip1)).thenReturn(trip1);
 
@@ -77,7 +77,7 @@ class TripServiceTest {
         Coordinates coordinates1 = new Coordinates("1", "2");
 
         Destination destination1 = new Destination("Germany", "Berlin", coordinates1, LocalDateTime.now());
-        Trip trip1 = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(destination1));
+        Trip trip1 = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(destination1),List.of());
 
         when(tripRepoMock.existsById(trip1.id())).thenReturn(true);
         doNothing().when(tripRepoMock).deleteById(trip1.id());
@@ -113,7 +113,7 @@ class TripServiceTest {
         Coordinates coordinates1 = new Coordinates("1", "2");
 
         Destination destination1 = new Destination("Germany", "Berlin", coordinates1, LocalDateTime.now());
-        Trip trip1 = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(destination1));
+        Trip trip1 = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(destination1),List.of());
 
 
 
@@ -136,8 +136,8 @@ class TripServiceTest {
         Destination oldDestination = new Destination("Germany", "Berlin", oldCoordinates, LocalDateTime.now());
         Destination updatedDestination = new Destination("Germany", "Hamburg", updatedCoordinates, LocalDateTime.now());
 
-        Trip oldTrip = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(oldDestination));
-        Trip updatedTrip = new Trip("1", "Business Trip", "Meeting with CEO", "Business", List.of(updatedDestination));
+        Trip oldTrip = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(oldDestination),List.of());
+        Trip updatedTrip = new Trip("1", "Business Trip", "Meeting with CEO", "Business", List.of(updatedDestination),List.of());
 
         when(tripRepoMock.findById("1")).thenReturn(Optional.of(oldTrip));
         when(tripRepoMock.save(updatedTrip)).thenReturn(updatedTrip);
@@ -172,7 +172,7 @@ class TripServiceTest {
 
         Destination updatedDestination = new Destination("Germany", "Hamburg", new Coordinates("1","2"), LocalDateTime.now());
 
-        Trip updatedTrip = new Trip(nonExistentId, "Business Trip", "Meeting with CEO", "Business", List.of(updatedDestination));
+        Trip updatedTrip = new Trip(nonExistentId, "Business Trip", "Meeting with CEO", "Business", List.of(updatedDestination),List.of());
 
         when(tripRepoMock.findById(nonExistentId)).thenThrow(new TripNotFoundException(nonExistentId));
 
