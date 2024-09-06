@@ -22,3 +22,8 @@ export function getTime(dateTimeStr: string) {
 
 
 }
+
+
+export function toCamelCase(word: string) {
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+}

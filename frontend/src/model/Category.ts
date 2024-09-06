@@ -1,0 +1,1 @@
+export type Category = "RESTAURANT" | "COFFEE" | "BAR" | "BAKERY" | "THINGS_TO_DO" | "EVENT" | "HOTEL" | "TRANSPORT" | "MEETING" | "NOTE";
