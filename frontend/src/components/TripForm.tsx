@@ -92,8 +92,9 @@ export default function TripForm() {
                 console.log(err)
             }
         }
-
+if(formData){
         postTrip()
+}
     }, [formData])
 
     return (
@@ -120,7 +121,8 @@ export default function TripForm() {
                             title: formData.get('title'),
                             description: formData.get('description'),
                             reason: formData.get('reason'),
-                            destinations: destinations
+                            destinations: destinations,
+                            events: []
                         }
                         setFormData(newTrip)
                         handleClose();

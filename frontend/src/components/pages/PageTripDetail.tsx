@@ -14,6 +14,7 @@ import AirlineStopsRoundedIcon from '@mui/icons-material/AirlineStopsRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import {getDate, getTime} from "../../util/formatting.ts";
 import {Box, Typography} from "@mui/material";
+import EventForm from "../EventForm.tsx";
 
 export default function PageTripDetail() {
     const {id} = useParams();
@@ -44,10 +45,11 @@ export default function PageTripDetail() {
             <p>{tripData.title}</p>
             <p>{tripData.reason}</p>
             <p>{tripData.description}</p>
+            <EventForm tripData={tripData} />
             <Timeline>
                 {tripData.destinations.map((destination, index) => {
                     return (
-                        <TimelineItem>
+                        <TimelineItem key={index}>
                             <TimelineOppositeContent color="primary">
                                 <Box>
                                     <Typography>{getDate(destination.date)}</Typography>
