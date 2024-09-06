@@ -29,7 +29,8 @@ public class TripService {
                 newTripEntries.title(),
                 newTripEntries.description(),
                 newTripEntries.reason(),
-                newTripEntries.destinations()
+                newTripEntries.destinations(),
+                newTripEntries.events()
         );
 
         return tripRepo.save(newTrip);
@@ -49,7 +50,8 @@ public class TripService {
                 .withTitle(trip.title())
                 .withDescription(trip.description())
                 .withReason(trip.reason())
-                .withDestinations(trip.destinations());
+                .withDestinations(trip.destinations())
+                .withEvents(trip.events());
 
         return tripRepo.save(updatedTrip);
     }

@@ -65,7 +65,8 @@ class TripControllerTest {
                                                                     },
                                                                     "date": "2024-05-25T00:00:00"
                                                                 }
-                                                            ]
+                                                            ],
+                                                            "events": []
                                                         }
                         """
                 ))
@@ -94,7 +95,8 @@ class TripControllerTest {
                                             },
                                             "date": "2024-05-25T00:00:00"
                                         }
-                                    ]
+                                    ],
+                                    "events": []
                                 }
 """
                 ))
@@ -107,7 +109,7 @@ class TripControllerTest {
 
         Destination destination1 = new Destination("Germany", "Berlin", new Coordinates("1","2"), LocalDateTime.now());
 
-        Trip trip1 = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(destination1));
+        Trip trip1 = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(destination1),List.of());
 
         tripRepo.save(trip1);
 
@@ -137,7 +139,7 @@ class TripControllerTest {
     void getTripById() throws Exception {
         Destination destination1 = new Destination("Germany", "Berlin",new Coordinates("1","2") , LocalDateTime.parse("2024-05-20T00:00:00"));
 
-        Trip trip1 = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(destination1));
+        Trip trip1 = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(destination1), List.of());
 
         tripRepo.save(trip1);
 
@@ -159,7 +161,8 @@ class TripControllerTest {
                                             },
                                             "date": "2024-05-20T00:00:00"
                                         }
-                                    ]
+                                    ],
+                                    "events": []
                                 }
 """
 
@@ -173,7 +176,7 @@ class TripControllerTest {
     @DirtiesContext
     void putTrip() throws Exception {
         Destination oldDestination = new Destination("Germany", "Berlin", new Coordinates("1","2"), LocalDateTime.now());
-        Trip oldTrip = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(oldDestination));
+        Trip oldTrip = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(oldDestination), List.of());
 
         tripRepo.save(oldTrip);
 
@@ -205,7 +208,8 @@ class TripControllerTest {
                                             },
                                             "date": "2024-05-25T00:00:00"
                                         }
-                                    ]
+                                    ],
+                                    "events": []
                                 }
 """
                         ))
@@ -235,7 +239,8 @@ class TripControllerTest {
                                                                     },
                                                                     "date": "2024-05-25T00:00:00"
                                                                 }
-                                                            ]
+                                                            ],
+                                    "events": []
                                                         }
                         """
 
