@@ -5,5 +5,6 @@ export type Trip = {
     title: string,
     description: string,
     reason: string,
-    destinations: Destination[]
+    destinations: Destination[],
+    events: Event[]
 }
