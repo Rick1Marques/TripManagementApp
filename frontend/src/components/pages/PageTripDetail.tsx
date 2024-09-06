@@ -25,7 +25,7 @@ export default function PageTripDetail() {
             try {
                 const response = await axios.get(`/api/trips/${id}`)
                 if (response.status === 200) {
-                    const tripData = await response.data
+                    const tripData: Trip = await response.data
                     setTripData(tripData)
                 }
             } catch (err) {
@@ -40,33 +40,60 @@ export default function PageTripDetail() {
         return <h1>Loading...</h1>
     }
 
+    const destinationsTyped = tripData.destinations.map(destination => {
+        return {
+            ...destination,
+            date: destination.date,
+            type: "destination"
+        }
+    });
+
+    const eventsTyped = tripData.events.map(event => {
+        return {
+            ...event,
+            date: event.date,
+            type: "event"
+        }
+    });
+
+    const dataTimeLine = [...destinationsTyped, ...eventsTyped]
+
+        dataTimeLine.sort((a, b) => {
+        const dateA = new Date(a.date).getTime();
+        const dateB = new Date(b.date).getTime();
+        return dateA - dateB;
+    });
+
     return (
         <>
             <p>{tripData.title}</p>
             <p>{tripData.reason}</p>
             <p>{tripData.description}</p>
-            <EventForm tripData={tripData} />
+            <EventForm tripData={tripData}/>
             <Timeline>
                 {tripData.destinations.map((destination, index) => {
-                    return (
-                        <TimelineItem key={index}>
-                            <TimelineOppositeContent color="primary">
-                                <Box>
-                                    <Typography>{getDate(destination.date)}</Typography>
-                                    <Typography>{getTime(destination.date)}</Typography>
-                                </Box>
-                            </TimelineOppositeContent>
-                            <TimelineSeparator >
-                                {index === 0 ? <PlaceIcon fontSize="large" /> : index === tripData.destinations.length -1 ? <HomeRoundedIcon fontSize="large"/> : <AirlineStopsRoundedIcon fontSize="large"/>}
+                        return (
+                            <TimelineItem key={index}>
+                                <TimelineOppositeContent color="primary">
+                                    <Box>
+                                        <Typography>{getDate(destination.date)}</Typography>
+                                        <Typography>{getTime(destination.date)}</Typography>
+                                    </Box>
+                                </TimelineOppositeContent>
+                                <TimelineSeparator>
+                                    {index === 0 ?
+                                        <PlaceIcon fontSize="large"/> : index === tripData.destinations.length - 1 ?
+                                            <HomeRoundedIcon fontSize="large"/> :
+                                            <AirlineStopsRoundedIcon fontSize="large"/>}
 
-                                {index !== tripData.destinations.length -1 && <TimelineConnector/>}
-                            </TimelineSeparator>
-                            <TimelineContent>
-                                {destination.country} - {destination.city}
-                            </TimelineContent>
-                        </TimelineItem>
-                    )
-                }
+                                    {index !== tripData.destinations.length - 1 && <TimelineConnector/>}
+                                </TimelineSeparator>
+                                <TimelineContent>
+                                    {destination.country} - {destination.city}
+                                </TimelineContent>
+                            </TimelineItem>
+                        )
+                    }
                 )}
             </Timeline>
         </>

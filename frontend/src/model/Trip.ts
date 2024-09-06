@@ -1,4 +1,5 @@
 import {Destination} from "./Destination.ts";
+import {Event} from "./Event.ts";
 
 export type Trip = {
     id: string,
