@@ -15,6 +15,7 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import {getDate, getTime} from "../../util/formatting.ts";
 import {Box, Typography} from "@mui/material";
 import EventForm from "../EventForm.tsx";
+import EventIcon from '@mui/icons-material/Event';
 
 export default function PageTripDetail() {
     const {id} = useParams();
@@ -64,6 +65,8 @@ export default function PageTripDetail() {
         return dateA - dateB;
     });
 
+    console.log(dataTimeLine)
+
     return (
         <>
             <p>{tripData.title}</p>
@@ -71,25 +74,33 @@ export default function PageTripDetail() {
             <p>{tripData.description}</p>
             <EventForm tripData={tripData}/>
             <Timeline>
-                {tripData.destinations.map((destination, index) => {
+                {dataTimeLine.map((data, index) => {
                         return (
                             <TimelineItem key={index}>
                                 <TimelineOppositeContent color="primary">
                                     <Box>
-                                        <Typography>{getDate(destination.date)}</Typography>
-                                        <Typography>{getTime(destination.date)}</Typography>
+                                        <Typography>{getDate(data.date)}</Typography>
+                                        <Typography>{getTime(data.date)}</Typography>
                                     </Box>
                                 </TimelineOppositeContent>
                                 <TimelineSeparator>
                                     {index === 0 ?
-                                        <PlaceIcon fontSize="large"/> : index === tripData.destinations.length - 1 ?
+                                        <PlaceIcon fontSize="large"/> :
+                                        index === dataTimeLine.length -1 ?
                                             <HomeRoundedIcon fontSize="large"/> :
-                                            <AirlineStopsRoundedIcon fontSize="large"/>}
+                                            data.type === "destination" ?
+                                            <AirlineStopsRoundedIcon fontSize="large"/> :
+                                    <EventIcon />
+                                    }
 
-                                    {index !== tripData.destinations.length - 1 && <TimelineConnector/>}
+                                    {index !== dataTimeLine.length - 1 && <TimelineConnector/>}
                                 </TimelineSeparator>
                                 <TimelineContent>
-                                    {destination.country} - {destination.city}
+                                    {data.type === "destination" ?
+                                        `${data.country} - ${data.city}` :
+                                    `${data.title}`
+                                    }
+
                                 </TimelineContent>
                             </TimelineItem>
                         )
