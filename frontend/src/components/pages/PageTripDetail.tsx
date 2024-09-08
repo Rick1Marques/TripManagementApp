@@ -14,10 +14,12 @@ import AirlineStopsRoundedIcon from '@mui/icons-material/AirlineStopsRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import {getDate, getTime} from "../../util/formatting.ts";
 import {Box, Typography} from "@mui/material";
-import EventForm from "../EventForm.tsx";
 import EventIcon from '@mui/icons-material/Event';
 import {TripEvent} from "../../model/TripEvent.ts";
 import EditItinerary from "./EditItinerary.tsx";
+import {DestinationTyped} from "../../model/DestinationTyped.ts";
+import {TripEventTyped} from "../../model/TripEventTyped.ts";
+
 
 export default function PageTripDetail() {
     const {id} = useParams();
@@ -44,7 +46,7 @@ export default function PageTripDetail() {
         return <h1>Loading...</h1>
     }
 
-    const destinationsTyped = tripData.destinations.map(destination => {
+    const destinationsTyped: DestinationTyped = tripData.destinations.map(destination => {
         return {
             ...destination,
             date: destination.date,
@@ -52,7 +54,7 @@ export default function PageTripDetail() {
         }
     });
 
-    const eventsTyped = tripData.events.map(event => {
+    const tripEventsTyped: TripEventTyped = tripData.events.map(event => {
         return {
             ...event,
             date: event.date,
@@ -60,7 +62,7 @@ export default function PageTripDetail() {
         }
     });
 
-    const dataTimeLine = [...destinationsTyped, ...eventsTyped]
+    const dataTimeLine: (DestinationTyped | TripEventTyped)[] = [...destinationsTyped, ...tripEventsTyped]
 
         dataTimeLine.sort((a, b) => {
         const dateA = new Date(a.date).getTime();
@@ -83,8 +85,7 @@ export default function PageTripDetail() {
             <p>{tripData.title}</p>
             <p>{tripData.reason}</p>
             <p>{tripData.description}</p>
-
-            <EventForm tripData={tripData} handleChangeEventsArray={handleChangeEventsArray}/>
+            <EditItinerary dataTimeLine = {dataTimeLine} tripData={tripData} handleChangeEventsArray={handleChangeEventsArray}/>
             <Timeline>
                 {dataTimeLine.map((data, index) => {
                         return (

@@ -11,14 +11,16 @@ import {Category} from "../model/Category.ts";
 import {emptyInputData, InputData} from "../model/CountryCityDateData.ts";
 import {TripEvent} from "../model/TripEvent.ts";
 import {useState} from "react";
+import {Trip} from "../model/Trip.ts";
 
 const categoryOpt = ["RESTAURANT", "COFFEE", "BAR", "BAKERY", "THINGS_TO_DO", "EVENT", "HOTEL", "TRANSPORT", "MEETING", "NOTE"]
 
 type EventFormProps = {
+    tripData: Trip,
     handleChangeEventsArray: (tripEvent: TripEvent)=> void;
 }
 
-export default function EventForm({ handleChangeEventsArray}: EventFormProps) {
+export default function EventForm({ tripData, handleChangeEventsArray}: EventFormProps) {
 
     const [open, setOpen] = React.useState(false);
 
