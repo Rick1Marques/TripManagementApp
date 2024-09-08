@@ -2,23 +2,11 @@ import {useEffect, useState} from "react";
 import { useParams} from "react-router-dom";
 import axios from "axios";
 import {Trip} from "../../model/Trip.ts";
-import {
-    Timeline,
-    TimelineConnector, TimelineContent,
-    TimelineItem,
-    TimelineOppositeContent,
-    TimelineSeparator
-} from "@mui/lab";
-import PlaceIcon from '@mui/icons-material/Place';
-import AirlineStopsRoundedIcon from '@mui/icons-material/AirlineStopsRounded';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import {getDate, getTime} from "../../util/formatting.ts";
-import {Box, Typography} from "@mui/material";
-import EventIcon from '@mui/icons-material/Event';
 import {TripEvent} from "../../model/TripEvent.ts";
 import EditItinerary from "./EditItinerary.tsx";
 import {DestinationTyped} from "../../model/DestinationTyped.ts";
 import {TripEventTyped} from "../../model/TripEventTyped.ts";
+import TripTimeLine from "../TimeLine.tsx";
 
 
 export default function PageTripDetail() {
@@ -84,41 +72,8 @@ export default function PageTripDetail() {
             <p>{tripData.reason}</p>
             <p>{tripData.description}</p>
             <EditItinerary dataTimeLine = {dataTimeLine} tripData={tripData} handleChangeEventsArray={handleChangeEventsArray}/>
-            <Timeline>
-                {dataTimeLine.map((data, index) => {
-                        return (
-                            <TimelineItem key={index}>
-                                <TimelineOppositeContent color="primary">
-                                    <Box>
-                                        <Typography>{getDate(data.date)}</Typography>
-                                        <Typography>{getTime(data.date)}</Typography>
-                                    </Box>
-                                </TimelineOppositeContent>
-                                <TimelineSeparator>
-                                    {index === 0 ?
-                                        <PlaceIcon fontSize="large"/> :
-                                        index === dataTimeLine.length -1 ?
-                                            <HomeRoundedIcon fontSize="large"/> :
-                                            data.type === "destination" ?
-                                            <AirlineStopsRoundedIcon fontSize="large"/> :
-                                    <EventIcon />
-                                    }
+            <TripTimeLine dataTimeLine={dataTimeLine}/>
 
-                                    {index !== dataTimeLine.length - 1 && <TimelineConnector/>}
-                                </TimelineSeparator>
-                                <TimelineContent>
-                                    {data.type === "destination" ?
-                                        `${data.country} - ${data.city}` :
-                                    `${data.title}`
-                                    }
-
-                                </TimelineContent>
-
-                            </TimelineItem>
-                        )
-                    }
-                )}
-            </Timeline>
         </>
     )
 }
