@@ -7,24 +7,23 @@ import DialogTitle from '@mui/material/DialogTitle';
 import CountryCityDateInputs from "./CountryCityDateInputs.tsx";
 import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField} from "@mui/material";
 import {toCamelCase} from "../util/formatting.ts";
-import {useEffect, useState} from "react";
 import {Category} from "../model/Category.ts";
 import {emptyInputData, InputData} from "../model/CountryCityDateData.ts";
-import {Trip} from "../model/Trip.ts";
-import axios from "axios";
+import {TripEvent} from "../model/TripEvent.ts";
+import {useState} from "react";
 
 const categoryOpt = ["RESTAURANT", "COFFEE", "BAR", "BAKERY", "THINGS_TO_DO", "EVENT", "HOTEL", "TRANSPORT", "MEETING", "NOTE"]
 
 type EventFormProps = {
-    tripData: Trip
+    handleChangeEventsArray: (tripEvent: TripEvent)=> void;
 }
 
-export default function EventForm({tripData}: EventFormProps) {
+export default function EventForm({ handleChangeEventsArray}: EventFormProps) {
+
     const [open, setOpen] = React.useState(false);
 
     const [category, setCategory] = useState<Category>()
     const [countryCityDateData, setCountryCityDateData] = useState<InputData>(emptyInputData)
-    const [formData, setFormData] = useState()
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -43,25 +42,25 @@ export default function EventForm({tripData}: EventFormProps) {
     }
 
 
-    useEffect(() => {
-        async function putTripAddEvent() {
-            try {
-                const updatedTrip = {
-                    ...tripData,
-                    events: [...tripData.events, formData]
-                }
-                const response = await axios.put(`/api/trips`, updatedTrip)
-                console.log("Event added with success!", response.data)
-            } catch (err) {
-                console.log(err)
-            }
-        }
-
-        if (formData) {
-            putTripAddEvent();
-        }
-    }, [formData])
-
+    // useEffect(() => {
+    //     async function putTripAddEvent() {
+    //         try {
+    //             const updatedTrip = {
+    //                 ...tripData,
+    //                 events: [...tripData.events, formData]
+    //             }
+    //             const response = await axios.put(`/api/trips`, updatedTrip)
+    //             console.log("Event added with success!", response.data)
+    //         } catch (err) {
+    //             console.log(err)
+    //         }
+    //     }
+    //
+    //     if (formData) {
+    //         putTripAddEvent();
+    //     }
+    // }, [formData])
+    //
 
     return (
         <React.Fragment>
@@ -77,7 +76,7 @@ export default function EventForm({tripData}: EventFormProps) {
                         event.preventDefault();
                         const formData = new FormData(event.currentTarget);
 
-                        const combinedData = {
+                        const tripEvent: TripEvent = {
                             title: formData.get("title"),
                             category: formData.get("category"),
                             description: formData.get("description"),
@@ -86,7 +85,8 @@ export default function EventForm({tripData}: EventFormProps) {
                             city: countryCityDateData.city,
                             date: countryCityDateData.date
                         }
-                        setFormData(combinedData)
+
+                        handleChangeEventsArray(tripEvent)
                         handleClose();
                     },
                 }}

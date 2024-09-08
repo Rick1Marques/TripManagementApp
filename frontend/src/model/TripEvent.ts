@@ -1,6 +1,6 @@
 import {Category} from "./Category.ts";
 
-export type Event = {
+export type TripEvent = {
     title: string,
     category: Category,
     description: string,

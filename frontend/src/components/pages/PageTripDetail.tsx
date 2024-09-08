@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import { useParams} from "react-router-dom";
 import axios from "axios";
 import {Trip} from "../../model/Trip.ts";
 import {
@@ -16,9 +16,12 @@ import {getDate, getTime} from "../../util/formatting.ts";
 import {Box, Typography} from "@mui/material";
 import EventForm from "../EventForm.tsx";
 import EventIcon from '@mui/icons-material/Event';
+import {TripEvent} from "../../model/TripEvent.ts";
+import EditItinerary from "./EditItinerary.tsx";
 
 export default function PageTripDetail() {
     const {id} = useParams();
+
     const [tripData, setTripData] = useState<Trip | null>(null)
 
     useEffect(() => {
@@ -65,6 +68,14 @@ export default function PageTripDetail() {
         return dateA - dateB;
     });
 
+    function handleChangeEventsArray(tripEvent:TripEvent){
+        const updatedTrip = {
+            ...tripData,
+            events: [...tripData.events, tripEvent]
+        }
+        setTripData(updatedTrip)
+    }
+
     console.log(dataTimeLine)
 
     return (
@@ -72,7 +83,8 @@ export default function PageTripDetail() {
             <p>{tripData.title}</p>
             <p>{tripData.reason}</p>
             <p>{tripData.description}</p>
-            <EventForm tripData={tripData}/>
+
+            <EventForm tripData={tripData} handleChangeEventsArray={handleChangeEventsArray}/>
             <Timeline>
                 {dataTimeLine.map((data, index) => {
                         return (
@@ -102,6 +114,7 @@ export default function PageTripDetail() {
                                     }
 
                                 </TimelineContent>
+
                             </TimelineItem>
                         )
                     }
