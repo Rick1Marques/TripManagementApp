@@ -11,16 +11,14 @@ import {Category} from "../model/Category.ts";
 import {emptyInputData, InputData} from "../model/CountryCityDateData.ts";
 import {TripEvent} from "../model/TripEvent.ts";
 import {useState} from "react";
-import {Trip} from "../model/Trip.ts";
 
 const categoryOpt = ["RESTAURANT", "COFFEE", "BAR", "BAKERY", "THINGS_TO_DO", "EVENT", "HOTEL", "TRANSPORT", "MEETING", "NOTE"]
 
 type EventFormProps = {
-    tripData: Trip,
     handleChangeEventsArray: (tripEvent: TripEvent)=> void;
 }
 
-export default function EventForm({ tripData, handleChangeEventsArray}: EventFormProps) {
+export default function EventForm({ handleChangeEventsArray}: EventFormProps) {
 
     const [open, setOpen] = React.useState(false);
 
@@ -42,27 +40,6 @@ export default function EventForm({ tripData, handleChangeEventsArray}: EventFor
     function handleCountryCityDateChange(data: InputData) {
         setCountryCityDateData(data)
     }
-
-
-    // useEffect(() => {
-    //     async function putTripAddEvent() {
-    //         try {
-    //             const updatedTrip = {
-    //                 ...tripData,
-    //                 events: [...tripData.events, formData]
-    //             }
-    //             const response = await axios.put(`/api/trips`, updatedTrip)
-    //             console.log("Event added with success!", response.data)
-    //         } catch (err) {
-    //             console.log(err)
-    //         }
-    //     }
-    //
-    //     if (formData) {
-    //         putTripAddEvent();
-    //     }
-    // }, [formData])
-    //
 
     return (
         <React.Fragment>

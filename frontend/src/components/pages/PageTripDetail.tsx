@@ -78,8 +78,6 @@ export default function PageTripDetail() {
         setTripData(updatedTrip)
     }
 
-    console.log(dataTimeLine)
-
     return (
         <>
             <p>{tripData.title}</p>

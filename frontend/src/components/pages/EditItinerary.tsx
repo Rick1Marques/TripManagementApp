@@ -12,6 +12,7 @@ import {TripEvent} from "../../model/TripEvent.ts";
 import {DestinationTyped} from "../../model/DestinationTyped.ts";
 import {TripEventTyped} from "../../model/TripEventTyped.ts";
 import TripTimeLine from "../TimeLine.tsx";
+import axios from "axios";
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -31,11 +32,28 @@ type EditItineraryProps = {
 export default function EditItinerary({dataTimeLine, tripData, handleChangeEventsArray}: EditItineraryProps) {
     const [open, setOpen] = React.useState(false);
 
+
+    async function putTripAddEvent() {
+        try {
+            const response = await axios.put(`/api/trips`, tripData)
+            console.log("Event edited with success!", response.data)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     const handleClickOpen = () => {
         setOpen(true);
     };
 
-    const handleClose = () => {
+    async function handleSave(){
+        await putTripAddEvent()
+        setOpen(false)
+    }
+
+
+    const handleCloseCancel = () => {
+        window.location.reload()
         setOpen(false);
     };
 
@@ -48,19 +66,19 @@ export default function EditItinerary({dataTimeLine, tripData, handleChangeEvent
                 open={open}
                 TransitionComponent={Transition}
                 keepMounted
-                onClose={handleClose}
+                onClose={handleCloseCancel}
                 aria-describedby="alert-dialog-slide-description"
             >
                 <DialogTitle>{"Edit Events"}</DialogTitle>
                 <DialogContent>
 
                     <TripTimeLine dataTimeLine={dataTimeLine}/>
-                    <EventForm tripData={tripData} handleChangeEventsArray={handleChangeEventsArray}/>
+                    <EventForm handleChangeEventsArray={handleChangeEventsArray}/>
 
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClose}>Save</Button>
+                    <Button onClick={handleCloseCancel}>Cancel</Button>
+                    <Button onClick={handleSave}>Save</Button>
                 </DialogActions>
             </Dialog>
         </React.Fragment>
