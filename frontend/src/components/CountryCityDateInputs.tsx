@@ -127,6 +127,7 @@ export default function CountryCityDateInputs({
                         }
                     }}
                     sx={{mt: 2}}
+                    value={tripEventTyped?.date}
                 />
             </FormControl>
             {(handleDeleteInput) &&

@@ -62,10 +62,14 @@ export default function TripTimeLine({dataTimeLine, handleDeleteTripEvent, handl
                                     `${data.country} - ${data.city}` :
                                     `${data.title}`
                                 }
-                                {data.type === "event" &&
-                                    <EventForm index={index} handleEditTripEvent={handleEditTripEvent} tripEventTyped={dataTimeLine[index]}/>}
-                                {data.type === "event" &&
-                                    <Button onClick={() => handleDeleteEvent(index)}>Delete</Button>}
+                                {}
+                                {(data.type === "event" && (handleDeleteTripEvent || handleEditTripEvent)) &&
+                                        <Box>
+                                            <EventForm index={index} handleEditTripEvent={handleEditTripEvent}
+                                                       tripEventTyped={dataTimeLine[index]}/>
+                                            <Button onClick={() => handleDeleteEvent(index)}>Delete</Button>
+                                        </Box>
+                                }
                             </TimelineContent>
 
                         </TimelineItem>
