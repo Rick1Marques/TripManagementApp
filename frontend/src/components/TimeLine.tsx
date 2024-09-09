@@ -15,13 +15,15 @@ import EventIcon from "@mui/icons-material/Event";
 import {DestinationTyped} from "../model/DestinationTyped.ts";
 import {TripEventTyped} from "../model/TripEventTyped.ts";
 import {TripEvent} from "../model/TripEvent.ts";
+import EventForm from "./EventForm.tsx";
 
 type TimeLineProps = {
     dataTimeLine: (DestinationTyped | TripEventTyped)[],
-    handleDeleteTripEvent?: (tripEvents: TripEvent[])=> void
+    handleDeleteTripEvent?: (tripEvents: TripEvent[]) => void,
+    handleEditTripEvent?: (index: number, updatedTripEvent: TripEventTyped) => void
 }
 
-export default function TripTimeLine({dataTimeLine, handleDeleteTripEvent}: TimeLineProps) {
+export default function TripTimeLine({dataTimeLine, handleDeleteTripEvent, handleEditTripEvent}: TimeLineProps) {
 
 
     function handleDeleteEvent(index: number) {
@@ -60,6 +62,8 @@ export default function TripTimeLine({dataTimeLine, handleDeleteTripEvent}: Time
                                     `${data.country} - ${data.city}` :
                                     `${data.title}`
                                 }
+                                {data.type === "event" &&
+                                    <EventForm index={index} handleEditTripEvent={handleEditTripEvent} tripEventTyped={dataTimeLine[index]}/>}
                                 {data.type === "event" &&
                                     <Button onClick={() => handleDeleteEvent(index)}>Delete</Button>}
                             </TimelineContent>

@@ -74,6 +74,21 @@ export default function PageTripDetail() {
         setTripData(updatedTrip)
     }
 
+    function handleEditTripEvent(index: number, updatedTripEvent: TripEventTyped ) {
+        const updatedDataTimeLine: (DestinationTyped | TripEventTyped)[] = [...dataTimeLine];
+        updatedDataTimeLine[index] = updatedTripEvent;
+        const eventsTyped: TripEventTyped[] = updatedDataTimeLine.filter(item => item.type === "event")
+        const tripEvents: TripEvent[] = eventsTyped.map(({type, ...tripEvent}) => tripEvent)
+
+        const updatedTrip = {
+            ...tripData,
+            events: tripEvents
+        }
+        setTripData(updatedTrip)
+    }
+
+
+
     return (
         <>
             <p>{tripData.title}</p>
@@ -81,7 +96,9 @@ export default function PageTripDetail() {
             <p>{tripData.description}</p>
             <EditItinerary dataTimeLine={dataTimeLine} tripData={tripData}
                            handleAddTripEvent={handleAddTripEvent}
-                           handleDeleteTripEvent={handleDeleteTripEvent}/>
+                           handleDeleteTripEvent={handleDeleteTripEvent}
+                           handleEditTripEvent={handleEditTripEvent}
+            />
             <TripTimeLine dataTimeLine={dataTimeLine}/>
 
         </>

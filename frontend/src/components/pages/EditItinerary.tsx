@@ -28,9 +28,16 @@ type EditItineraryProps = {
     tripData: Trip,
     handleAddTripEvent: (tripEvent: TripEvent) => void,
     handleDeleteTripEvent: (tripEvents: TripEvent[]) => void,
+    handleEditTripEvent: (index: number, updatedTripEvent: TripEventTyped) => void
 }
 
-export default function EditItinerary({dataTimeLine, tripData, handleAddTripEvent, handleDeleteTripEvent}: EditItineraryProps) {
+export default function EditItinerary({
+                                          dataTimeLine,
+                                          tripData,
+                                          handleAddTripEvent,
+                                          handleDeleteTripEvent,
+                                          handleEditTripEvent
+                                      }: EditItineraryProps) {
     const [open, setOpen] = React.useState(false);
 
 
@@ -47,7 +54,7 @@ export default function EditItinerary({dataTimeLine, tripData, handleAddTripEven
         setOpen(true);
     };
 
-    async function handleSave(){
+    async function handleSave() {
         await putTripAddEvent()
         setOpen(false)
     }
@@ -73,7 +80,8 @@ export default function EditItinerary({dataTimeLine, tripData, handleAddTripEven
                 <DialogTitle>{"Edit Events"}</DialogTitle>
                 <DialogContent>
 
-                    <TripTimeLine dataTimeLine={dataTimeLine} handleDeleteTripEvent={handleDeleteTripEvent}/>
+                    <TripTimeLine dataTimeLine={dataTimeLine} handleDeleteTripEvent={handleDeleteTripEvent}
+                                  handleEditTripEvent={handleEditTripEvent}/>
                     <EventForm handleAddTripEvent={handleAddTripEvent}/>
 
                 </DialogContent>

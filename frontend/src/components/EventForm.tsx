@@ -11,14 +11,18 @@ import {Category} from "../model/Category.ts";
 import {emptyInputData, InputData} from "../model/CountryCityDateData.ts";
 import {TripEvent} from "../model/TripEvent.ts";
 import {useState} from "react";
+import {TripEventTyped} from "../model/TripEventTyped.ts";
 
 const categoryOpt = ["RESTAURANT", "COFFEE", "BAR", "BAKERY", "THINGS_TO_DO", "EVENT", "HOTEL", "TRANSPORT", "MEETING", "NOTE"]
 
 type EventFormProps = {
-    handleAddTripEvent: (tripEvent: TripEvent)=> void;
+    handleAddTripEvent?: (tripEvent: TripEvent) => void,
+    index?: number,
+    handleEditTripEvent?: (index: number, updatedTripEvent: TripEventTyped) => void,
+    tripEventTyped?: TripEventTyped
 }
 
-export default function EventForm({ handleAddTripEvent}: EventFormProps) {
+export default function EventForm({handleAddTripEvent, handleEditTripEvent, index, tripEventTyped}: EventFormProps) {
 
     const [open, setOpen] = React.useState(false);
 
@@ -44,7 +48,7 @@ export default function EventForm({ handleAddTripEvent}: EventFormProps) {
     return (
         <React.Fragment>
             <Button variant="outlined" onClick={handleClickOpen}>
-                Add Event
+                {handleAddTripEvent ? "Add Event" : "Edit Event"}
             </Button>
             <Dialog
                 open={open}
@@ -64,13 +68,21 @@ export default function EventForm({ handleAddTripEvent}: EventFormProps) {
                             city: countryCityDateData.city,
                             date: countryCityDateData.date
                         }
+                        if (handleAddTripEvent) {
+                            handleAddTripEvent(tripEvent)
+                        } else if (handleEditTripEvent && typeof index === 'number') {
+                            const tripEventTyped: TripEventTyped = {
+                                ...tripEvent,
+                                type: "event"
+                            };
+                            handleEditTripEvent(index, tripEventTyped);
+                        }
 
-                        handleAddTripEvent(tripEvent)
                         handleClose();
                     },
                 }}
             >
-                <DialogTitle>Add Event</DialogTitle>
+                <DialogTitle>{handleAddTripEvent ? "Add Event" : "Edit Event"}</DialogTitle>
                 <DialogContent>
                     <FormControl sx={{m: "5% 0"}} fullWidth>
                         <TextField
@@ -83,7 +95,7 @@ export default function EventForm({ handleAddTripEvent}: EventFormProps) {
                             label="Title"
                             type="text"
                             variant="standard"
-                            defaultValue=''
+                            defaultValue={tripEventTyped?.title || ''}
                         />
 
                         <FormControl sx={{m: "5% 0"}} fullWidth>
@@ -95,6 +107,7 @@ export default function EventForm({ handleAddTripEvent}: EventFormProps) {
                                 value={category}
                                 label="Category"
                                 onChange={handleChangeCategory}
+                                defaultValue={tripEventTyped?.category || ''}
                             >
                                 {categoryOpt.map(opt => <MenuItem key={opt} value={opt}>{toCamelCase(opt)}</MenuItem>)}
                             </Select>
@@ -110,7 +123,7 @@ export default function EventForm({ handleAddTripEvent}: EventFormProps) {
                             label="Description"
                             type="text"
                             variant="standard"
-                            defaultValue=''
+                            defaultValue={tripEventTyped?.description || ''}
                         />
                         <TextField
                             autoFocus
@@ -121,17 +134,18 @@ export default function EventForm({ handleAddTripEvent}: EventFormProps) {
                             label="Address"
                             type="text"
                             variant="standard"
-                            defaultValue=''
+                            defaultValue={tripEventTyped?.address || ''}
                         />
                         <CountryCityDateInputs name=""
                                                id={0}
                                                handleInputChange={(_id, data) => handleCountryCityDateChange(data)}
+                                               tripEventTyped={tripEventTyped}
                         />
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button type="submit">Add Event</Button>
+                    <Button type="submit">{handleAddTripEvent ? "Add Event" : "Edit Event"}</Button>
                 </DialogActions>
             </Dialog>
         </React.Fragment>
