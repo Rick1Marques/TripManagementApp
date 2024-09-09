@@ -1,5 +1,5 @@
 import {Destination} from "./Destination.ts";
-import {Event} from "./TripEvent.ts";
+import { TripEvent} from "./TripEvent.ts";
 
 export type Trip = {
     id: string,
@@ -7,5 +7,5 @@ export type Trip = {
     description: string,
     reason: string,
     destinations: Destination[],
-    events: Event[]
+    events: TripEvent[]
 }

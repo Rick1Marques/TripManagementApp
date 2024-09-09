@@ -15,10 +15,10 @@ import {useState} from "react";
 const categoryOpt = ["RESTAURANT", "COFFEE", "BAR", "BAKERY", "THINGS_TO_DO", "EVENT", "HOTEL", "TRANSPORT", "MEETING", "NOTE"]
 
 type EventFormProps = {
-    handleChangeEventsArray: (tripEvent: TripEvent)=> void;
+    handleAddTripEvent: (tripEvent: TripEvent)=> void;
 }
 
-export default function EventForm({ handleChangeEventsArray}: EventFormProps) {
+export default function EventForm({ handleAddTripEvent}: EventFormProps) {
 
     const [open, setOpen] = React.useState(false);
 
@@ -65,7 +65,7 @@ export default function EventForm({ handleChangeEventsArray}: EventFormProps) {
                             date: countryCityDateData.date
                         }
 
-                        handleChangeEventsArray(tripEvent)
+                        handleAddTripEvent(tripEvent)
                         handleClose();
                     },
                 }}

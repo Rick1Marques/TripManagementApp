@@ -26,10 +26,11 @@ const Transition = React.forwardRef(function Transition(
 type EditItineraryProps = {
     dataTimeLine: (DestinationTyped | TripEventTyped)[],
     tripData: Trip,
-    handleChangeEventsArray: (tripEvent: TripEvent) => void;
+    handleAddTripEvent: (tripEvent: TripEvent) => void,
+    handleDeleteTripEvent: (tripEvents: TripEvent[]) => void,
 }
 
-export default function EditItinerary({dataTimeLine, tripData, handleChangeEventsArray}: EditItineraryProps) {
+export default function EditItinerary({dataTimeLine, tripData, handleAddTripEvent, handleDeleteTripEvent}: EditItineraryProps) {
     const [open, setOpen] = React.useState(false);
 
 
@@ -72,8 +73,8 @@ export default function EditItinerary({dataTimeLine, tripData, handleChangeEvent
                 <DialogTitle>{"Edit Events"}</DialogTitle>
                 <DialogContent>
 
-                    <TripTimeLine dataTimeLine={dataTimeLine}/>
-                    <EventForm handleChangeEventsArray={handleChangeEventsArray}/>
+                    <TripTimeLine dataTimeLine={dataTimeLine} handleDeleteTripEvent={handleDeleteTripEvent}/>
+                    <EventForm handleAddTripEvent={handleAddTripEvent}/>
 
                 </DialogContent>
                 <DialogActions>
