@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import {City, Country} from "country-state-city";
 import {ChangeEvent, useEffect, useState} from "react";
+import {TripEventTyped} from "../model/TripEventTyped.ts";
 
 type InputData = {
     country: string,
@@ -22,14 +23,16 @@ type TripFormDestinationInputProps = {
     id?: number,
     name: string
     handleDeleteInput?: (id: number) => void,
-    handleInputChange: (id: number | null, inputData: InputData) => void
+    handleInputChange: (id: number | null, inputData: InputData) => void,
+    tripEventTyped?: TripEventTyped
 }
 
 export default function CountryCityDateInputs({
                                                   id,
                                                   name,
                                                   handleDeleteInput,
-                                                  handleInputChange
+                                                  handleInputChange,
+                                                  tripEventTyped
                                               }: TripFormDestinationInputProps) {
     const countries = Country.getAllCountries()
     const [selectedCountry, setSelectedCountry] = useState<string>("")
@@ -95,10 +98,10 @@ export default function CountryCityDateInputs({
                     )}
                 </Select>
             </FormControl>
-            {selectedCountry &&
                 <FormControl>
                     <InputLabel id="city">City</InputLabel>
                     <Select
+                        disabled={selectedCountry === ""}
                         required
                         labelId="city"
                         id="city"
@@ -111,7 +114,6 @@ export default function CountryCityDateInputs({
                         )}
                     </Select>
                 </FormControl>
-            }
             <FormControl>
                 <TextField
                     type="datetime-local"
@@ -125,6 +127,7 @@ export default function CountryCityDateInputs({
                         }
                     }}
                     sx={{mt: 2}}
+                    value={tripEventTyped?.date}
                 />
             </FormControl>
             {(handleDeleteInput) &&

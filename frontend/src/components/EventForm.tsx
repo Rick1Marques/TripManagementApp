@@ -7,24 +7,27 @@ import DialogTitle from '@mui/material/DialogTitle';
 import CountryCityDateInputs from "./CountryCityDateInputs.tsx";
 import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField} from "@mui/material";
 import {toCamelCase} from "../util/formatting.ts";
-import {useEffect, useState} from "react";
 import {Category} from "../model/Category.ts";
 import {emptyInputData, InputData} from "../model/CountryCityDateData.ts";
-import {Trip} from "../model/Trip.ts";
-import axios from "axios";
+import {TripEvent} from "../model/TripEvent.ts";
+import {useState} from "react";
+import {TripEventTyped} from "../model/TripEventTyped.ts";
 
 const categoryOpt = ["RESTAURANT", "COFFEE", "BAR", "BAKERY", "THINGS_TO_DO", "EVENT", "HOTEL", "TRANSPORT", "MEETING", "NOTE"]
 
 type EventFormProps = {
-    tripData: Trip
+    handleAddTripEvent?: (tripEvent: TripEvent) => void,
+    index?: number,
+    handleEditTripEvent?: (index: number, updatedTripEvent: TripEventTyped) => void,
+    tripEventTyped?: TripEventTyped
 }
 
-export default function EventForm({tripData}: EventFormProps) {
+export default function EventForm({handleAddTripEvent, handleEditTripEvent, index, tripEventTyped}: EventFormProps) {
+
     const [open, setOpen] = React.useState(false);
 
     const [category, setCategory] = useState<Category>()
     const [countryCityDateData, setCountryCityDateData] = useState<InputData>(emptyInputData)
-    const [formData, setFormData] = useState()
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -42,31 +45,10 @@ export default function EventForm({tripData}: EventFormProps) {
         setCountryCityDateData(data)
     }
 
-
-    useEffect(() => {
-        async function putTripAddEvent() {
-            try {
-                const updatedTrip = {
-                    ...tripData,
-                    events: [...tripData.events, formData]
-                }
-                const response = await axios.put(`/api/trips`, updatedTrip)
-                console.log("Event added with success!", response.data)
-            } catch (err) {
-                console.log(err)
-            }
-        }
-
-        if (formData) {
-            putTripAddEvent();
-        }
-    }, [formData])
-
-
     return (
         <React.Fragment>
             <Button variant="outlined" onClick={handleClickOpen}>
-                Add Event
+                {handleAddTripEvent ? "Add Event" : "Edit Event"}
             </Button>
             <Dialog
                 open={open}
@@ -77,7 +59,7 @@ export default function EventForm({tripData}: EventFormProps) {
                         event.preventDefault();
                         const formData = new FormData(event.currentTarget);
 
-                        const combinedData = {
+                        const tripEvent: TripEvent = {
                             title: formData.get("title"),
                             category: formData.get("category"),
                             description: formData.get("description"),
@@ -86,12 +68,21 @@ export default function EventForm({tripData}: EventFormProps) {
                             city: countryCityDateData.city,
                             date: countryCityDateData.date
                         }
-                        setFormData(combinedData)
+                        if (handleAddTripEvent) {
+                            handleAddTripEvent(tripEvent)
+                        } else if (handleEditTripEvent && typeof index === 'number') {
+                            const tripEventTyped: TripEventTyped = {
+                                ...tripEvent,
+                                type: "event"
+                            };
+                            handleEditTripEvent(index, tripEventTyped);
+                        }
+
                         handleClose();
                     },
                 }}
             >
-                <DialogTitle>Add Event</DialogTitle>
+                <DialogTitle>{handleAddTripEvent ? "Add Event" : "Edit Event"}</DialogTitle>
                 <DialogContent>
                     <FormControl sx={{m: "5% 0"}} fullWidth>
                         <TextField
@@ -104,7 +95,7 @@ export default function EventForm({tripData}: EventFormProps) {
                             label="Title"
                             type="text"
                             variant="standard"
-                            defaultValue=''
+                            defaultValue={tripEventTyped?.title || ''}
                         />
 
                         <FormControl sx={{m: "5% 0"}} fullWidth>
@@ -116,6 +107,7 @@ export default function EventForm({tripData}: EventFormProps) {
                                 value={category}
                                 label="Category"
                                 onChange={handleChangeCategory}
+                                defaultValue={tripEventTyped?.category || ''}
                             >
                                 {categoryOpt.map(opt => <MenuItem key={opt} value={opt}>{toCamelCase(opt)}</MenuItem>)}
                             </Select>
@@ -131,7 +123,7 @@ export default function EventForm({tripData}: EventFormProps) {
                             label="Description"
                             type="text"
                             variant="standard"
-                            defaultValue=''
+                            defaultValue={tripEventTyped?.description || ''}
                         />
                         <TextField
                             autoFocus
@@ -142,17 +134,18 @@ export default function EventForm({tripData}: EventFormProps) {
                             label="Address"
                             type="text"
                             variant="standard"
-                            defaultValue=''
+                            defaultValue={tripEventTyped?.address || ''}
                         />
                         <CountryCityDateInputs name=""
                                                id={0}
                                                handleInputChange={(_id, data) => handleCountryCityDateChange(data)}
+                                               tripEventTyped={tripEventTyped}
                         />
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button type="submit">Add Event</Button>
+                    <Button type="submit">{handleAddTripEvent ? "Add Event" : "Edit Event"}</Button>
                 </DialogActions>
             </Dialog>
         </React.Fragment>
