@@ -4,6 +4,7 @@ import {emptyTrip, Trip} from "../model/Trip.ts";
 import {DestinationTyped} from "../model/DestinationTyped.ts";
 import {TripEventTyped} from "../model/TripEventTyped.ts";
 import {TripEvent} from "../model/TripEvent.ts";
+import {Destination} from "../model/Destination.ts";
 
 type ItineraryContext = {
     id: string,
@@ -11,7 +12,7 @@ type ItineraryContext = {
     dataTimeLine: (DestinationTyped | TripEventTyped)[],
     handleIdChange: (id: string) => void,
     handleAddTripEvent: (tripEvent: TripEvent) => void,
-    handleDeleteTripEvent: (index: number) => void,
+    handleDeleteTripEventDestination: (index: number) => void,
     handleEditTripEvent: (index: number, updatedTripEvent: TripEventTyped) => void
 }
 
@@ -23,7 +24,7 @@ export const ItineraryContext = createContext<ItineraryContext>({
     },
     handleAddTripEvent: () => {
     },
-    handleDeleteTripEvent: () => {
+    handleDeleteTripEventDestination: () => {
     },
     handleEditTripEvent: () => {
     },
@@ -107,13 +108,17 @@ export default function ItineraryContextProvider({children}: ItineraryContextPro
         setTripData(updatedTrip)
     }
 
-    function handleDeleteTripEvent(index: number) {
+    function handleDeleteTripEventDestination(index: number) {
         const updatedList = dataTimeLine.filter((_, i) => i !== index)
         const eventsTyped: TripEventTyped[] = updatedList.filter(item => item.type === "event")
-        const tripEvents: TripEvent[] = eventsTyped.map(({type, ...tripEvent}) => tripEvent)
+        const destinationsTyped: DestinationTyped[] = updatedList.filter(item => item.type !== "event")
 
-        const updatedTrip = {
+        const tripEvents: TripEvent[] = eventsTyped.map(({type, ...tripEvent}) => tripEvent)
+        const tripDestinations: Destination[] = destinationsTyped.map(({type, ...tripDestination}) => tripDestination)
+
+        const updatedTrip: Trip = {
             ...tripData,
+            destinations: tripDestinations,
             events: tripEvents
         }
         setTripData(updatedTrip)
@@ -139,7 +144,7 @@ export default function ItineraryContextProvider({children}: ItineraryContextPro
         dataTimeLine,
         handleIdChange,
         handleAddTripEvent,
-        handleDeleteTripEvent,
+        handleDeleteTripEventDestination,
         handleEditTripEvent
     }
 

@@ -24,14 +24,13 @@ export default function TripTimeLine({edit}: TimeLineProps) {
 
     const {
         dataTimeLine,
-        handleDeleteTripEvent,
+        handleDeleteTripEventDestination,
         } = useContext( ItineraryContext)
 
     function handleDeleteEvent(index: number) {
-        handleDeleteTripEvent(index)
+        handleDeleteTripEventDestination(index)
     }
 
-console.log(dataTimeLine)
     return (
         <Timeline sx={{w: "100%"}}>
             {dataTimeLine.map((data, index) => {
@@ -60,8 +59,13 @@ console.log(dataTimeLine)
                                     `${data.country} - ${data.city}` :
                                     `${data.title}`
                                 }
-                                {}
-                                {(data.type === "event" && edit )&&
+                                {(data.type === "destination"  && edit) &&
+                                    <Box>
+                                        <Button onClick={() => handleDeleteEvent(index)}>Delete</Button>
+                                    </Box>
+                                }
+
+                                {(data.type === "event" && edit ) &&
                                         <Box>
                                             <EventForm index={index}
                                                        edit={true}
