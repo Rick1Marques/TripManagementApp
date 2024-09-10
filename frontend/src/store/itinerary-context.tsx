@@ -126,22 +126,24 @@ export default function ItineraryContextProvider({children}: ItineraryContextPro
         return (item as TripEvent).address !== undefined;
     }
 
-    function handleDeleteTripEventDestination(index: number) {
-        const updatedList = dataTimeLine.filter((_, i) => i !== index)
-        const eventsTyped: TripEventTyped[] = updatedList.filter(item => item.type === "event")
-        const destinationsTyped: DestinationTyped[] = updatedList.filter(item => item.type !== "event")
+    function updateTripData(updatedList: (TripEventTyped | DestinationTyped)[]): Trip {
+        const eventsTyped: TripEventTyped[] = updatedList.filter(item => item.type === "event");
+        const destinationsTyped: DestinationTyped[] = updatedList.filter(item => item.type !== "event");
 
-        const tripEvents: TripEvent[] = eventsTyped.map(({type, ...tripEvent}) => tripEvent)
-        const tripDestinations: Destination[] = destinationsTyped.map(({
-                                                                           type,
-                                                                           ...tripDestination
-                                                                       }) => tripDestination)
+        const tripEvents: TripEvent[] = eventsTyped.map(({ type, ...tripEvent }) => tripEvent);
+        const tripDestinations: Destination[] = destinationsTyped.map(({ type, ...tripDestination }) => tripDestination);
 
-        const updatedTrip: Trip = {
+        return {
             ...tripData,
             destinations: tripDestinations,
             events: tripEvents
-        }
+        };
+    }
+
+    function handleDeleteTripEventDestination(index: number) {
+        const updatedList = dataTimeLine.filter((_, i) => i !== index)
+        const updatedTrip = updateTripData(updatedList)
+
         setTripData(updatedTrip)
     }
 
@@ -149,20 +151,8 @@ export default function ItineraryContextProvider({children}: ItineraryContextPro
         const updatedDataTimeLine: (DestinationTyped | TripEventTyped)[] = [...dataTimeLine];
         updatedDataTimeLine[index] = updatedTripEventDestination;
 
-        const eventsTyped: TripEventTyped[] = updatedDataTimeLine.filter(item => item.type === "event")
-        const destinationsTyped: DestinationTyped[] = updatedDataTimeLine.filter(item => item.type !== "event")
-
-        const tripEvents: TripEvent[] = eventsTyped.map(({type, ...tripEvent}) => tripEvent)
-        const tripDestinations: Destination[] = destinationsTyped.map(({
-                                                                           type,
-                                                                           ...tripDestination
-                                                                       }) => tripDestination)
-
-        const updatedTrip: Trip = {
-            ...tripData,
-            destinations: tripDestinations,
-            events: tripEvents
-        }
+        const updatedTrip = updateTripData(updatedDataTimeLine);
+        
         setTripData(updatedTrip)
     }
 
