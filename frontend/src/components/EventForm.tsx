@@ -10,19 +10,20 @@ import {toCamelCase} from "../util/formatting.ts";
 import {Category} from "../model/Category.ts";
 import {emptyInputData, InputData} from "../model/CountryCityDateData.ts";
 import {TripEvent} from "../model/TripEvent.ts";
-import {useState} from "react";
+import {useContext, useState} from "react";
 import {TripEventTyped} from "../model/TripEventTyped.ts";
+import {ItineraryContext} from "../store/itinerary-context.tsx";
 
 const categoryOpt = ["RESTAURANT", "COFFEE", "BAR", "BAKERY", "THINGS_TO_DO", "EVENT", "HOTEL", "TRANSPORT", "MEETING", "NOTE"]
 
 type EventFormProps = {
-    handleAddTripEvent?: (tripEvent: TripEvent) => void,
     index?: number,
-    handleEditTripEvent?: (index: number, updatedTripEvent: TripEventTyped) => void,
+    edit?: boolean,
     tripEventTyped?: TripEventTyped
 }
 
-export default function EventForm({handleAddTripEvent, handleEditTripEvent, index, tripEventTyped}: EventFormProps) {
+export default function EventForm({ index, edit, tripEventTyped}: EventFormProps) {
+    const {handleAddTripEvent, handleEditTripEvent, } = useContext(ItineraryContext)
 
     const [open, setOpen] = React.useState(false);
 
@@ -48,7 +49,7 @@ export default function EventForm({handleAddTripEvent, handleEditTripEvent, inde
     return (
         <React.Fragment>
             <Button variant="outlined" onClick={handleClickOpen}>
-                {handleAddTripEvent ? "Add Event" : "Edit Event"}
+                {edit ? "Edit Event": "Add Event"}
             </Button>
             <Dialog
                 open={open}
@@ -82,7 +83,7 @@ export default function EventForm({handleAddTripEvent, handleEditTripEvent, inde
                     },
                 }}
             >
-                <DialogTitle>{handleAddTripEvent ? "Add Event" : "Edit Event"}</DialogTitle>
+                <DialogTitle>{edit ? "Edit Event": "Add Event"}</DialogTitle>
                 <DialogContent>
                     <FormControl sx={{m: "5% 0"}} fullWidth>
                         <TextField
@@ -145,7 +146,7 @@ export default function EventForm({handleAddTripEvent, handleEditTripEvent, inde
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button type="submit">{handleAddTripEvent ? "Add Event" : "Edit Event"}</Button>
+                    <Button type="submit">{edit ? "Edit Event": "Add Event"}</Button>
                 </DialogActions>
             </Dialog>
         </React.Fragment>

@@ -12,25 +12,23 @@ import PlaceIcon from "@mui/icons-material/Place";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import AirlineStopsRoundedIcon from "@mui/icons-material/AirlineStopsRounded";
 import EventIcon from "@mui/icons-material/Event";
-import {DestinationTyped} from "../model/DestinationTyped.ts";
-import {TripEventTyped} from "../model/TripEventTyped.ts";
-import {TripEvent} from "../model/TripEvent.ts";
 import EventForm from "./EventForm.tsx";
+import {useContext} from "react";
+import {ItineraryContext} from "../store/itinerary-context.tsx";
 
 type TimeLineProps = {
-    dataTimeLine: (DestinationTyped | TripEventTyped)[],
-    handleDeleteTripEvent?: (tripEvents: TripEvent[]) => void,
-    handleEditTripEvent?: (index: number, updatedTripEvent: TripEventTyped) => void
+    edit?: boolean
 }
 
-export default function TripTimeLine({dataTimeLine, handleDeleteTripEvent, handleEditTripEvent}: TimeLineProps) {
+export default function TripTimeLine({edit}: TimeLineProps) {
 
+    const {
+        dataTimeLine,
+        handleDeleteTripEvent,
+        } = useContext( ItineraryContext)
 
     function handleDeleteEvent(index: number) {
-        const updatedList = dataTimeLine.filter((_, i) => i !== index)
-        const eventsTyped: TripEventTyped[] = updatedList.filter(item => item.type === "event")
-        const tripEvents: TripEvent[] = eventsTyped.map(({type, ...tripEvent}) => tripEvent)
-        handleDeleteTripEvent(tripEvents)
+        handleDeleteTripEvent(index)
     }
 
 
@@ -39,7 +37,7 @@ export default function TripTimeLine({dataTimeLine, handleDeleteTripEvent, handl
             {dataTimeLine.map((data, index) => {
                     return (
                         <TimelineItem key={index}>
-                            <TimelineOppositeContent color="primary">
+                            <TimelineOppositeContent >
                                 <Box>
                                     <Typography>{getDate(data.date)}</Typography>
                                     <Typography>{getTime(data.date)}</Typography>
@@ -63,9 +61,10 @@ export default function TripTimeLine({dataTimeLine, handleDeleteTripEvent, handl
                                     `${data.title}`
                                 }
                                 {}
-                                {(data.type === "event" && (handleDeleteTripEvent || handleEditTripEvent)) &&
+                                {(data.type === "event" && edit )&&
                                         <Box>
-                                            <EventForm index={index} handleEditTripEvent={handleEditTripEvent}
+                                            <EventForm index={index}
+                                                       edit={true}
                                                        tripEventTyped={dataTimeLine[index]}/>
                                             <Button onClick={() => handleDeleteEvent(index)}>Delete</Button>
                                         </Box>

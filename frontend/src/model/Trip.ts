@@ -9,3 +9,12 @@ export type Trip = {
     destinations: Destination[],
     events: TripEvent[]
 }
+
+export const emptyTrip: Trip = {
+    id: "",
+    title: "",
+    description: "",
+    reason: "",
+    destinations: [],
+    events: []
+}

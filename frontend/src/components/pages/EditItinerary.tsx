@@ -7,12 +7,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import {TransitionProps} from '@mui/material/transitions';
 import EventForm from "../EventForm.tsx";
-import {Trip} from "../../model/Trip.ts";
-import {TripEvent} from "../../model/TripEvent.ts";
-import {DestinationTyped} from "../../model/DestinationTyped.ts";
-import {TripEventTyped} from "../../model/TripEventTyped.ts";
-import TripTimeLine from "../TimeLine.tsx";
+import TripTimeLine from "../TripTimeLine.tsx";
 import axios from "axios";
+import {useContext} from "react";
+import {ItineraryContext} from "../../store/itinerary-context.tsx";
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -23,23 +21,12 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-type EditItineraryProps = {
-    dataTimeLine: (DestinationTyped | TripEventTyped)[],
-    tripData: Trip,
-    handleAddTripEvent: (tripEvent: TripEvent) => void,
-    handleDeleteTripEvent: (tripEvents: TripEvent[]) => void,
-    handleEditTripEvent: (index: number, updatedTripEvent: TripEventTyped) => void
-}
-
-export default function EditItinerary({
-                                          dataTimeLine,
-                                          tripData,
-                                          handleAddTripEvent,
-                                          handleDeleteTripEvent,
-                                          handleEditTripEvent
-                                      }: EditItineraryProps) {
+export default function EditItinerary() {
     const [open, setOpen] = React.useState(false);
 
+    const {
+        tripData,
+    } = useContext(ItineraryContext)
 
     async function putTripAddEvent() {
         try {
@@ -79,11 +66,8 @@ export default function EditItinerary({
             >
                 <DialogTitle>{"Edit Events"}</DialogTitle>
                 <DialogContent>
-
-                    <TripTimeLine dataTimeLine={dataTimeLine} handleDeleteTripEvent={handleDeleteTripEvent}
-                                  handleEditTripEvent={handleEditTripEvent}/>
-                    <EventForm handleAddTripEvent={handleAddTripEvent}/>
-
+                    <TripTimeLine edit={true}/>
+                    <EventForm/>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseCancel}>Cancel</Button>
