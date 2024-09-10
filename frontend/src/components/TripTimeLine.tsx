@@ -31,7 +31,7 @@ export default function TripTimeLine({edit}: TimeLineProps) {
         handleDeleteTripEvent(index)
     }
 
-
+console.log(dataTimeLine)
     return (
         <Timeline sx={{w: "100%"}}>
             {dataTimeLine.map((data, index) => {
@@ -44,9 +44,9 @@ export default function TripTimeLine({edit}: TimeLineProps) {
                                 </Box>
                             </TimelineOppositeContent>
                             <TimelineSeparator>
-                                {index === 0 ?
+                                {data.type === "starting-point" ?
                                     <PlaceIcon fontSize="large"/> :
-                                    index === dataTimeLine.length - 1 ?
+                                    data.type === "home" ?
                                         <HomeRoundedIcon fontSize="large"/> :
                                         data.type === "destination" ?
                                             <AirlineStopsRoundedIcon fontSize="large"/> :
@@ -56,7 +56,7 @@ export default function TripTimeLine({edit}: TimeLineProps) {
                                 {index !== dataTimeLine.length - 1 && <TimelineConnector/>}
                             </TimelineSeparator>
                             <TimelineContent>
-                                {data.type === "destination" ?
+                                {data.type !== "event" ?
                                     `${data.country} - ${data.city}` :
                                     `${data.title}`
                                 }

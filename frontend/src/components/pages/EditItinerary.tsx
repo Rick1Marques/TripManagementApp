@@ -64,9 +64,10 @@ export default function EditItinerary() {
                 onClose={handleCloseCancel}
                 aria-describedby="alert-dialog-slide-description"
             >
-                <DialogTitle>{"Edit Events"}</DialogTitle>
+                <DialogTitle>{"Edit Itinerary"}</DialogTitle>
                 <DialogContent>
                     <TripTimeLine edit={true}/>
+
                     <EventForm/>
                 </DialogContent>
                 <DialogActions>

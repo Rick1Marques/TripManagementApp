@@ -66,11 +66,20 @@ export default function ItineraryContextProvider({children}: ItineraryContextPro
     }
 
 
-    const destinationsTyped: DestinationTyped = tripData.destinations.map(destination => {
+    const destinationsTyped: DestinationTyped = tripData.destinations.map((destination, index) => {
+        let type: string;
+        if(index === 0){
+            type = "starting-point"
+        } else if(index === tripData.destinations.length -1){
+            type = "home"
+        } else {
+            type = "destination"
+        }
+
         return {
             ...destination,
             date: destination.date,
-            type: "destination"
+            type: type
         }
     });
 
