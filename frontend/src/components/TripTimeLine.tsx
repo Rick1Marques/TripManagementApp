@@ -15,7 +15,7 @@ import EventIcon from "@mui/icons-material/Event";
 import EventForm from "./forms/EventForm.tsx";
 import {useContext} from "react";
 import {ItineraryContext} from "../store/itinerary-context.tsx";
-import EditDestinationForm from "./forms/EditDestinationForm.tsx";
+import DestinationForm from "./forms/DestinationForm.tsx";
 
 type TimeLineProps = {
     edit?: boolean
@@ -62,7 +62,7 @@ export default function TripTimeLine({edit}: TimeLineProps) {
                                 }
                                 <Box>
                                     {(data.type !== "event" && edit) &&
-                                       <EditDestinationForm index={index} destinationType={data.type}/>
+                                       <DestinationForm index={index} edit={true} destinationType={data.type}/>
                                     }
                                     {(data.type === "destination" && edit) &&
                                         <Button onClick={() => handleDeleteEvent(index)}>Delete</Button>

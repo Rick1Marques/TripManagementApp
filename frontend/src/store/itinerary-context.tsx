@@ -11,7 +11,7 @@ type ItineraryContext = {
     tripData: Trip | null,
     dataTimeLine: (DestinationTyped | TripEventTyped)[],
     handleIdChange: (id: string) => void,
-    handleAddTripEvent: (tripEvent: TripEvent) => void,
+    handleAddTripEventDestination: (tripEvent: TripEvent | Destination) => void,
     handleDeleteTripEventDestination: (index: number) => void,
     handleEditTripEventDestination: (index: number, updatedTripEventDestination: DestinationTyped | TripEventTyped) => void
 }
@@ -50,6 +50,7 @@ export default function ItineraryContextProvider({children}: ItineraryContextPro
                 console.error(err)
             }
         }
+
         if (id) {
             fetchTrip()
         }
@@ -66,9 +67,9 @@ export default function ItineraryContextProvider({children}: ItineraryContextPro
 
     const destinationsTyped: DestinationTyped = tripData.destinations.map((destination, index) => {
         let type: string;
-        if(index === 0){
+        if (index === 0) {
             type = "starting-point"
-        } else if(index === tripData.destinations.length -1){
+        } else if (index === tripData.destinations.length - 1) {
             type = "home"
         } else {
             type = "destination"
@@ -97,12 +98,32 @@ export default function ItineraryContextProvider({children}: ItineraryContextPro
         return dateA - dateB;
     });
 
-    function handleAddTripEvent(tripEvent: TripEvent) {
-        const updatedTrip = {
-            ...tripData,
-            events: [...tripData.events, tripEvent]
+    function handleAddTripEventDestination(tripEventDestination: TripEvent | Destination) {
+        let updatedTrip: Trip
+
+        if (isTripEvent(tripEventDestination)) {
+            updatedTrip = {
+                ...tripData,
+                events: [...tripData.events, tripEventDestination]
+            }
+        } else {
+            updatedTrip = {
+                ...tripData,
+                destinations: [...tripData.destinations, tripEventDestination]
+            }
+
+            updatedTrip.destinations.sort((a,b)=> {
+                const dataA = new Date(a.date).getTime()
+                const dataB = new Date(b.date).getTime()
+                return dataA - dataB
+            })
+
         }
         setTripData(updatedTrip)
+    }
+
+    function isTripEvent(item: TripEvent | Destination): item is TripEvent {
+        return (item as TripEvent).address !== undefined;
     }
 
     function handleDeleteTripEventDestination(index: number) {
@@ -111,7 +132,10 @@ export default function ItineraryContextProvider({children}: ItineraryContextPro
         const destinationsTyped: DestinationTyped[] = updatedList.filter(item => item.type !== "event")
 
         const tripEvents: TripEvent[] = eventsTyped.map(({type, ...tripEvent}) => tripEvent)
-        const tripDestinations: Destination[] = destinationsTyped.map(({type, ...tripDestination}) => tripDestination)
+        const tripDestinations: Destination[] = destinationsTyped.map(({
+                                                                           type,
+                                                                           ...tripDestination
+                                                                       }) => tripDestination)
 
         const updatedTrip: Trip = {
             ...tripData,
@@ -129,7 +153,10 @@ export default function ItineraryContextProvider({children}: ItineraryContextPro
         const destinationsTyped: DestinationTyped[] = updatedDataTimeLine.filter(item => item.type !== "event")
 
         const tripEvents: TripEvent[] = eventsTyped.map(({type, ...tripEvent}) => tripEvent)
-        const tripDestinations: Destination[] = destinationsTyped.map(({type, ...tripDestination}) => tripDestination)
+        const tripDestinations: Destination[] = destinationsTyped.map(({
+                                                                           type,
+                                                                           ...tripDestination
+                                                                       }) => tripDestination)
 
         const updatedTrip: Trip = {
             ...tripData,
@@ -144,7 +171,7 @@ export default function ItineraryContextProvider({children}: ItineraryContextPro
         tripData,
         dataTimeLine,
         handleIdChange,
-        handleAddTripEvent,
+        handleAddTripEventDestination,
         handleDeleteTripEventDestination,
         handleEditTripEventDestination
     }

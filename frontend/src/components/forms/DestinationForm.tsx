@@ -11,15 +11,16 @@ import {ItineraryContext} from "../../store/itinerary-context.tsx";
 import {DestinationTyped} from "../../model/DestinationTyped.ts";
 
 type EditDestinationFormProps = {
-    index: number,
+    index?: number,
+    edit?: boolean,
     destinationType: string
 }
 
-export default function EditDestinationForm({index, destinationType}: EditDestinationFormProps) {
+export default function DestinationForm({index,edit, destinationType}: EditDestinationFormProps) {
     const [open, setOpen] = React.useState(false);
     const [destinationData, setDestinationData] = useState<InputData>(emptyInputData)
 
-    const { handleEditTripEventDestination} = useContext(ItineraryContext)
+    const { handleEditTripEventDestination, handleAddTripEventDestination} = useContext(ItineraryContext)
 
     function handleDestinationChange(data: InputData) {
         setDestinationData(data);
@@ -36,7 +37,7 @@ export default function EditDestinationForm({index, destinationType}: EditDestin
     return (
         <React.Fragment>
             <Button variant="outlined" onClick={handleClickOpen}>
-                Edit
+                {edit ? "Edit" : "Add Destination"}
             </Button>
             <Dialog
                 open={open}
@@ -46,7 +47,12 @@ export default function EditDestinationForm({index, destinationType}: EditDestin
                     onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
                         event.preventDefault();
                         const typedUpdatedDestination : DestinationTyped = {...destinationData, type: destinationType}
+
+                        if(index){
                         handleEditTripEventDestination(index, typedUpdatedDestination)
+                        } else {
+                            handleAddTripEventDestination(destinationData)
+                        }
                         handleClose();
                     },
                 }}

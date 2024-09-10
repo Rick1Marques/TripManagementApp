@@ -23,7 +23,7 @@ type EventFormProps = {
 }
 
 export default function EventForm({ index, edit, tripEventTyped}: EventFormProps) {
-    const {handleAddTripEvent, handleEditTripEventDestination, } = useContext(ItineraryContext)
+    const {handleAddTripEventDestination, handleEditTripEventDestination, } = useContext(ItineraryContext)
 
     const [open, setOpen] = React.useState(false);
 
@@ -69,8 +69,8 @@ export default function EventForm({ index, edit, tripEventTyped}: EventFormProps
                             city: countryCityDateData.city,
                             date: countryCityDateData.date
                         }
-                        if (handleAddTripEvent) {
-                            handleAddTripEvent(tripEvent)
+                        if (handleAddTripEventDestination) {
+                            handleAddTripEventDestination(tripEvent)
                         } else if (handleEditTripEventDestination && typeof index === 'number') {
                             const tripEventTyped: TripEventTyped = {
                                 ...tripEvent,

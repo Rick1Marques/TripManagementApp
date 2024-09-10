@@ -11,6 +11,7 @@ import TripTimeLine from "./TripTimeLine.tsx";
 import axios from "axios";
 import {useContext} from "react";
 import {ItineraryContext} from "../store/itinerary-context.tsx";
+import DestinationForm from "./forms/DestinationForm.tsx";
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -68,6 +69,7 @@ export default function EditItinerary() {
                 <DialogContent>
                     <TripTimeLine edit={true}/>
                     <EventForm/>
+                    <DestinationForm destinationType="destination"/>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseCancel}>Cancel</Button>
