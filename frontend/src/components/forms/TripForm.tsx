@@ -5,11 +5,11 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import {useEffect, useState} from "react";
-import {getOrdinalSuffix} from "../util/getOrdinalSuffix.ts";
+import {getOrdinalSuffix} from "../../util/getOrdinalSuffix.ts";
 import {FormControl, FormLabel, TextField, Typography} from '@mui/material';
 import axios from "axios";
-import CountryCityDateInputs from "./CountryCityDateInputs.tsx";
-import {emptyInputData, InputData} from "../model/CountryCityDateData.ts";
+import CountryCityDateInputs from "../CountryCityDateInputs.tsx";
+import {emptyInputData, InputData} from "../../model/CountryCityDateData.ts";
 
 type DestinationsInput = {
     id: number,
@@ -165,7 +165,6 @@ if(formData){
                             <Typography variant="h5">Destinations</Typography>
                         </FormLabel>
                         <CountryCityDateInputs name="Starting Point"
-                                                  id={0}
                                                   handleInputChange={(_id, data) => handleStartingPointChange(data)}
                         />
                         {destinationsInputs.map((destination) =>
@@ -177,7 +176,6 @@ if(formData){
                             />
                         )}
                         <CountryCityDateInputs name="Home"
-                                                  id={1}
                                                   handleInputChange={(_id, data) => handleHomeChange(data)}
                         />
                         <Button onClick={handleAddNewInput}>Add Destination</Button>

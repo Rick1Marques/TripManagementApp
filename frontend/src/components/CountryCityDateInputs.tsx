@@ -21,7 +21,7 @@ type InputData = {
 
 type TripFormDestinationInputProps = {
     id?: number,
-    name: string
+    name?: string,
     handleDeleteInput?: (id: number) => void,
     handleInputChange: (id: number | null, inputData: InputData) => void,
     tripEventTyped?: TripEventTyped
@@ -80,9 +80,11 @@ export default function CountryCityDateInputs({
 
     return (
         <FormControl fullWidth>
+            {name &&
             <FormLabel sx={{m: "2% 0"}}>
                 <Typography variant="h6">{name}</Typography>
             </FormLabel>
+            }
             <FormControl>
                 <InputLabel id="country">Country</InputLabel>
                 <Select

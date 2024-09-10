@@ -1,6 +1,6 @@
 import {useContext} from "react";
 import {useParams} from "react-router-dom";
-import EditItinerary from "./EditItinerary.tsx";
+import EditItinerary from "../EditItinerary.tsx";
 import TripTimeLine from "../TripTimeLine.tsx";
 import {ItineraryContext} from "../../store/itinerary-context.tsx";
 

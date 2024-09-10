@@ -12,9 +12,10 @@ import PlaceIcon from "@mui/icons-material/Place";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import AirlineStopsRoundedIcon from "@mui/icons-material/AirlineStopsRounded";
 import EventIcon from "@mui/icons-material/Event";
-import EventForm from "./EventForm.tsx";
+import EventForm from "./forms/EventForm.tsx";
 import {useContext} from "react";
 import {ItineraryContext} from "../store/itinerary-context.tsx";
+import EditDestinationForm from "./forms/EditDestinationForm.tsx";
 
 type TimeLineProps = {
     edit?: boolean
@@ -25,7 +26,7 @@ export default function TripTimeLine({edit}: TimeLineProps) {
     const {
         dataTimeLine,
         handleDeleteTripEventDestination,
-        } = useContext( ItineraryContext)
+    } = useContext(ItineraryContext)
 
     function handleDeleteEvent(index: number) {
         handleDeleteTripEventDestination(index)
@@ -36,7 +37,7 @@ export default function TripTimeLine({edit}: TimeLineProps) {
             {dataTimeLine.map((data, index) => {
                     return (
                         <TimelineItem key={index}>
-                            <TimelineOppositeContent >
+                            <TimelineOppositeContent>
                                 <Box>
                                     <Typography>{getDate(data.date)}</Typography>
                                     <Typography>{getTime(data.date)}</Typography>
@@ -56,22 +57,25 @@ export default function TripTimeLine({edit}: TimeLineProps) {
                             </TimelineSeparator>
                             <TimelineContent>
                                 {data.type !== "event" ?
-                                    `${data.country} - ${data.city}` :
-                                    `${data.title}`
+                                    <p>{`${data.country} - ${data.city}`}</p> :
+                                    <p>{`${data.title}`}</p>
                                 }
-                                {(data.type === "destination"  && edit) &&
+                                <Box>
+                                    {(data.type !== "event" && edit) &&
+                                       <EditDestinationForm index={index} destinationType={data.type}/>
+                                    }
+                                    {(data.type === "destination" && edit) &&
+                                        <Button onClick={() => handleDeleteEvent(index)}>Delete</Button>
+                                    }
+                                </Box>
+
+                                {(data.type === "event" && edit) &&
                                     <Box>
+                                        <EventForm index={index}
+                                                   edit={true}
+                                                   tripEventTyped={dataTimeLine[index]}/>
                                         <Button onClick={() => handleDeleteEvent(index)}>Delete</Button>
                                     </Box>
-                                }
-
-                                {(data.type === "event" && edit ) &&
-                                        <Box>
-                                            <EventForm index={index}
-                                                       edit={true}
-                                                       tripEventTyped={dataTimeLine[index]}/>
-                                            <Button onClick={() => handleDeleteEvent(index)}>Delete</Button>
-                                        </Box>
                                 }
                             </TimelineContent>
 
