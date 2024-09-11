@@ -22,7 +22,7 @@ export const ItineraryContext = createContext<ItineraryContext>({
     dataTimeLine: [],
     handleIdChange: () => {
     },
-    handleAddTripEvent: () => {
+    handleAddTripEventDestination: () => {
     },
     handleDeleteTripEventDestination: () => {
     },
