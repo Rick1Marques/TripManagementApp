@@ -1,6 +1,6 @@
 import {Trip} from "../model/Trip.ts";
-import {Button} from "@mui/material";
-import {useNavigate} from "react-router-dom";
+import { List, ListItem, Stack} from "@mui/material";
+import TripCard from "./TripCard.tsx";
 
 type TripsListProps = {
     title: string,
@@ -9,18 +9,21 @@ type TripsListProps = {
 
 
 export default function TripsList({title, list}: TripsListProps) {
-    const navigate = useNavigate()
 
-    function handleClick(id: string) {
-        navigate(`/my-trips/${id}`)
-    }
+
+
 
     return (
-        <>
+        <Stack>
             <h2>{title}</h2>
-            <ul>
-                {list.map(trip => <Button key={trip.id} onClick={() => handleClick(trip.id)}>{trip.title}</Button>)}
-            </ul>
-        </>
+            <List>
+                {list.map(trip =>
+                    <ListItem>
+                        <TripCard key={trip.id} trip={trip}/>
+                    </ListItem>
+                )
+                }
+            </List>
+        </Stack>
     )
 }
