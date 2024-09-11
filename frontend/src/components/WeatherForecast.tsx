@@ -8,7 +8,7 @@ import {getDaysOfTheWeek} from "../util/formatting.ts";
 import useFetchWeatherForecast from "../hooks/useFetchWeatherForecast.ts";
 
 const style = {
-    position: 'absolute' as 'absolute',
+    position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
@@ -20,6 +20,15 @@ const style = {
 
 type WeatherForecastProps = {
     trip: Trip,
+}
+
+type WeatherForecastData = {
+    date: string,
+    temperature_2m_max: string,
+    temperature_2m_min: string,
+    daylight_duration: string,
+    uv_index_max: string,
+    precipitation_probability_max: string
 }
 
 export default function WeatherForecast({trip}: WeatherForecastProps) {
@@ -61,10 +70,17 @@ export default function WeatherForecast({trip}: WeatherForecastProps) {
         };
     }
 
-    let rows = []
+    const rows: WeatherForecastData[] = []
 
-    date.forEach((e, index) => {
-        const data = createData(date[index], `${Math.round(temperature_2m_max[index])}°`, `${Math.round(temperature_2m_min[index])}°`, `${Math.round(daylight_duration[index] / 60 / 60)}h`, uv_index_max[index].toFixed(1).toString(), `${precipitation_probability_max[index]}%`)
+    date.forEach((_e: string, index: number) => {
+        const data = createData(
+            date[index],
+            `${Math.round(temperature_2m_max[index])}°`,
+            `${Math.round(temperature_2m_min[index])}°`,
+            `${Math.round(daylight_duration[index] / 60 / 60)}h`,
+            uv_index_max[index].toFixed(1).toString(),
+            `${precipitation_probability_max[index]}%`
+        )
         rows.push(data)
     });
 
@@ -97,7 +113,7 @@ export default function WeatherForecast({trip}: WeatherForecastProps) {
                                         sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                     >
                                         <TableCell component="th" scope="row">
-                                            {index === 0 ? "Today": getDaysOfTheWeek(row.date)}
+                                            {index === 0 ? "Today" : getDaysOfTheWeek(row.date)}
                                         </TableCell>
                                         <TableCell
                                             align="center">{row.temperature_2m_min} - {row.temperature_2m_max}</TableCell>
