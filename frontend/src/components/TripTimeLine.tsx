@@ -12,9 +12,10 @@ import PlaceIcon from "@mui/icons-material/Place";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import AirlineStopsRoundedIcon from "@mui/icons-material/AirlineStopsRounded";
 import EventIcon from "@mui/icons-material/Event";
-import EventForm from "./EventForm.tsx";
+import EventForm from "./forms/EventForm.tsx";
 import {useContext} from "react";
 import {ItineraryContext} from "../store/itinerary-context.tsx";
+import DestinationForm from "./forms/DestinationForm.tsx";
 
 type TimeLineProps = {
     edit?: boolean
@@ -24,29 +25,28 @@ export default function TripTimeLine({edit}: TimeLineProps) {
 
     const {
         dataTimeLine,
-        handleDeleteTripEvent,
-        } = useContext( ItineraryContext)
+        handleDeleteTripEventDestination,
+    } = useContext(ItineraryContext)
 
     function handleDeleteEvent(index: number) {
-        handleDeleteTripEvent(index)
+        handleDeleteTripEventDestination(index)
     }
-
 
     return (
         <Timeline sx={{w: "100%"}}>
             {dataTimeLine.map((data, index) => {
                     return (
                         <TimelineItem key={index}>
-                            <TimelineOppositeContent >
+                            <TimelineOppositeContent>
                                 <Box>
                                     <Typography>{getDate(data.date)}</Typography>
                                     <Typography>{getTime(data.date)}</Typography>
                                 </Box>
                             </TimelineOppositeContent>
                             <TimelineSeparator>
-                                {index === 0 ?
+                                {data.type === "starting-point" ?
                                     <PlaceIcon fontSize="large"/> :
-                                    index === dataTimeLine.length - 1 ?
+                                    data.type === "home" ?
                                         <HomeRoundedIcon fontSize="large"/> :
                                         data.type === "destination" ?
                                             <AirlineStopsRoundedIcon fontSize="large"/> :
@@ -56,18 +56,26 @@ export default function TripTimeLine({edit}: TimeLineProps) {
                                 {index !== dataTimeLine.length - 1 && <TimelineConnector/>}
                             </TimelineSeparator>
                             <TimelineContent>
-                                {data.type === "destination" ?
-                                    `${data.country} - ${data.city}` :
-                                    `${data.title}`
+                                {data.type !== "event" ?
+                                    <p>{`${data.country} - ${data.city}`}</p> :
+                                    <p>{`${data.title}`}</p>
                                 }
-                                {}
-                                {(data.type === "event" && edit )&&
-                                        <Box>
-                                            <EventForm index={index}
-                                                       edit={true}
-                                                       tripEventTyped={dataTimeLine[index]}/>
-                                            <Button onClick={() => handleDeleteEvent(index)}>Delete</Button>
-                                        </Box>
+                                <Box>
+                                    {(data.type !== "event" && edit) &&
+                                       <DestinationForm index={index} edit={true} destinationType={data.type}/>
+                                    }
+                                    {(data.type === "destination" && edit) &&
+                                        <Button onClick={() => handleDeleteEvent(index)}>Delete</Button>
+                                    }
+                                </Box>
+
+                                {(data.type === "event" && edit) &&
+                                    <Box>
+                                        <EventForm index={index}
+                                                   edit={true}
+                                                   tripEventTyped={dataTimeLine[index]}/>
+                                        <Button onClick={() => handleDeleteEvent(index)}>Delete</Button>
+                                    </Box>
                                 }
                             </TimelineContent>
 

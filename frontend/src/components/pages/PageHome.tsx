@@ -3,7 +3,7 @@ import {getLastAndNextTrips} from "../../util/getLastAndNextTrips.ts";
 import {getDifferenceInDays} from "../../util/getDifferenceInDays.ts";
 import {getCurrentDestination} from "../../util/getCurrentDestination.ts";
 import {useFetchTrips} from "../../hooks/useFetchTrips.ts";
-import TripForm from "../TripForm.tsx";
+import TripForm from "../forms/TripForm.tsx";
 
 export default function PageHome() {
 

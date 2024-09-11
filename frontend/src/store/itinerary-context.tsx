@@ -4,15 +4,16 @@ import {emptyTrip, Trip} from "../model/Trip.ts";
 import {DestinationTyped} from "../model/DestinationTyped.ts";
 import {TripEventTyped} from "../model/TripEventTyped.ts";
 import {TripEvent} from "../model/TripEvent.ts";
+import {Destination} from "../model/Destination.ts";
 
 type ItineraryContext = {
     id: string,
     tripData: Trip | null,
     dataTimeLine: (DestinationTyped | TripEventTyped)[],
     handleIdChange: (id: string) => void,
-    handleAddTripEvent: (tripEvent: TripEvent) => void,
-    handleDeleteTripEvent: (index: number) => void,
-    handleEditTripEvent: (index: number, updatedTripEvent: TripEventTyped) => void
+    handleAddTripEventDestination: (tripEvent: TripEvent | Destination) => void,
+    handleDeleteTripEventDestination: (index: number) => void,
+    handleEditTripEventDestination: (index: number, updatedTripEventDestination: DestinationTyped | TripEventTyped) => void
 }
 
 export const ItineraryContext = createContext<ItineraryContext>({
@@ -23,9 +24,9 @@ export const ItineraryContext = createContext<ItineraryContext>({
     },
     handleAddTripEvent: () => {
     },
-    handleDeleteTripEvent: () => {
+    handleDeleteTripEventDestination: () => {
     },
-    handleEditTripEvent: () => {
+    handleEditTripEventDestination: () => {
     },
 })
 
@@ -36,7 +37,6 @@ type ItineraryContextProviderProps = {
 export default function ItineraryContextProvider({children}: ItineraryContextProviderProps) {
     const [id, setId] = useState<string>("")
     const [tripData, setTripData] = useState<Trip>(emptyTrip)
-
 
     useEffect(() => {
         async function fetchTrip() {
@@ -65,12 +65,20 @@ export default function ItineraryContextProvider({children}: ItineraryContextPro
         setId(id)
     }
 
+    const destinationsTyped: DestinationTyped = tripData.destinations.map((destination, index) => {
+        let type: string;
+        if (index === 0) {
+            type = "starting-point"
+        } else if (index === tripData.destinations.length - 1) {
+            type = "home"
+        } else {
+            type = "destination"
+        }
 
-    const destinationsTyped: DestinationTyped = tripData.destinations.map(destination => {
         return {
             ...destination,
             date: destination.date,
-            type: "destination"
+            type: type
         }
     });
 
@@ -90,48 +98,72 @@ export default function ItineraryContextProvider({children}: ItineraryContextPro
         return dateA - dateB;
     });
 
-    function handleAddTripEvent(tripEvent: TripEvent) {
-        const updatedTrip = {
-            ...tripData,
-            events: [...tripData.events, tripEvent]
+    function handleAddTripEventDestination(tripEventDestination: TripEvent | Destination) {
+        let updatedTrip: Trip
+
+        if (isTripEvent(tripEventDestination)) {
+            updatedTrip = {
+                ...tripData,
+                events: [...tripData.events, tripEventDestination]
+            }
+        } else {
+            updatedTrip = {
+                ...tripData,
+                destinations: [...tripData.destinations, tripEventDestination]
+            }
+
+            updatedTrip.destinations.sort((a,b)=> {
+                const dataA = new Date(a.date).getTime()
+                const dataB = new Date(b.date).getTime()
+                return dataA - dataB
+            })
+
         }
         setTripData(updatedTrip)
     }
 
-    function handleDeleteTripEvent(index: number) {
+    function isTripEvent(item: TripEvent | Destination): item is TripEvent {
+        return (item as TripEvent).address !== undefined;
+    }
+
+    function updateTripData(updatedList: (TripEventTyped | DestinationTyped)[]): Trip {
+        const eventsTyped: TripEventTyped[] = updatedList.filter(item => item.type === "event");
+        const destinationsTyped: DestinationTyped[] = updatedList.filter(item => item.type !== "event");
+
+        const tripEvents: TripEvent[] = eventsTyped.map(({ type, ...tripEvent }) => tripEvent);
+        const tripDestinations: Destination[] = destinationsTyped.map(({ type, ...tripDestination }) => tripDestination);
+
+        return {
+            ...tripData,
+            destinations: tripDestinations,
+            events: tripEvents
+        };
+    }
+
+    function handleDeleteTripEventDestination(index: number) {
         const updatedList = dataTimeLine.filter((_, i) => i !== index)
-        const eventsTyped: TripEventTyped[] = updatedList.filter(item => item.type === "event")
-        const tripEvents: TripEvent[] = eventsTyped.map(({type, ...tripEvent}) => tripEvent)
+        const updatedTrip = updateTripData(updatedList)
 
-        const updatedTrip = {
-            ...tripData,
-            events: tripEvents
-        }
         setTripData(updatedTrip)
     }
 
-    function handleEditTripEvent(index: number, updatedTripEvent: TripEventTyped) {
+    function handleEditTripEventDestination(index: number, updatedTripEventDestination: DestinationTyped | TripEventTyped) {
         const updatedDataTimeLine: (DestinationTyped | TripEventTyped)[] = [...dataTimeLine];
-        updatedDataTimeLine[index] = updatedTripEvent;
-        const eventsTyped: TripEventTyped[] = updatedDataTimeLine.filter(item => item.type === "event")
-        const tripEvents: TripEvent[] = eventsTyped.map(({type, ...tripEvent}) => tripEvent)
+        updatedDataTimeLine[index] = updatedTripEventDestination;
 
-        const updatedTrip = {
-            ...tripData,
-            events: tripEvents
-        }
+        const updatedTrip = updateTripData(updatedDataTimeLine);
+        
         setTripData(updatedTrip)
     }
-
 
     const ctxValue = {
         id,
         tripData,
         dataTimeLine,
         handleIdChange,
-        handleAddTripEvent,
-        handleDeleteTripEvent,
-        handleEditTripEvent
+        handleAddTripEventDestination,
+        handleDeleteTripEventDestination,
+        handleEditTripEventDestination
     }
 
     return (

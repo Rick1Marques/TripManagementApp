@@ -4,15 +4,15 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import CountryCityDateInputs from "./CountryCityDateInputs.tsx";
+import CountryCityDateInputs from "../CountryCityDateInputs.tsx";
 import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField} from "@mui/material";
-import {toCamelCase} from "../util/formatting.ts";
-import {Category} from "../model/Category.ts";
-import {emptyInputData, InputData} from "../model/CountryCityDateData.ts";
-import {TripEvent} from "../model/TripEvent.ts";
+import {toCamelCase} from "../../util/formatting.ts";
+import {Category} from "../../model/Category.ts";
+import {emptyInputData, InputData} from "../../model/CountryCityDateData.ts";
+import {TripEvent} from "../../model/TripEvent.ts";
 import {useContext, useState} from "react";
-import {TripEventTyped} from "../model/TripEventTyped.ts";
-import {ItineraryContext} from "../store/itinerary-context.tsx";
+import {TripEventTyped} from "../../model/TripEventTyped.ts";
+import {ItineraryContext} from "../../store/itinerary-context.tsx";
 
 const categoryOpt = ["RESTAURANT", "COFFEE", "BAR", "BAKERY", "THINGS_TO_DO", "EVENT", "HOTEL", "TRANSPORT", "MEETING", "NOTE"]
 
@@ -23,7 +23,7 @@ type EventFormProps = {
 }
 
 export default function EventForm({ index, edit, tripEventTyped}: EventFormProps) {
-    const {handleAddTripEvent, handleEditTripEvent, } = useContext(ItineraryContext)
+    const {handleAddTripEventDestination, handleEditTripEventDestination, } = useContext(ItineraryContext)
 
     const [open, setOpen] = React.useState(false);
 
@@ -49,7 +49,7 @@ export default function EventForm({ index, edit, tripEventTyped}: EventFormProps
     return (
         <React.Fragment>
             <Button variant="outlined" onClick={handleClickOpen}>
-                {edit ? "Edit Event": "Add Event"}
+                {edit ? "Edit": "Add Event"}
             </Button>
             <Dialog
                 open={open}
@@ -69,14 +69,14 @@ export default function EventForm({ index, edit, tripEventTyped}: EventFormProps
                             city: countryCityDateData.city,
                             date: countryCityDateData.date
                         }
-                        if (handleAddTripEvent) {
-                            handleAddTripEvent(tripEvent)
-                        } else if (handleEditTripEvent && typeof index === 'number') {
+                        if (handleAddTripEventDestination) {
+                            handleAddTripEventDestination(tripEvent)
+                        } else if (handleEditTripEventDestination && typeof index === 'number') {
                             const tripEventTyped: TripEventTyped = {
                                 ...tripEvent,
                                 type: "event"
                             };
-                            handleEditTripEvent(index, tripEventTyped);
+                            handleEditTripEventDestination(index, tripEventTyped);
                         }
 
                         handleClose();
