@@ -9,6 +9,8 @@ import {useContext, useState} from "react";
 import {emptyInputData, InputData} from "../../model/CountryCityDateData.ts";
 import {ItineraryContext} from "../../store/itinerary-context.tsx";
 import {DestinationTyped} from "../../model/DestinationTyped.ts";
+import AirlineStopsIcon from '@mui/icons-material/AirlineStops';
+import EditIcon from '@mui/icons-material/Edit';
 
 type EditDestinationFormProps = {
     index?: number,
@@ -16,11 +18,11 @@ type EditDestinationFormProps = {
     destinationType: string
 }
 
-export default function DestinationForm({index,edit, destinationType}: EditDestinationFormProps) {
+export default function DestinationForm({index, edit, destinationType}: EditDestinationFormProps) {
     const [open, setOpen] = React.useState(false);
     const [destinationData, setDestinationData] = useState<InputData>(emptyInputData)
 
-    const { handleEditTripEventDestination, handleAddTripEventDestination} = useContext(ItineraryContext)
+    const {handleEditTripEventDestination, handleAddTripEventDestination} = useContext(ItineraryContext)
 
     function handleDestinationChange(data: InputData) {
         setDestinationData(data);
@@ -36,8 +38,10 @@ export default function DestinationForm({index,edit, destinationType}: EditDesti
 
     return (
         <React.Fragment>
-            <Button variant="outlined" onClick={handleClickOpen}>
-                {edit ? "Edit" : "Add Destination"}
+
+            <Button variant="text" onClick={handleClickOpen}>
+                {edit ? <EditIcon fontSize="small"/> :
+                        <AirlineStopsIcon fontSize="medium"/>}
             </Button>
             <Dialog
                 open={open}
@@ -46,10 +50,10 @@ export default function DestinationForm({index,edit, destinationType}: EditDesti
                     component: 'form',
                     onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
                         event.preventDefault();
-                        const typedUpdatedDestination : DestinationTyped = {...destinationData, type: destinationType}
+                        const typedUpdatedDestination: DestinationTyped = {...destinationData, type: destinationType}
 
-                        if(index){
-                        handleEditTripEventDestination(index, typedUpdatedDestination)
+                        if (index) {
+                            handleEditTripEventDestination(index, typedUpdatedDestination)
                         } else {
                             handleAddTripEventDestination(destinationData)
                         }
@@ -57,7 +61,7 @@ export default function DestinationForm({index,edit, destinationType}: EditDesti
                     },
                 }}
             >
-                <DialogTitle>Edit {`${destinationType}`}</DialogTitle>
+                <DialogTitle>{edit ? `Edit ${destinationType}` : "Add destination"}</DialogTitle>
                 <DialogContent>
                     <CountryCityDateInputs handleInputChange={(_id, data) => handleDestinationChange(data)}/>
                 </DialogContent>
