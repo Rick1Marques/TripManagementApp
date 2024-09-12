@@ -1,6 +1,7 @@
 import {Trip} from "../model/Trip.ts";
-import { List, ListItem, Stack} from "@mui/material";
+import {Accordion, AccordionDetails, AccordionSummary, List, ListItem, Typography} from "@mui/material";
 import TripCard from "./TripCard.tsx";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 type TripsListProps = {
     title: string,
@@ -11,19 +12,27 @@ type TripsListProps = {
 export default function TripsList({title, list}: TripsListProps) {
 
 
-
-
     return (
-        <Stack>
-            <h2>{title}</h2>
-            <List>
-                {list.map(trip =>
-                    <ListItem>
-                        <TripCard key={trip.id} trip={trip}/>
-                    </ListItem>
-                )
-                }
-            </List>
-        </Stack>
+        <Accordion defaultExpanded>
+            <AccordionSummary
+                expandIcon={<ExpandMoreIcon/>}
+                aria-controls="panel1-content"
+                id="panel1-header"
+            >
+                <Typography variant="h4" gutterBottom>
+                    {title}
+                </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <List>
+                    {list.map(trip =>
+                        <ListItem>
+                            <TripCard key={trip.id} trip={trip}/>
+                        </ListItem>
+                    )
+                    }
+                </List>
+            </AccordionDetails>
+        </Accordion>
     )
 }
