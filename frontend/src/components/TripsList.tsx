@@ -26,8 +26,8 @@ export default function TripsList({title, list}: TripsListProps) {
             <AccordionDetails>
                 <List>
                     {list.map(trip =>
-                        <ListItem>
-                            <TripCard key={trip.id} trip={trip}/>
+                        <ListItem key={trip.id}>
+                            <TripCard trip={trip}/>
                         </ListItem>
                     )
                     }

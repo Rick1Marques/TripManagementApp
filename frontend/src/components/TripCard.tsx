@@ -1,7 +1,8 @@
 import {Trip} from "../model/Trip.ts";
 import {Button, Card, CardActions, CardContent, CardMedia, Stack, Typography} from "@mui/material";
 import {useNavigate} from "react-router-dom";
-import {getDate, getListOfVisitedCities, getListOfVisitedCountries} from "../util/formatting.ts";
+import {getDate} from "../util/formatting.ts";
+import {getListOfVisitedCities, getListOfVisitedCountries} from "../util/getListOfVisited.ts";
 
 type TripCardProps = {
     trip: Trip

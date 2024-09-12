@@ -1,5 +1,5 @@
 import {Destination} from "./Destination.ts";
-import { TripEvent} from "./TripEvent.ts";
+import {TripEvent} from "./TripEvent.ts";
 
 export type Trip = {
     id: string,
@@ -10,11 +10,22 @@ export type Trip = {
     events: TripEvent[]
 }
 
+const emptyDestination = {
+country: "",
+city: "",
+coordinates: {
+    latitude: "",
+    longitude: ""
+},
+date: ""
+}
+
 export const emptyTrip: Trip = {
     id: "",
     title: "",
     description: "",
     reason: "",
-    destinations: [],
+    destinations: [emptyDestination, emptyDestination],
     events: []
 }
+
