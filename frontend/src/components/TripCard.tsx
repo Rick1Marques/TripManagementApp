@@ -49,7 +49,7 @@ export default function TripCard({trip}: TripCardProps) {
                 />
             </CardContent>
             <CardActions sx={{alignSelf: "end"}}>
-                <Button sx={{alignSelf: "end"}} size="small" onClick={() => handleClick(trip.id)}>Details</Button>
+                <Button variant="text" sx={{alignSelf: "end"}} size="small" onClick={() => handleClick(trip.id)}>Details</Button>
             </CardActions>
         </Card>
     )

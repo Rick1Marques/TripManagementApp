@@ -1,10 +1,11 @@
 import {getFullDifferenceDates, getDifferenceInDaysDates} from "../util/getDifferenceDates.ts";
-import {Box, Divider, Stack, Typography} from "@mui/material";
+import {Button, Divider, Stack, Typography} from "@mui/material";
 import {Trip} from "../model/Trip.ts";
 import {getDate} from "../util/formatting.ts";
-import WeatherForecast from "./WeatherForecast.tsx";
 import {getListOfVisitedCities, getListOfVisitedCountries} from "../util/getListOfVisited.ts";
 import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import WeatherForecast from "./WeatherForecast.tsx";
 
 type NextTripProps = {
     trip: Trip
@@ -13,7 +14,11 @@ type NextTripProps = {
 export default function NextTrip({trip}: NextTripProps) {
     const [countDownData, setCountDownData] = useState<string[]>(getFullDifferenceDates(new Date(), new Date(trip.destinations[0].date)));
     const countDownCaption = ["mths", "days", "hrs", "min", "sec"]
+    const navigate = useNavigate()
 
+    function handleClick(id: string) {
+        navigate(`/my-trips/${id}`)
+    }
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -24,36 +29,41 @@ export default function NextTrip({trip}: NextTripProps) {
     }, [trip]);
 
     return (
-        <Stack alignItems="center" gap=".7rem">
+        <Stack alignItems="center" height="100vh" justifyContent="space-around" padding="0 .5rem .5rem">
+
             <Typography variant="h4">
                 Next Trip
             </Typography>
+
             <Divider/>
+
             <Typography variant="h5" gutterBottom>
                 {trip.title}
             </Typography>
+
             <Stack width="100%" direction="row" justifyContent="center">
                 <Stack alignItems="center" width="50%">
-                    <Typography variant="subtitle1" gutterBottom>
+                    <Typography variant="subtitle1">
                         Beginning
                     </Typography>
-                    <Typography variant="subtitle2" gutterBottom>
+                    <Typography variant="subtitle2">
                         {getDate(trip.destinations[0].date)}
                     </Typography>
                 </Stack>
-
                 <Stack alignItems="center" width="50%">
-                    <Typography variant="subtitle1" gutterBottom>
+                    <Typography variant="subtitle1">
                         First Stop
                     </Typography>
-                    <Typography variant="subtitle2" gutterBottom>
+                    <Typography variant="subtitle2">
                         {trip.destinations[1].city} - {trip.destinations[1].country.slice(0, 2).toUpperCase()}
                     </Typography>
                 </Stack>
             </Stack>
 
-
             <Stack alignItems="center">
+                <Typography variant="caption">
+                    Duration
+                </Typography>
                 <Typography variant="h4">
                     {getDifferenceInDaysDates(new Date(trip.destinations[0].date), new Date(trip.destinations[trip.destinations.length - 1].date))}
                 </Typography>
@@ -64,19 +74,18 @@ export default function NextTrip({trip}: NextTripProps) {
 
             <Stack width="100%" direction="row" justifyContent="center">
                 <Stack alignItems="center" width="50%">
-                    <Typography variant="subtitle1" gutterBottom>
+                    <Typography variant="subtitle1">
                         Countries
                     </Typography>
-                    <Typography variant="subtitle2" gutterBottom>
+                    <Typography variant="subtitle2">
                         {getListOfVisitedCountries(trip).length}
                     </Typography>
                 </Stack>
-
                 <Stack alignItems="center" width="50%">
-                    <Typography variant="subtitle1" gutterBottom>
+                    <Typography variant="subtitle1">
                         Cities
                     </Typography>
-                    <Typography variant="subtitle2" gutterBottom>
+                    <Typography variant="subtitle2">
                         {getListOfVisitedCities(trip).length}
                     </Typography>
                 </Stack>
@@ -98,7 +107,13 @@ export default function NextTrip({trip}: NextTripProps) {
                     </>
                 )}
             </Stack>
-            <WeatherForecast trip={trip}/>
+
+            <Stack width="100%" direction="row" justifyContent="space-between">
+                <WeatherForecast trip={trip}/>
+                <Button variant="text" sx={{alignSelf: "end"}} size="small"
+                        onClick={() => handleClick(trip.id)}>Details</Button>
+
+            </Stack>
         </Stack>
     )
 }

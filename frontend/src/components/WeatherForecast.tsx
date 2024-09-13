@@ -3,9 +3,25 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import {Trip} from "../model/Trip.ts";
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
+import {
+    Divider,
+    Paper,
+    Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography
+} from "@mui/material";
 import {getDaysOfTheWeek} from "../util/formatting.ts";
 import useFetchWeatherForecast from "../hooks/useFetchWeatherForecast.ts";
+import UmbrellaIcon from '@mui/icons-material/Umbrella';
+import WbSunnyIcon from '@mui/icons-material/WbSunny';
+import DeviceThermostatIcon from '@mui/icons-material/DeviceThermostat';
+
+import CloudQueueIcon from '@mui/icons-material/CloudQueue';
 
 const style = {
     position: 'absolute',
@@ -14,7 +30,7 @@ const style = {
     transform: 'translate(-50%, -50%)',
     bgcolor: 'background.paper',
     boxShadow: 24,
-    p: 2,
+    p: 2
 };
 
 
@@ -86,24 +102,33 @@ export default function WeatherForecast({trip}: WeatherForecastProps) {
 
     return (
         <div>
-            <Button onClick={handleOpen}>Weather Forecast</Button>
+            <Button onClick={handleOpen}><CloudQueueIcon fontSize="large"/></Button>
             <Modal
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={style}>
-
-                    <TableContainer component={Paper}>
-                        <Table aria-label="simple table">
+                <Stack alignItems="center" sx={style} gap=".5rem">
+                    <Typography variant="h5" gutterBottom>Weather on Forecast</Typography>
+                    <Stack width="100%" direction="row" justifyContent="center">
+                        <Stack alignItems="center" width="50%">
+                            <Typography variant="subtitle2">7 Days</Typography>
+                        </Stack>
+                        <Stack alignItems="center" width="50%">
+                            <Typography variant="subtitle2">{trip.destinations[1].city}</Typography>
+                        </Stack>
+                    </Stack>
+                    <Divider/>
+                    <TableContainer component={Box}>
+                        <Table aria-label="simple table" size="medium">
                             <TableHead>
                                 <TableRow>
                                     <TableCell></TableCell>
-                                    <TableCell align="center">Temp</TableCell>
-                                    <TableCell align="center">Daylight</TableCell>
+                                    <TableCell align="center"><DeviceThermostatIcon/></TableCell>
+                                    <TableCell align="center"><WbSunnyIcon/></TableCell>
                                     <TableCell align="center">UV</TableCell>
-                                    <TableCell align="center">precip prob</TableCell>
+                                    <TableCell align="center"><UmbrellaIcon/></TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -113,13 +138,37 @@ export default function WeatherForecast({trip}: WeatherForecastProps) {
                                         sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                     >
                                         <TableCell component="th" scope="row">
-                                            {index === 0 ? "Today" : getDaysOfTheWeek(row.date)}
+                                            {index === 0 ?
+                                                <Typography variant="subtitle2">
+                                                    Today
+                                                </Typography>
+                                                :
+                                                <Typography variant="subtitle2">
+                                                    {getDaysOfTheWeek(row.date)}
+                                                </Typography>
+                                            }
                                         </TableCell>
                                         <TableCell
-                                            align="center">{row.temperature_2m_min} - {row.temperature_2m_max}</TableCell>
-                                        <TableCell align="center">{row.daylight_duration}</TableCell>
-                                        <TableCell align="center">{row.uv_index_max}</TableCell>
-                                        <TableCell align="center">{row.precipitation_probability_max}</TableCell>
+                                            align="center">
+                                            <Typography variant="caption">
+                                                {row.temperature_2m_min}{row.temperature_2m_max}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            <Typography variant="caption">
+                                                {row.daylight_duration}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            <Typography variant="caption">
+                                                {row.uv_index_max}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            <Typography variant="caption">
+                                                {row.precipitation_probability_max}
+                                            </Typography>
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -127,7 +176,7 @@ export default function WeatherForecast({trip}: WeatherForecastProps) {
                     </TableContainer>
 
 
-                </Box>
+                </Stack>
             </Modal>
         </div>
     );

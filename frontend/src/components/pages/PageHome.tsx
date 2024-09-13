@@ -23,8 +23,8 @@ export default function PageHome() {
     if (onGoingTrip.length === 0) {
         return (
             <Stack>
-                <NextTrip trip={nextTrip}/>
-                <LastTrip trip={lastTrip}/>
+                {/*<NextTrip trip={nextTrip}/>*/}
+                {/*<LastTrip trip={lastTrip}/>*/}
                 <TripForm/>
             </Stack>
         )
