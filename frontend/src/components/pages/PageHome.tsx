@@ -5,7 +5,7 @@ import {useFetchTrips} from "../../hooks/useFetchTrips.ts";
 import TripForm from "../forms/TripForm.tsx";
 import NextTrip from "../NextTrip.tsx";
 import LastTrip from "../LastTrip.tsx";
-import {Box} from "@mui/material";
+import {Box, Stack} from "@mui/material";
 import OnGoingTrip from "../OnGoingTrip.tsx";
 
 export default function PageHome() {
@@ -22,20 +22,20 @@ export default function PageHome() {
 
     if (onGoingTrip.length === 0) {
         return (
-            <Box>
+            <Stack>
                 <NextTrip trip={nextTrip}/>
                 <LastTrip trip={lastTrip}/>
                 <TripForm/>
-            </Box>
+            </Stack>
         )
     } else {
         const currentlyTrip = onGoingTrip[0];
         const currentDestination = getCurrentDestination(currentlyTrip.destinations)
         return (
-            <Box>
+            <Stack>
                 <OnGoingTrip trip={currentlyTrip} currentDestination={currentDestination}/>
                 <TripForm/>
-            </Box>
+            </Stack>
         )
     }
 }
