@@ -3,7 +3,7 @@ import {getLastAndNextTrips} from "../../util/getLastAndNextTrips.ts";
 import {getCurrentDestination} from "../../util/getCurrentDestination.ts";
 import {useFetchTrips} from "../../hooks/useFetchTrips.ts";
 import TripForm from "../forms/TripForm.tsx";
-import NextTrip from "../NextTrip.tsx";
+import TripSlideHome from "../TripSlideHome.tsx";
 import LastTrip from "../LastTrip.tsx";
 import { Stack} from "@mui/material";
 import OnGoingTrip from "../OnGoingTrip.tsx";
@@ -23,8 +23,8 @@ export default function PageHome() {
     if (onGoingTrip.length === 0) {
         return (
             <Stack>
-                <NextTrip trip={nextTrip}/>
-                {/*<LastTrip trip={lastTrip}/>*/}
+                <TripSlideHome trip={nextTrip} type="next"/>
+                <TripSlideHome trip={lastTrip} type="last"/>
                 <TripForm />
             </Stack>
         )

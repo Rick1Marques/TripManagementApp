@@ -7,11 +7,12 @@ import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import WeatherForecast from "./WeatherForecast.tsx";
 
-type NextTripProps = {
-    trip: Trip
+type TripSlideHomeProps = {
+    trip: Trip,
+    type: "next" | "last" | "onGoing"
 }
 
-export default function NextTrip({trip}: NextTripProps) {
+export default function TripSlideHome({trip, type}: TripSlideHomeProps) {
     const [countDownData, setCountDownData] = useState<string[]>(getFullDifferenceDates(new Date(), new Date(trip.destinations[0].date)));
     const countDownCaption = ["mths", "days", "hrs", "min", "sec"]
     const navigate = useNavigate()
@@ -32,10 +33,8 @@ export default function NextTrip({trip}: NextTripProps) {
         <Stack alignItems="center" height="100vh" justifyContent="space-around" padding="0 .5rem .5rem">
 
             <Typography variant="h4">
-                Next Trip
+                {type === "next" ? "Next Trip" : "Last Trip"}
             </Typography>
-
-            <Divider/>
 
             <Typography variant="h5" gutterBottom>
                 {trip.title}
@@ -52,10 +51,10 @@ export default function NextTrip({trip}: NextTripProps) {
                 </Stack>
                 <Stack alignItems="center" width="50%">
                     <Typography variant="subtitle1">
-                        First Stop
+                        {type === "next" ? "First Stop" : "End"}
                     </Typography>
                     <Typography variant="subtitle2">
-                        {trip.destinations[1].city} - {trip.destinations[1].country.slice(0, 2).toUpperCase()}
+                        {type === "next" ? `${trip.destinations[1].city} - ${trip.destinations[1].country.slice(0, 2).toUpperCase()}` :`${getDate(trip.destinations[trip.destinations.length - 1].date)}` }
                     </Typography>
                 </Stack>
             </Stack>
@@ -91,6 +90,17 @@ export default function NextTrip({trip}: NextTripProps) {
                 </Stack>
             </Stack>
 
+
+            {type === "last" &&
+                    <Stack alignItems="center" width="80%">
+                        <Typography variant="subtitle2">
+                            {getListOfVisitedCities(trip).join(" | ")}
+                        </Typography>
+                    </Stack>
+            }
+
+
+            {type === "next" &&
             <Stack direction="row" gap=".5rem">
                 {countDownData.map((data, index) =>
                     <>
@@ -107,9 +117,11 @@ export default function NextTrip({trip}: NextTripProps) {
                     </>
                 )}
             </Stack>
+            }
 
             <Stack width="100%" direction="row" justifyContent="space-between">
-                <WeatherForecast trip={trip}/>
+                {type === "next" && <WeatherForecast trip={trip}/>}
+
                 <Button variant="text" sx={{alignSelf: "end"}} size="small"
                         onClick={() => handleClick(trip.id)}>Details</Button>
 
