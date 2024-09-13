@@ -5,7 +5,7 @@ import {ItineraryContext} from "../../store/itinerary-context.tsx";
 import {Divider, Stack, Typography} from "@mui/material";
 import {getDate} from "../../util/formatting.ts";
 import {getListOfVisitedCities, getListOfVisitedCountries} from "../../util/getListOfVisited.ts";
-import {getDifferenceInDays} from "../../util/getDifferenceInDays.ts";
+import {getDifferenceInDaysDates} from "../../util/getDifferenceDates.ts";
 import EditItinerary from "../EditItinerary.tsx";
 
 
@@ -28,7 +28,7 @@ if(!tripData){
                     General Information
                 </Typography>
                 <Typography variant="body2" sx={{color: 'text.secondary'}}>
-                    Duration: {getDifferenceInDays(new Date(tripData.destinations[0].date), new Date(tripData.destinations[tripData.destinations.length - 1].date))} days
+                    Duration: {getDifferenceInDaysDates(new Date(tripData.destinations[0].date), new Date(tripData.destinations[tripData.destinations.length - 1].date))} days
                 </Typography>
                 <Typography variant="body2" sx={{color: 'text.secondary'}}>
                     Date: {getDate(tripData.destinations[0].date)} - {getDate(tripData.destinations[tripData.destinations.length - 1].date)}
@@ -52,7 +52,6 @@ if(!tripData){
                 Itinerary
             </Typography>
                 <EditItinerary/>
-            {/*<EditItinerary/>*/}
             </Stack>
             <TripTimeLine/>
         </Stack>

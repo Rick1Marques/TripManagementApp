@@ -5,7 +5,7 @@ import {useFetchTrips} from "../../hooks/useFetchTrips.ts";
 import TripForm from "../forms/TripForm.tsx";
 import NextTrip from "../NextTrip.tsx";
 import LastTrip from "../LastTrip.tsx";
-import {Box, Stack} from "@mui/material";
+import { Stack} from "@mui/material";
 import OnGoingTrip from "../OnGoingTrip.tsx";
 
 export default function PageHome() {
