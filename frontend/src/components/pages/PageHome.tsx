@@ -20,22 +20,44 @@ export default function PageHome() {
     const {onGoingTrip} = getTimeGroupedTrips(trips)
     const {lastTrip, nextTrip} = getLastAndNextTrips(trips)
 
-    if (onGoingTrip.length === 0) {
-        return (
-            <Stack>
-                <TripSlideHome trip={nextTrip} type="next"/>
-                <TripSlideHome trip={lastTrip} type="last"/>
-                <TripForm />
-            </Stack>
-        )
-    } else {
-        const currentlyTrip = onGoingTrip[0];
-        const currentDestination = getCurrentDestination(currentlyTrip.destinations)
-        return (
-            <Stack>
-                <OnGoingTrip trip={currentlyTrip} currentDestination={currentDestination}/>
-                <TripForm/>
-            </Stack>
-        )
-    }
+
+// teste
+
+    const currentlyTrip = onGoingTrip[0];
+    const currentDestination = getCurrentDestination(currentlyTrip.destinations)
+    return(
+        <Stack>
+            <TripSlideHome trip={nextTrip} type="next"/>
+            <TripSlideHome trip={lastTrip} type="last"/>
+            <OnGoingTrip trip={currentlyTrip} currentDestination={currentDestination}/>
+            <TripForm />
+        </Stack>
+    )
+
+
+
+    //real code
+
+    // if (onGoingTrip.length === 0) {
+    //     return (
+    //         <Stack>
+    //             <TripSlideHome trip={nextTrip} type="next"/>
+    //             <TripSlideHome trip={lastTrip} type="last"/>
+    //             <TripForm />
+    //         </Stack>
+    //     )
+    // } else {
+    //     const currentlyTrip = onGoingTrip[0];
+    //     const currentDestination = getCurrentDestination(currentlyTrip.destinations)
+    //     return (
+    //         <Stack>
+    //             <OnGoingTrip trip={currentlyTrip} currentDestination={currentDestination}/>
+    //             <TripForm/>
+    //         </Stack>
+    //     )
+    // }
+
+
+
+
 }

@@ -12,7 +12,7 @@ export function getListOfVisitedCountries(trip: Trip) {
 export function getListOfVisitedCities(trip: Trip) {
     return trip.destinations.reduce((acc, destination) => {
         if (!acc.includes(destination.city)) {
-            acc.push(`${destination.city} - ${destination.country.slice(0, 2).toUpperCase()}` )
+            acc.push(`${destination.city} / ${destination.country.slice(0, 2).toUpperCase()}` )
         }
         return acc
     }, [] as string[])

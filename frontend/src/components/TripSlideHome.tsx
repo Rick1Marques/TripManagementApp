@@ -92,10 +92,12 @@ export default function TripSlideHome({trip, type}: TripSlideHomeProps) {
 
 
             {type === "last" &&
-                    <Stack alignItems="center" width="80%">
-                        <Typography variant="subtitle2">
-                            {getListOfVisitedCities(trip).join(" | ")}
-                        </Typography>
+                    <Stack direction="row" flexWrap="wrap" justifyContent="space-around" gap=".7rem">
+                            {getListOfVisitedCities(trip).map(city =>
+                                <Typography variant="caption">
+                                    {city}
+                                </Typography>
+                            )}
                     </Stack>
             }
 
@@ -120,7 +122,7 @@ export default function TripSlideHome({trip, type}: TripSlideHomeProps) {
             }
 
             <Stack width="100%" direction="row" justifyContent="space-between">
-                {type === "next" && <WeatherForecast trip={trip}/>}
+                 <WeatherForecast disable={type === "last"} trip={trip}/>
 
                 <Button variant="text" sx={{alignSelf: "end"}} size="small"
                         onClick={() => handleClick(trip.id)}>Details</Button>

@@ -5,7 +5,6 @@ import Modal from '@mui/material/Modal';
 import {Trip} from "../model/Trip.ts";
 import {
     Divider,
-    Paper,
     Stack,
     Table,
     TableBody,
@@ -36,6 +35,7 @@ const style = {
 
 type WeatherForecastProps = {
     trip: Trip,
+    disable: boolean
 }
 
 type WeatherForecastData = {
@@ -47,7 +47,7 @@ type WeatherForecastData = {
     precipitation_probability_max: string
 }
 
-export default function WeatherForecast({trip}: WeatherForecastProps) {
+export default function WeatherForecast({trip, disable}: WeatherForecastProps) {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -102,7 +102,7 @@ export default function WeatherForecast({trip}: WeatherForecastProps) {
 
     return (
         <div>
-            <Button onClick={handleOpen}><CloudQueueIcon fontSize="large"/></Button>
+            <Button disabled={disable} onClick={handleOpen}><CloudQueueIcon fontSize="large"/></Button>
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -116,12 +116,12 @@ export default function WeatherForecast({trip}: WeatherForecastProps) {
                             <Typography variant="subtitle2">7 Days</Typography>
                         </Stack>
                         <Stack alignItems="center" width="50%">
-                            <Typography variant="subtitle2">{trip.destinations[1].city}</Typography>
+                            <Typography variant="subtitle2">{trip.destinations[1].city} - {trip.destinations[1].country.slice(0, 2).toUpperCase()}</Typography>
                         </Stack>
                     </Stack>
                     <Divider/>
                     <TableContainer component={Box}>
-                        <Table aria-label="simple table" size="medium">
+                        <Table aria-label="simple table">
                             <TableHead>
                                 <TableRow>
                                     <TableCell></TableCell>
