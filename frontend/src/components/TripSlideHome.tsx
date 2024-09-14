@@ -14,6 +14,7 @@ type TripSlideHomeProps = {
 
 export default function TripSlideHome({trip, type}: TripSlideHomeProps) {
     const [countDownData, setCountDownData] = useState<string[]>(getFullDifferenceDates(new Date(), new Date(trip.destinations[0].date)));
+
     const countDownCaption = ["mths", "days", "hrs", "min", "sec"]
     const navigate = useNavigate()
 
@@ -29,8 +30,10 @@ export default function TripSlideHome({trip, type}: TripSlideHomeProps) {
         return () => clearInterval(interval);
     }, [trip]);
 
+
+
     return (
-        <Stack alignItems="center" height="100vh" justifyContent="space-around" padding="0 .5rem .5rem">
+        <Stack alignItems="center" height="100vh" width="100vh" justifyContent="space-around" padding="0 .5rem .5rem">
 
             <Typography variant="h4">
                 {type === "next" ? "Next Trip" : "Last Trip"}
@@ -40,7 +43,7 @@ export default function TripSlideHome({trip, type}: TripSlideHomeProps) {
                 {trip.title}
             </Typography>
 
-            <Stack width="100%" direction="row" justifyContent="center">
+            <Stack width="100%" direction="row" >
                 <Stack alignItems="center" width="50%">
                     <Typography variant="subtitle1">
                         Beginning
@@ -94,7 +97,7 @@ export default function TripSlideHome({trip, type}: TripSlideHomeProps) {
             {type === "last" &&
                     <Stack direction="row" flexWrap="wrap" justifyContent="space-around" gap=".7rem">
                             {getListOfVisitedCities(trip).map(city =>
-                                <Typography variant="caption">
+                                <Typography key={city} variant="caption">
                                     {city}
                                 </Typography>
                             )}
@@ -105,7 +108,7 @@ export default function TripSlideHome({trip, type}: TripSlideHomeProps) {
             {type === "next" &&
             <Stack direction="row" gap=".5rem">
                 {countDownData.map((data, index) =>
-                    <>
+                    <div key={index}>
                         <Stack alignItems="center">
                             <Typography variant="h4" gutterBottom>
                                 {data}
@@ -116,7 +119,7 @@ export default function TripSlideHome({trip, type}: TripSlideHomeProps) {
                         </Stack>
                         {index !== countDownCaption.length - 1 &&
                             <Divider orientation="vertical" variant="middle" flexItem/>}
-                    </>
+                    </div>
                 )}
             </Stack>
             }

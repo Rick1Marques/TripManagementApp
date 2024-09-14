@@ -37,7 +37,7 @@ export default function TripTimeLine({edit, fullData=true}: TimeLineProps) {
     }
 
     function groupDataByDate(data: (TripEventTyped | DestinationTyped)[]) {
-        const groupedData = data.reduce((acc, data) => {
+        return data.reduce((acc, data) => {
             const key: string = getDate(data.date)
 
             if (!acc[key]) {
@@ -48,12 +48,8 @@ export default function TripTimeLine({edit, fullData=true}: TimeLineProps) {
             return acc;
 
         }, {} as Record<string, (DestinationTyped | TripEventTyped)[]>)
-        return groupedData
     }
 
-    if (!dataTimeLine) {
-        return <h1>Loading...</h1>
-    }
 
     const groupedDataByDate = groupDataByDate(dataTimeLine)[getDate(new Date().toString())]
 
@@ -65,6 +61,10 @@ export default function TripTimeLine({edit, fullData=true}: TimeLineProps) {
         dataToRender = groupedDataByDate
     }
 
+
+    if (!dataToRender) {
+        return <h1>Loading...</h1>
+    }
     return (
         <Timeline sx={{width: "100%"}}>
             {dataToRender.map((data, index) => {
