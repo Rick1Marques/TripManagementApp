@@ -23,7 +23,6 @@ useEffect(() => {
             })
             const data = await response.data
             setWeatherForecastData(data)
-            console.log(data)
         } catch (err) {
             console.log(err)
         }

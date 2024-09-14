@@ -6,10 +6,11 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import {useEffect, useState} from "react";
 import {getOrdinalSuffix} from "../../util/getOrdinalSuffix.ts";
-import {FormControl, FormLabel, TextField, Typography} from '@mui/material';
+import {Box, FormControl, FormLabel, Stack, TextField, Typography} from '@mui/material';
 import axios from "axios";
 import CountryCityDateInputs from "../CountryCityDateInputs.tsx";
 import {emptyInputData, InputData} from "../../model/CountryCityDateData.ts";
+import AddIcon from '@mui/icons-material/Add';
 
 type DestinationsInput = {
     id: number,
@@ -98,9 +99,22 @@ if(formData){
     }, [formData])
 
     return (
-        <React.Fragment>
-            <Button variant="outlined" onClick={handleClickOpen}>
-                Add New Trip
+        <Box >
+            <Button variant="outlined"
+                    onClick={handleClickOpen}
+                    sx={{
+                        position: "absolute",
+                        width: "3.5rem",
+                        height: "3.5rem",
+                        borderRadius: '50%',
+                        minWidth: 0,
+                        padding: 0,
+                        bottom: '.5rem',
+                        left: '50%',
+                        transform: 'translate(-50%, 0%)',
+                    }}
+            >
+                <AddIcon/>
             </Button>
             <Dialog
                 open={open}
@@ -186,6 +200,6 @@ if(formData){
                     <Button type="submit">Add new Trip</Button>
                 </DialogActions>
             </Dialog>
-        </React.Fragment>
+        </Box>
     );
 }

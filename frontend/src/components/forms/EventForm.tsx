@@ -5,7 +5,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import CountryCityDateInputs from "../CountryCityDateInputs.tsx";
-import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField} from "@mui/material";
+import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Tooltip} from "@mui/material";
 import {toCamelCase} from "../../util/formatting.ts";
 import {Category} from "../../model/Category.ts";
 import {emptyInputData, InputData} from "../../model/CountryCityDateData.ts";
@@ -13,6 +13,8 @@ import {TripEvent} from "../../model/TripEvent.ts";
 import {useContext, useState} from "react";
 import {TripEventTyped} from "../../model/TripEventTyped.ts";
 import {ItineraryContext} from "../../store/itinerary-context.tsx";
+import EventIcon from "@mui/icons-material/Event";
+import EditIcon from "@mui/icons-material/Edit";
 
 const categoryOpt = ["RESTAURANT", "COFFEE", "BAR", "BAKERY", "THINGS_TO_DO", "EVENT", "HOTEL", "TRANSPORT", "MEETING", "NOTE"]
 
@@ -22,8 +24,8 @@ type EventFormProps = {
     tripEventTyped?: TripEventTyped
 }
 
-export default function EventForm({ index, edit, tripEventTyped}: EventFormProps) {
-    const {handleAddTripEventDestination, handleEditTripEventDestination, } = useContext(ItineraryContext)
+export default function EventForm({index, edit, tripEventTyped}: EventFormProps) {
+    const {handleAddTripEventDestination, handleEditTripEventDestination,} = useContext(ItineraryContext)
 
     const [open, setOpen] = React.useState(false);
 
@@ -48,8 +50,11 @@ export default function EventForm({ index, edit, tripEventTyped}: EventFormProps
 
     return (
         <React.Fragment>
-            <Button variant="outlined" onClick={handleClickOpen}>
-                {edit ? "Edit": "Add Event"}
+            <Button variant="text" onClick={handleClickOpen}>
+                {edit ? <EditIcon fontSize="small"/> :
+                    <Tooltip title="Event">
+                        <EventIcon fontSize="medium"/>
+                    </Tooltip>}
             </Button>
             <Dialog
                 open={open}
@@ -83,7 +88,7 @@ export default function EventForm({ index, edit, tripEventTyped}: EventFormProps
                     },
                 }}
             >
-                <DialogTitle>{edit ? "Edit Event": "Add Event"}</DialogTitle>
+                <DialogTitle>{edit ? "Edit Event" : "Add Event"}</DialogTitle>
                 <DialogContent>
                     <FormControl sx={{m: "5% 0"}} fullWidth>
                         <TextField
@@ -146,7 +151,7 @@ export default function EventForm({ index, edit, tripEventTyped}: EventFormProps
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button type="submit">{edit ? "Edit Event": "Add Event"}</Button>
+                    <Button type="submit">{edit ? "Edit Event" : "Add Event"}</Button>
                 </DialogActions>
             </Dialog>
         </React.Fragment>

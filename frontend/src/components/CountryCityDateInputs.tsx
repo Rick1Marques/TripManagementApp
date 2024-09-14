@@ -38,7 +38,7 @@ export default function CountryCityDateInputs({
     const [selectedCountry, setSelectedCountry] = useState<string>("")
     const cities = City.getCitiesOfCountry(selectedCountry)
     const [selectedCity, setSelectedCity] = useState<string>("")
-    const [selectedDate, setSelectedDate] = useState<string>("")
+    const [selectedDate, setSelectedDate] = useState<string>(tripEventTyped?.date || "")
     const [coordinates, setCoordinates] = useState<{ latitude: string, longitude: string }>({
         latitude: "",
         longitude: ""
@@ -129,7 +129,7 @@ export default function CountryCityDateInputs({
                         }
                     }}
                     sx={{mt: 2}}
-                    value={tripEventTyped?.date}
+                    value={selectedDate}
                 />
             </FormControl>
             {(handleDeleteInput) &&

@@ -1,21 +1,29 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import {TransitionProps} from '@mui/material/transitions';
-import EventForm from "./forms/EventForm.tsx";
-import TripTimeLine from "./TripTimeLine.tsx";
-import axios from "axios";
 import {useContext} from "react";
 import {ItineraryContext} from "../store/itinerary-context.tsx";
+import axios from "axios";
+import ModeEditOutlineRoundedIcon from "@mui/icons-material/ModeEditOutlineRounded";
+import {Stack} from "@mui/material";
+import TripTimeLine from "./TripTimeLine.tsx";
+import EventForm from "./forms/EventForm.tsx";
 import DestinationForm from "./forms/DestinationForm.tsx";
+import DialogContent from "@mui/material/DialogContent";
+import {SpeedDial, SpeedDialAction} from "@mui/lab";
+import SaveIcon from '@mui/icons-material/Save';
+import AddIcon from '@mui/icons-material/Add';
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
-        children: React.ReactElement<any, any>;
+        children: React.ReactElement<any>;
     },
     ref: React.Ref<unknown>,
 ) {
@@ -39,7 +47,7 @@ export default function EditItinerary() {
     }
 
     const handleClickOpen = () => {
-        setOpen(true);
+        setOpen(true)
     };
 
     async function handleSave() {
@@ -47,34 +55,72 @@ export default function EditItinerary() {
         setOpen(false)
     }
 
-
     const handleCloseCancel = () => {
         window.location.reload()
         setOpen(false);
     };
 
+    const actions = [
+        { icon:  <EventForm/>, name: 'Event' },
+        { icon: <DestinationForm destinationType="destination"/>, name: 'Destination' },
+    ];
+
     return (
         <React.Fragment>
-            <Button variant="outlined" onClick={handleClickOpen}>
-                Edit Itinerary
+            <Button variant="text" onClick={handleClickOpen}>
+                <ModeEditOutlineRoundedIcon/>
             </Button>
             <Dialog
+                fullScreen
                 open={open}
-                TransitionComponent={Transition}
-                keepMounted
                 onClose={handleCloseCancel}
-                aria-describedby="alert-dialog-slide-description"
+                TransitionComponent={Transition}
+                scroll="paper"
             >
-                <DialogTitle>{"Edit Itinerary"}</DialogTitle>
-                <DialogContent>
-                    <TripTimeLine edit={true}/>
-                    <EventForm/>
-                    <DestinationForm destinationType="destination"/>
+                <AppBar sx={{position: 'relative'}}>
+                    <Toolbar>
+                        <Stack width="100%" direction="row" justifyContent="space-between">
+                            <IconButton
+                                edge="start"
+                                color="inherit"
+                                onClick={handleCloseCancel}
+                                aria-label="close"
+                            >
+                                <CloseIcon/>
+                            </IconButton>
+                        </Stack>
+                    </Toolbar>
+                </AppBar>
+                <DialogContent dividers={true}>
+                    <Typography align="center" variant="h4" gutterBottom mt="0.5rem">
+                        Edit Itinerary
+                    </Typography>
+                        <TripTimeLine edit={true}/>
+                    <Stack direction="row" justifyContent="space-between">
+                        <SpeedDial
+                            ariaLabel="SpeedDial add"
+                            icon={<AddIcon fontSize="large"/>}
+                            direction="right"
+                            FabProps={{
+                                sx: {
+                                    width: "3rem",
+                                    height: "3rem",
+                                },
+                            }}
+                        >
+                            {actions.map((action) => (
+                                <SpeedDialAction
+                                    key={action.name}
+                                    icon={action.icon}
+                                />
+                            ))}
+                        </SpeedDial>
+                        <Button variant="text" onClick={handleSave}>
+                            <SaveIcon fontSize="large"/>
+                        </Button>
+                    </Stack>
+
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseCancel}>Cancel</Button>
-                    <Button onClick={handleSave}>Save</Button>
-                </DialogActions>
             </Dialog>
         </React.Fragment>
     );

@@ -21,9 +21,9 @@ export function toCamelCase(word: string) {
     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
 
-export function getDaysOfTheWeek(inputDate: string){
+export function getDaysOfTheWeek(inputDate: string) {
     const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const date = new Date(inputDate);
     return daysOfWeek[date.getDay()];
-
 }
+
