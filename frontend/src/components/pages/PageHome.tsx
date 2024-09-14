@@ -58,8 +58,8 @@ export default function PageHome() {
 
 
                 {currentIndex === 0 && <OnGoingTrip trip={currentlyTrip} currentDestination={currentDestination}/>}
-                {currentIndex === 2 && <TripSlideHome trip={nextTrip} type="next"/>}
-                {currentIndex === 1 && <TripSlideHome trip={lastTrip} type="last"/>}
+                {currentIndex === 1 && <TripSlideHome trip={nextTrip} type="next"/>}
+                {currentIndex === 2 && <TripSlideHome trip={lastTrip} type="last"/>}
 
 
 
