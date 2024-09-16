@@ -63,7 +63,7 @@ export default function TripTimeLine({edit, fullData=true}: TimeLineProps) {
 
 
     if (!dataToRender) {
-        return <h1>Loading...</h1>
+        return <h1>You have nothing planed for today</h1>
     }
     return (
         <Timeline sx={{width: "100%"}}>

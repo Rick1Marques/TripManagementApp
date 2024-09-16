@@ -56,12 +56,9 @@ export default function PageHome() {
                     <ArrowBackIosNewIcon fontSize="large" />
                 </IconButton>
 
-
                 {currentIndex === 0 && <OnGoingTrip trip={currentlyTrip} currentDestination={currentDestination}/>}
                 {currentIndex === 1 && <TripSlideHome trip={nextTrip} type="next"/>}
                 {currentIndex === 2 && <TripSlideHome trip={lastTrip} type="last"/>}
-
-
 
                 <IconButton
                     onClick={handleNext}
