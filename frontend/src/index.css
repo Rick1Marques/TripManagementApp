@@ -2,8 +2,10 @@
 *::before,
 *::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-body {
-  padding: 1%;
+.leaflet-container {
+  height: 100vh;
 }
