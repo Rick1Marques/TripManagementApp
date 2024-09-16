@@ -3,7 +3,7 @@ import PageTripsLists from "./components/pages/PageTripsLists.tsx";
 import PageTripDetail from "./components/pages/PageTripDetail.tsx";
 import PageHome from "./components/pages/PageHome.tsx";
 import ItineraryContextProvider from "./store/itinerary-context.tsx";
-import Map from "./components/pages/Map.tsx";
+import PageMap from "./components/pages/PageMap.tsx";
 
 export default function App() {
 
@@ -13,7 +13,7 @@ export default function App() {
                 <Route path="/my-trips" element={<PageTripsLists/>}/>
                 <Route path="/my-trips/:id" element={<PageTripDetail/>}/>
                 <Route path="/home" element={<PageHome/>}/>
-                <Route path="/map" element={<Map/>}/>
+                <Route path="/map" element={<PageMap/>}/>
             </Routes>
         </ItineraryContextProvider>
     )

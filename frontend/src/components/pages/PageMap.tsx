@@ -9,7 +9,7 @@ type MarkerData = {
     popUp: string
 }
 
-export default function Map() {
+export default function PageMap() {
     const [trips] = useFetchTrips()
 
     if (!trips) {
