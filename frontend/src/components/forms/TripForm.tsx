@@ -112,9 +112,11 @@ if(formData){
                         bottom: '.5rem',
                         left: '50%',
                         transform: 'translate(-50%, 0%)',
+                        zIndex: "1"
                     }}
             >
-                <AddIcon/>
+                {/*<AddIcon/>*/}
+                add
             </Button>
             <Dialog
                 open={open}
