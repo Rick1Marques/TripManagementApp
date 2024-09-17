@@ -6,11 +6,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import {useEffect, useState} from "react";
 import {getOrdinalSuffix} from "../../util/getOrdinalSuffix.ts";
-import {Box, FormControl, FormLabel, Stack, TextField, Typography} from '@mui/material';
+import {Box, FormControl, FormLabel, TextField, Typography} from '@mui/material';
 import axios from "axios";
 import CountryCityDateInputs from "../CountryCityDateInputs.tsx";
 import {emptyInputData, InputData} from "../../model/CountryCityDateData.ts";
-import AddIcon from '@mui/icons-material/Add';
 
 type DestinationsInput = {
     id: number,
@@ -84,22 +83,23 @@ export default function TripForm() {
 
 
     useEffect(() => {
-        async function postTrip(){
+        async function postTrip() {
             try {
-            const response = await axios.post("/api/trips", formData)
+                const response = await axios.post("/api/trips", formData)
                 console.log("Trip added with success!", response.data)
 
             } catch (err) {
                 console.log(err)
             }
         }
-if(formData){
-        postTrip()
-}
+
+        if (formData) {
+            postTrip()
+        }
     }, [formData])
 
     return (
-        <Box >
+        <Box>
             <Button variant="outlined"
                     onClick={handleClickOpen}
                     sx={{
@@ -181,18 +181,18 @@ if(formData){
                             <Typography variant="h5">Destinations</Typography>
                         </FormLabel>
                         <CountryCityDateInputs name="Starting Point"
-                                                  handleInputChange={(_id, data) => handleStartingPointChange(data)}
+                                               handleInputChange={(_id, data) => handleStartingPointChange(data)}
                         />
                         {destinationsInputs.map((destination) =>
                             <CountryCityDateInputs name={destination.type}
-                                                      handleInputChange={handleDestinationsInputsChange}
-                                                      handleDeleteInput={handleDeleteInput}
-                                                      key={destination.id}
-                                                      id={destination.id}
+                                                   handleInputChange={handleDestinationsInputsChange}
+                                                   handleDeleteInput={handleDeleteInput}
+                                                   key={destination.id}
+                                                   id={destination.id}
                             />
                         )}
                         <CountryCityDateInputs name="Home"
-                                                  handleInputChange={(_id, data) => handleHomeChange(data)}
+                                               handleInputChange={(_id, data) => handleHomeChange(data)}
                         />
                         <Button onClick={handleAddNewInput}>Add Destination</Button>
                     </FormControl>
