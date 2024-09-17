@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -24,6 +25,7 @@ class AppUserControllerTest {
 
 
     @Test
+    @DirtiesContext
     @WithMockUser(username = "test")
     void getLoggedInUser() throws Exception {
         AppUser appUserTest = new AppUser("1", "test", "test");
@@ -32,7 +34,6 @@ class AppUserControllerTest {
         mvc.perform(MockMvcRequestBuilders.get("/api/users/me"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
-
                                                 {
                                                         "id": "1",
                                                         "username":"test"
@@ -43,6 +44,7 @@ class AppUserControllerTest {
 
 
     @Test
+    @DirtiesContext
     void register() throws Exception {
         mvc.perform(MockMvcRequestBuilders
                         .post("/api/users/register")
