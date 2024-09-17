@@ -13,6 +13,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +30,7 @@ class TripControllerTest {
     private TripRepo tripRepo;
 
     @Test
+    @WithMockUser
     void getAllTrips() throws Exception {
         mvc.perform(MockMvcRequestBuilders
                 .get( "/api/trips"))
@@ -37,6 +39,7 @@ class TripControllerTest {
     }
 
     @Test
+    @WithMockUser
     void postTrip() throws Exception {
         mvc.perform(MockMvcRequestBuilders
                 .post("/api/trips")
@@ -105,6 +108,7 @@ class TripControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void deleteTrip() throws Exception {
 
         Destination destination1 = new Destination("Germany", "Berlin", new Coordinates("1","2"), LocalDateTime.now());
@@ -120,6 +124,7 @@ class TripControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void deleteNonExistentTrip() throws Exception {
         String nonExistentTripId = "999";
 
@@ -136,6 +141,7 @@ class TripControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void getTripById() throws Exception {
         Destination destination1 = new Destination("Germany", "Berlin",new Coordinates("1","2") , LocalDateTime.parse("2024-05-20T00:00:00"));
 
@@ -174,6 +180,7 @@ class TripControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void putTrip() throws Exception {
         Destination oldDestination = new Destination("Germany", "Berlin", new Coordinates("1","2"), LocalDateTime.now());
         Trip oldTrip = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(oldDestination), List.of());
@@ -249,6 +256,7 @@ class TripControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void getNonExistentTripById() throws Exception {
         String nonExistentTripId = "999";
 
