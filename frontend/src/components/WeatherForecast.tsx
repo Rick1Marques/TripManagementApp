@@ -21,6 +21,7 @@ import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import DeviceThermostatIcon from '@mui/icons-material/DeviceThermostat';
 
 import CloudQueueIcon from '@mui/icons-material/CloudQueue';
+import {Destination} from "../model/Destination.ts";
 
 const style = {
     position: 'absolute',
@@ -35,7 +36,8 @@ const style = {
 
 type WeatherForecastProps = {
     trip: Trip,
-    disable: boolean
+    disable: boolean,
+    currentDestination?: Destination
 }
 
 type WeatherForecastData = {
@@ -47,7 +49,7 @@ type WeatherForecastData = {
     precipitation_probability_max: string
 }
 
-export default function WeatherForecast({trip, disable}: WeatherForecastProps) {
+export default function WeatherForecast({trip, disable, currentDestination}: WeatherForecastProps) {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -110,13 +112,20 @@ export default function WeatherForecast({trip, disable}: WeatherForecastProps) {
                 aria-describedby="modal-modal-description"
             >
                 <Stack alignItems="center" sx={style} gap=".5rem">
-                    <Typography variant="h5" gutterBottom>Weather on Forecast</Typography>
+                    <Typography variant="h5" gutterBottom>Weather Forecast</Typography>
                     <Stack width="100%" direction="row" justifyContent="center">
                         <Stack alignItems="center" width="50%">
                             <Typography variant="subtitle2">7 Days</Typography>
                         </Stack>
                         <Stack alignItems="center" width="50%">
-                            <Typography variant="subtitle2">{trip.destinations[1].city} - {trip.destinations[1].country.slice(0, 2).toUpperCase()}</Typography>
+                            <Typography variant="subtitle2">
+                                {currentDestination ?
+                                    `${currentDestination.city} - ${currentDestination.country.slice(0, 2).toUpperCase()}`
+                                    :
+                                    `${trip.destinations[1].city} - ${trip.destinations[1].country.slice(0, 2).toUpperCase()}`}
+
+
+                            </Typography>
                         </Stack>
                     </Stack>
                     <Divider/>
