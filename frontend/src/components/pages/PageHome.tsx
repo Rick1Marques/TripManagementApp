@@ -19,7 +19,7 @@ export default function PageHome() {
 
     const navigate = useNavigate()
 
-    if (!trips) {
+    if (trips.length === 0) {
         return (
             <h1>Loading...</h1>
         )
@@ -43,7 +43,7 @@ export default function PageHome() {
 
     async function handleLogout() {
         try {
-            await axios.post("/api/users/logout")
+            await axios.post("/api/auth/logout")
             console.log("Logged out")
             navigate("/login")
         } catch (err) {

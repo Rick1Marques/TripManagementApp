@@ -11,7 +11,7 @@ export default function RegisterPage() {
 
     async function register() {
         try {
-            await axios.post("/api/users/register", {
+            await axios.post("/api/auth/register", {
                 username: username,
                 password: password
             })

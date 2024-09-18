@@ -1,13 +1,14 @@
-import {createContext, useEffect, useState} from "react";
+import {createContext, useContext, useEffect, useState} from "react";
 import axios from "axios";
 import {emptyTrip, Trip} from "../model/Trip.ts";
 import {DestinationTyped} from "../model/DestinationTyped.ts";
 import {TripEventTyped} from "../model/TripEventTyped.ts";
 import {TripEvent} from "../model/TripEvent.ts";
 import {Destination} from "../model/Destination.ts";
+import {AuthContext} from "./auth-context.tsx";
 
 type ItineraryContext = {
-    id: string,
+    tripId: string,
     tripData: Trip | null,
     dataTimeLine: (DestinationTyped | TripEventTyped)[],
     handleIdChange: (id: string) => void,
@@ -17,7 +18,7 @@ type ItineraryContext = {
 }
 
 export const ItineraryContext = createContext<ItineraryContext>({
-    id: "",
+    tripId: "",
     tripData: emptyTrip,
     dataTimeLine: [],
     handleIdChange: () => {
@@ -35,13 +36,16 @@ type ItineraryContextProviderProps = {
 }
 
 export default function ItineraryContextProvider({children}: ItineraryContextProviderProps) {
-    const [id, setId] = useState<string>("")
+    const [tripId, setTripId] = useState<string>("")
     const [tripData, setTripData] = useState<Trip>(emptyTrip)
+
+    const { loggedUserId} = useContext(AuthContext)
+
 
     useEffect(() => {
         async function fetchTrip() {
             try {
-                const response = await axios.get(`/api/trips/${id}`)
+                const response = await axios.get(`/api/user/${loggedUserId}/trips/${tripId}`)
                 if (response.status === 200) {
                     const tripData: Trip = await response.data
                     setTripData(tripData)
@@ -51,10 +55,10 @@ export default function ItineraryContextProvider({children}: ItineraryContextPro
             }
         }
 
-        if (id) {
+        if (tripId) {
             fetchTrip()
         }
-    }, [id])
+    }, [tripId, loggedUserId])
 
 
     if (!tripData) {
@@ -62,7 +66,7 @@ export default function ItineraryContextProvider({children}: ItineraryContextPro
     }
 
     function handleIdChange(id: string) {
-        setId(id)
+        setTripId(id)
     }
 
     const destinationsTyped: DestinationTyped = tripData.destinations.map((destination, index) => {
@@ -157,7 +161,7 @@ export default function ItineraryContextProvider({children}: ItineraryContextPro
     }
 
     const ctxValue = {
-        id,
+        tripId,
         tripData,
         dataTimeLine,
         handleIdChange,
