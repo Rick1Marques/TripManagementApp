@@ -35,7 +35,7 @@ class AppUserControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
                                                 {
-                                                        "id": "1",
+                                                        "tripId": "1",
                                                         "username":"test"
                                                 }
                         """
@@ -65,7 +65,7 @@ class AppUserControllerTest {
                         """
 
                 ))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.tripId").exists());
     }
 
 }

@@ -108,7 +108,7 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>report</id>
+                        <tripId>report</tripId>
                         <phase>test</phase>
                         <goals>
                             <goal>report</goal>

@@ -103,7 +103,7 @@ class TripControllerTest {
                                 }
 """
                 ))
-                .andExpect(jsonPath("$.id").exists());
+                .andExpect(jsonPath("$.tripId").exists());
     }
 
     @Test
@@ -133,7 +133,7 @@ class TripControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json("""
                         {
-                            "message": "Trip not found with id: 999"
+                            "message": "Trip not found with tripId: 999"
                         }
                         """));
     }
@@ -192,7 +192,7 @@ class TripControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
 {
-                                    "id": "1",
+                                    "tripId": "1",
                                     "title": "Business Trip",
                                     "description": "Meeting with clients",
                                     "reason": "Business",
@@ -223,7 +223,7 @@ class TripControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
                         {
-                                                            "id": "1",
+                                                            "tripId": "1",
                                                             "title": "Business Trip",
                                                             "description": "Meeting with clients",
                                                             "reason": "Business",
@@ -265,7 +265,7 @@ class TripControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json("""
                         {
-                            "message": "Trip not found with id: 999"
+                            "message": "Trip not found with tripId: 999"
                         }
                         """));
     }
