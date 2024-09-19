@@ -13,6 +13,8 @@ public record Event(
         String address,
         String city,
         String country,
+        String countryIso,
+        String countryFlag,
         LocalDateTime date
 ) {
 }

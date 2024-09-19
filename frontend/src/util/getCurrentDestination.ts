@@ -1,7 +1,11 @@
 import {Destination} from "../model/Destination.ts";
 
-export function getCurrentDestination(destinations: Destination[]){
-const currentDate = new Date();
+export function getCurrentDestination(destinations: Destination[]) {
+    const currentDate = new Date();
+
+    if (!destinations) {
+        return null
+    }
 
     for (let i = 0; i < destinations.length; i++) {
         const destinationDate = new Date(destinations[i].date);

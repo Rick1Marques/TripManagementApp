@@ -13,6 +13,8 @@ export type Trip = {
 const emptyDestination = {
     id: "",
     country: "",
+    countryIso: "",
+    countryFlag: "",
     city: "",
     coordinates: {
         latitude: "",

@@ -30,7 +30,6 @@ export default function TripForm() {
     const [formData, setFormData] = useState()
 
     const loggedUserId = localStorage.getItem("loggedUserId")
-    console.log(loggedUserId)
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -135,7 +134,7 @@ export default function TripForm() {
                             {id: Date.now(), type: 'Home', inputData: home}
                         ];
                         const destinations = combinedDestinations.map(destination => destination.inputData)
-
+                        console.log(destinations)
                         const newTrip = {
                             title: formData.get('title'),
                             description: formData.get('description'),
@@ -143,6 +142,7 @@ export default function TripForm() {
                             destinations: destinations,
                             events: []
                         }
+                        console.log(newTrip)
                         setFormData(newTrip)
                         handleClose();
                     },

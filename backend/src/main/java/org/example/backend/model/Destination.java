@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 public record Destination(
         String id,
         String country,
+        String countryIso,
+        String countryFlag,
         String city,
         Coordinates coordinates,
         LocalDateTime date

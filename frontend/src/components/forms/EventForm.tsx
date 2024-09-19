@@ -71,6 +71,8 @@ export default function EventForm({index, edit, tripEventTyped}: EventFormProps)
                             description: formData.get("description"),
                             address: formData.get("address"),
                             country: countryCityDateData.country,
+                            countryIso: countryCityDateData.countryIso,
+                            countryFlag: countryCityDateData.countryFlag,
                             city: countryCityDateData.city,
                             date: countryCityDateData.date
                         }

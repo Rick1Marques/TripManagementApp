@@ -120,9 +120,9 @@ export default function WeatherForecast({trip, disable, currentDestination}: Wea
                         <Stack alignItems="center" width="50%">
                             <Typography variant="subtitle2">
                                 {currentDestination ?
-                                    `${currentDestination.city} - ${currentDestination.country.slice(0, 2).toUpperCase()}`
+                                    `${currentDestination.countryFlag} ${currentDestination.city}`
                                     :
-                                    `${trip.destinations[1].city} - ${trip.destinations[1].country.slice(0, 2).toUpperCase()}`}
+                                    `${trip.destinations[1].countryFlag} ${trip.destinations[1].city}`}
 
 
                             </Typography>

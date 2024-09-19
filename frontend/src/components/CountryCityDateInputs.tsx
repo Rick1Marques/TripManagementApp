@@ -14,6 +14,8 @@ import {TripEventTyped} from "../model/TripEventTyped.ts";
 
 type InputData = {
     country: string,
+    countryIso: string,
+    countryFlag: string,
     city: string,
     coordinates: { latitude: string, longitude: string }
     date: string,
@@ -45,9 +47,13 @@ export default function CountryCityDateInputs({
     })
 
     useEffect(() => {
-        const countryName = selectedCountry ? Country.getCountryByCode(selectedCountry)!.name : "";
+        const country = Country.getCountryByCode(selectedCountry);
+        const countryName = selectedCountry ? country!.name : "";
+        const countryFlag = selectedCountry ? country!.flag : "";
         const data: InputData = {
             country: countryName,
+            countryIso: selectedCountry,
+            countryFlag,
             city: selectedCity,
             coordinates,
             date: selectedDate,
@@ -81,9 +87,9 @@ export default function CountryCityDateInputs({
     return (
         <FormControl fullWidth>
             {name &&
-            <FormLabel sx={{m: "2% 0"}}>
-                <Typography variant="h6">{name}</Typography>
-            </FormLabel>
+                <FormLabel sx={{m: "2% 0"}}>
+                    <Typography variant="h6">{name}</Typography>
+                </FormLabel>
             }
             <FormControl>
                 <InputLabel id="country">Country</InputLabel>
@@ -100,22 +106,22 @@ export default function CountryCityDateInputs({
                     )}
                 </Select>
             </FormControl>
-                <FormControl>
-                    <InputLabel id="city">City</InputLabel>
-                    <Select
-                        disabled={selectedCountry === ""}
-                        required
-                        labelId="city"
-                        id="city"
-                        label="city"
-                        onChange={handleChangeSelectedCity}
-                    >
-                        {cities!.map(city =>
-                            <MenuItem key={`${city.name}_${city.latitude}_${city.longitude}`}
-                                      value={`${city.name}_${city.latitude}_${city.longitude}`}>{city.name} - {city.stateCode}</MenuItem>
-                        )}
-                    </Select>
-                </FormControl>
+            <FormControl>
+                <InputLabel id="city">City</InputLabel>
+                <Select
+                    disabled={selectedCountry === ""}
+                    required
+                    labelId="city"
+                    id="city"
+                    label="city"
+                    onChange={handleChangeSelectedCity}
+                >
+                    {cities!.map(city =>
+                        <MenuItem key={`${city.name}_${city.latitude}_${city.longitude}`}
+                                  value={`${city.name}_${city.latitude}_${city.longitude}`}>{city.name} - {city.stateCode}</MenuItem>
+                    )}
+                </Select>
+            </FormControl>
             <FormControl>
                 <TextField
                     type="datetime-local"

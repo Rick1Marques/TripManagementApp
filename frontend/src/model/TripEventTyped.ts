@@ -7,6 +7,8 @@ export type TripEventTyped = {
     address: string,
     city: string,
     country: string,
+    countryIso: string,
+    countryFlag: string,
     date: string,
     type: string
 }

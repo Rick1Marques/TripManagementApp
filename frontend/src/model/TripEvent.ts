@@ -8,5 +8,7 @@ export type TripEvent = {
     address: string,
     city: string,
     country: string,
+    countryIso: string,
+    countryFlag: string,
     date: string
 }
