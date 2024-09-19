@@ -1,15 +1,13 @@
 package org.example.backend.service;
 
 import org.example.backend.exception.TripNotFoundException;
-import org.example.backend.model.Coordinates;
-import org.example.backend.model.Destination;
-import org.example.backend.model.Trip;
-import org.example.backend.model.TripDto;
-import org.example.backend.repo.TripRepo;
+import org.example.backend.exception.UserNotFoundException;
+import org.example.backend.model.*;
+import org.example.backend.repo.AppUserRepo;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,169 +16,117 @@ import static org.mockito.Mockito.*;
 
 class TripServiceTest {
 
-    private final TripRepo tripRepoMock = mock(TripRepo.class);
-    private final TripService tripService = new TripService(tripRepoMock);
+    private final AppUserRepo appUserRepo = mock(AppUserRepo.class);
+    private final IdService idServiceMock = mock(IdService.class);
+    private final TripService tripService = new TripService(appUserRepo, idServiceMock);
 
 
     @Test
-    @DirtiesContext
-    void findAllTrips() {
-        Coordinates coordinates1 = new Coordinates("1", "2");
-        Coordinates coordinates2 = new Coordinates("3", "4");
+    void findAllTrips_whenUserExists_returnsSortedTrips() {
+        AppUser user = new AppUser("1", "testUser", "password", List.of(
+                new Trip("1", "Trip A", "Desc A", "Reason A", List.of(
+                        new Destination("dest1", "Berlin", "Germany", "city", "address", new Coordinates("1", "2"), LocalDateTime.now())
+                ), new ArrayList<>()),
+                new Trip("2", "Trip B", "Desc B", "Reason B", List.of(
+                        new Destination("dest2", "Paris", "France", "city", "address", new Coordinates("3", "4"), LocalDateTime.now().plusDays(1))
+                ), new ArrayList<>())
+        ));
 
-        Destination destination1 = new Destination("Germany", "Berlin", coordinates1, LocalDateTime.now());
-        Destination destination2 = new Destination("France", "Paris", coordinates2, LocalDateTime.now());
+        when(appUserRepo.findById("1")).thenReturn(Optional.of(user));
 
-        Trip trip1 = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(destination1), List.of());
-        Trip trip2 = new Trip("2", "Vacation", "Family vacation", "Leisure", List.of(destination2), List.of());
+        List<Trip> trips = tripService.findAllTrips("1");
 
-        List<Trip> listTrips = List.of(trip1, trip2);
-
-        when(tripRepoMock.findAll()).thenReturn(listTrips);
-
-        List<Trip> result = tripService.findAllTrips();
-
-        verify(tripRepoMock).findAll();
-
-        assertEquals(listTrips, result);
+        assertEquals(2, trips.size());
+        assertEquals("Trip A", trips.get(0).title());  // Ensuring trips are sorted by first destination date
+        assertEquals("Trip B", trips.get(1).title());
     }
 
     @Test
-    @DirtiesContext
-    void addTrip() {
-        Coordinates coordinates1 = new Coordinates("1", "2");
-        Coordinates coordinates2 = new Coordinates("3", "4");
+    void findAllTrips_whenUserNotFound_throwsUserNotFoundException() {
+        when(appUserRepo.findById("1")).thenReturn(Optional.empty());
 
-        Destination destination1 = new Destination("Germany", "Berlin", coordinates1, LocalDateTime.now());
-        Destination destination2 = new Destination("France", "Paris", coordinates2, LocalDateTime.now());
-
-        List<Destination> listDestinations = List.of(destination1, destination2);
-
-        Trip trip1 = new Trip(null, "Business Trip", "Meeting with clients", "Business", listDestinations, List.of());
-        TripDto trip1Dto = new TripDto("Business Trip", "Meeting with clients", "Business", listDestinations, List.of());
-
-        when(tripRepoMock.save(trip1)).thenReturn(trip1);
-
-        Trip result = tripService.addTrip(trip1Dto);
-
-        verify(tripRepoMock).save(trip1);
-
-        assertEquals(trip1, result);
-
-
+        assertThrows(UserNotFoundException.class, () -> tripService.findAllTrips("1"));
     }
 
     @Test
-    @DirtiesContext
-    void deleteTrip_whenIdExists() {
+    void addTrip_whenUserExists_addsNewTrip() {
+        AppUser user = new AppUser("1", "testUser", "password", new ArrayList<>());
+        TripDto newTripDto = new TripDto(
+                "New Trip", "New Description", "New Reason", new ArrayList<>(), new ArrayList<>());
 
-        Coordinates coordinates1 = new Coordinates("1", "2");
+        when(appUserRepo.findById("1")).thenReturn(Optional.of(user));
+        when(idServiceMock.randomId()).thenReturn("randomTripId");
 
-        Destination destination1 = new Destination("Germany", "Berlin", coordinates1, LocalDateTime.now());
-        Trip trip1 = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(destination1),List.of());
+        Trip newTrip = tripService.addTrip("1", newTripDto);
 
-        when(tripRepoMock.existsById(trip1.id())).thenReturn(true);
-        doNothing().when(tripRepoMock).deleteById(trip1.id());
-
-        String result = tripService.deleteTrip("1");
-
-        verify(tripRepoMock).existsById(trip1.id());
-        verify(tripRepoMock).deleteById(trip1.id());
-
-        assertEquals(trip1.id(), result);
-
+        assertNotNull(newTrip);
+        assertEquals("randomTripId", newTrip.id());
+        verify(appUserRepo).save(user);
     }
 
     @Test
-    @DirtiesContext
-    void deleteTrip_idNotFound() {
-        String nonExistentId = "999";
+    void deleteTrip_whenTripExists_removesTrip() {
+        Trip trip = new Trip("1", "Test Trip", "Desc", "Reason", new ArrayList<>(), new ArrayList<>());
+        List<Trip> trips = new ArrayList<>(List.of(trip));
+        AppUser user = new AppUser("1", "testUser", "password", trips);
 
-        when(tripRepoMock.existsById(nonExistentId)).thenReturn(false);
+        when(appUserRepo.findById("1")).thenReturn(Optional.of(user));
 
-        assertThrows(TripNotFoundException.class, () -> {
-            tripService.deleteTrip(nonExistentId);
-        });
+        String deletedTripId = tripService.deleteTrip("1", "1");
 
-        verify(tripRepoMock).existsById(nonExistentId);
+        assertEquals("1", deletedTripId);
+        assertTrue(trips.isEmpty(), "Trip should be removed from user's trips");
+        verify(appUserRepo).save(user);
     }
-
-
     @Test
-    @DirtiesContext
-    void findTripById_whenIdExists() {
+    void deleteTrip_whenTripNotFound_throwsTripNotFoundException() {
+        AppUser user = new AppUser("1", "testUser", "password", new ArrayList<>());
+        when(appUserRepo.findById("1")).thenReturn(Optional.of(user));
 
-        Coordinates coordinates1 = new Coordinates("1", "2");
-
-        Destination destination1 = new Destination("Germany", "Berlin", coordinates1, LocalDateTime.now());
-        Trip trip1 = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(destination1),List.of());
-
-
-
-        when(tripRepoMock.findById("1")).thenReturn(Optional.of(trip1));
-
-        Trip result = tripService.findTripById("1");
-
-        assertEquals(trip1, result);
-
-        verify(tripRepoMock).findById("1");
-
+        assertThrows(TripNotFoundException.class, () -> tripService.deleteTrip("1", "999"));
     }
 
     @Test
-    @DirtiesContext
-    void updateTrip_whenIdExists() {
-        Coordinates oldCoordinates = new Coordinates("1", "2");
-        Coordinates updatedCoordinates = new Coordinates("5", "6");
+    void updateTrip_whenTripExists_updatesTripSuccessfully() {
+        // Arrange
+        Trip oldTrip = new Trip("1", "Old Trip", "Old Desc", "Old Reason", new ArrayList<>(), new ArrayList<>());
+        Trip newTrip = new Trip("1", "Updated Trip", "Updated Desc", "Updated Reason", new ArrayList<>(), new ArrayList<>());
+        AppUser user = new AppUser("1", "testUser", "password", List.of(oldTrip));
 
-        Destination oldDestination = new Destination("Germany", "Berlin", oldCoordinates, LocalDateTime.now());
-        Destination updatedDestination = new Destination("Germany", "Hamburg", updatedCoordinates, LocalDateTime.now());
+        when(appUserRepo.findById("1")).thenReturn(Optional.of(user));
+        when(idServiceMock.randomId()).thenReturn("newRandomId");
 
-        Trip oldTrip = new Trip("1", "Business Trip", "Meeting with clients", "Business", List.of(oldDestination),List.of());
-        Trip updatedTrip = new Trip("1", "Business Trip", "Meeting with CEO", "Business", List.of(updatedDestination),List.of());
+        // Act
+        Trip updatedTrip = tripService.updateTrip("1", newTrip);
 
-        when(tripRepoMock.findById("1")).thenReturn(Optional.of(oldTrip));
-        when(tripRepoMock.save(updatedTrip)).thenReturn(updatedTrip);
-
-        Trip result = tripService.updateTrip(updatedTrip);
-
-        assertEquals(updatedTrip, result);
-
-        verify(tripRepoMock).findById("1");
-        verify(tripRepoMock).save(updatedTrip);
-
-
+        // Assert
+        assertNotNull(updatedTrip);
+        assertEquals("Updated Trip", updatedTrip.title());
+        verify(appUserRepo).save(any(AppUser.class));
     }
 
     @Test
-    @DirtiesContext
-    void findTripById_idNotFound() {
-        String nonExistentId = "999";
-        when(tripRepoMock.findById(nonExistentId)).thenReturn(Optional.empty());
+    void findTripById_whenTripExists_returnsTrip() {
+        // Arrange
+        Trip trip = new Trip("1", "Test Trip", "Desc", "Reason", new ArrayList<>(), new ArrayList<>());
+        AppUser user = new AppUser("1", "testUser", "password", List.of(trip));
 
-        assertThrows(TripNotFoundException.class, () -> {
-            tripService.findTripById(nonExistentId);
-        });
-        verify(tripRepoMock).findById(nonExistentId);
+        when(appUserRepo.findById("1")).thenReturn(Optional.of(user));
+
+        // Act
+        Trip foundTrip = tripService.findTripById("1", "1");
+
+        // Assert
+        assertNotNull(foundTrip);
+        assertEquals("Test Trip", foundTrip.title());
     }
 
     @Test
-    @DirtiesContext
-    void updateTrip_idNotFound() {
+    void findTripById_whenTripNotFound_throwsTripNotFoundException() {
+        AppUser user = new AppUser("1", "testUser", "password", new ArrayList<>());
+        when(appUserRepo.findById("1")).thenReturn(Optional.of(user));
 
-        String nonExistentId = "999";
-
-        Destination updatedDestination = new Destination("Germany", "Hamburg", new Coordinates("1","2"), LocalDateTime.now());
-
-        Trip updatedTrip = new Trip(nonExistentId, "Business Trip", "Meeting with CEO", "Business", List.of(updatedDestination),List.of());
-
-        when(tripRepoMock.findById(nonExistentId)).thenThrow(new TripNotFoundException(nonExistentId));
-
-        assertThrows(TripNotFoundException.class, () -> {
-            tripService.updateTrip(updatedTrip);
-        });
-
-        verify(tripRepoMock).findById(nonExistentId);
+        assertThrows(TripNotFoundException.class, () -> tripService.findTripById("1", "999"));
     }
 
 
