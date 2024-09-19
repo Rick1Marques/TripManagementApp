@@ -44,6 +44,7 @@ export default function PageHome() {
     async function handleLogout() {
         try {
             await axios.post("/api/auth/logout")
+            localStorage.removeItem("loggedUserId");
             console.log("Logged out")
             navigate("/login")
         } catch (err) {

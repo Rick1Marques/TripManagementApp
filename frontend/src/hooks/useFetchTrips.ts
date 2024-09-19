@@ -1,12 +1,12 @@
-import {useContext, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {Trip} from "../model/Trip.ts";
 import axios from "axios";
-import {AuthContext} from "../store/auth-context.tsx";
 
 export function useFetchTrips() {
     const [trips, setTrips] = useState<Trip[]>([])
 
-    const {loggedUserId} = useContext(AuthContext)
+
+    const loggedUserId = localStorage.getItem("loggedUserId")
 
     useEffect(() => {
         async function fetchTrips() {

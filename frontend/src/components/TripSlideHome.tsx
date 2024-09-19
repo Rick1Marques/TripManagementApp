@@ -18,8 +18,8 @@ export default function TripSlideHome({trip, type}: TripSlideHomeProps) {
     const countDownCaption = ["mths", "days", "hrs", "min", "sec"]
     const navigate = useNavigate()
 
-    function handleClick(id: string) {
-        navigate(`/my-trips/${id}`)
+    function handleClick() {
+        navigate(`/my-trips/${trip.id}`)
     }
 
     useEffect(() => {
@@ -128,7 +128,7 @@ export default function TripSlideHome({trip, type}: TripSlideHomeProps) {
                  <WeatherForecast disable={type === "last"} trip={trip}/>
 
                 <Button variant="text" sx={{alignSelf: "end"}} size="small"
-                        onClick={() => handleClick(trip.id)}>Details</Button>
+                        onClick={handleClick}>Details</Button>
 
             </Stack>
         </Stack>

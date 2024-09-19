@@ -28,9 +28,8 @@ public class AppUserController {
     }
     
     @PostMapping("/login")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void login() {
-        // Trigger login process
+    public AppUserResponse login() {
+        return appUserService.getLoggedInUser();
     }
 
     @PostMapping("/logout")

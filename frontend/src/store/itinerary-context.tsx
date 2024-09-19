@@ -5,7 +5,6 @@ import {DestinationTyped} from "../model/DestinationTyped.ts";
 import {TripEventTyped} from "../model/TripEventTyped.ts";
 import {TripEvent} from "../model/TripEvent.ts";
 import {Destination} from "../model/Destination.ts";
-import {AuthContext} from "./auth-context.tsx";
 
 type ItineraryContext = {
     tripId: string,
@@ -39,7 +38,9 @@ export default function ItineraryContextProvider({children}: ItineraryContextPro
     const [tripId, setTripId] = useState<string>("")
     const [tripData, setTripData] = useState<Trip>(emptyTrip)
 
-    const { loggedUserId} = useContext(AuthContext)
+
+
+    const loggedUserId = localStorage.getItem("loggedUserId")
 
 
     useEffect(() => {

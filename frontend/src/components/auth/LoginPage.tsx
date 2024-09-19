@@ -7,16 +7,17 @@ export default function LoginPage() {
     const [username, setUsername] = useState<string>("")
     const [password, setPassword] = useState<string>("")
 
-const navigate = useNavigate()
+    const navigate = useNavigate()
 
     async function login() {
         try {
-            await axios.post("/api/auth/login", {}, {
+            const response = await axios.post("/api/auth/login", {}, {
                 auth: {
                     username: username,
                     password: password
                 }
             })
+            localStorage.setItem("loggedUserId", response.data.id)
             console.log("Logged in")
             setUsername("")
             setPassword("")
