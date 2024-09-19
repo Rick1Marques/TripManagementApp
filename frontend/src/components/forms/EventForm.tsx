@@ -74,9 +74,9 @@ export default function EventForm({index, edit, tripEventTyped}: EventFormProps)
                             city: countryCityDateData.city,
                             date: countryCityDateData.date
                         }
-                        if (handleAddTripEventDestination) {
+                        if (!edit) {
                             handleAddTripEventDestination(tripEvent)
-                        } else if (handleEditTripEventDestination && typeof index === 'number') {
+                        } else if (edit && typeof index === 'number') {
                             const tripEventTyped: TripEventTyped = {
                                 ...tripEvent,
                                 type: "event"

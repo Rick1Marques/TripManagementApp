@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState} from "react";
+import {createContext, useEffect, useState} from "react";
 import axios from "axios";
 import {emptyTrip, Trip} from "../model/Trip.ts";
 import {DestinationTyped} from "../model/DestinationTyped.ts";
@@ -38,10 +38,7 @@ export default function ItineraryContextProvider({children}: ItineraryContextPro
     const [tripId, setTripId] = useState<string>("")
     const [tripData, setTripData] = useState<Trip>(emptyTrip)
 
-
-
     const loggedUserId = localStorage.getItem("loggedUserId")
-
 
     useEffect(() => {
         async function fetchTrip() {
@@ -60,7 +57,6 @@ export default function ItineraryContextProvider({children}: ItineraryContextPro
             fetchTrip()
         }
     }, [tripId, loggedUserId])
-
 
     if (!tripData) {
         return

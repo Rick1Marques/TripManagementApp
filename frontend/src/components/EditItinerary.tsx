@@ -33,13 +33,15 @@ const Transition = React.forwardRef(function Transition(
 export default function EditItinerary() {
     const [open, setOpen] = React.useState(false);
 
+    const loggedUserId = localStorage.getItem("loggedUserId");
+
     const {
         tripData,
     } = useContext(ItineraryContext)
 
     async function putTripAddEvent() {
         try {
-            const response = await axios.put(`/api/trips`, tripData)
+            const response = await axios.put(`/api/user/${loggedUserId}/trips`, tripData)
             console.log("Event edited with success!", response.data)
         } catch (err) {
             console.log(err)
@@ -95,7 +97,7 @@ export default function EditItinerary() {
                     <Typography align="center" variant="h4" gutterBottom mt="0.5rem">
                         Edit Itinerary
                     </Typography>
-                        <TripTimeLine edit={true}/>
+                        <TripTimeLine fullData={true} edit={true}/>
                     <Stack direction="row" justifyContent="space-between">
                         <SpeedDial
                             ariaLabel="SpeedDial add"
