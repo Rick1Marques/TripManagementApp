@@ -7,6 +7,7 @@ import {getDate} from "../../util/formatting.ts";
 import {getListOfVisitedCities, getListOfVisitedCountries} from "../../util/getListOfVisited.ts";
 import {getDifferenceInDaysDates} from "../../util/getDifferenceDates.ts";
 import EditItinerary from "../EditItinerary.tsx";
+import TripForm from "../forms/TripForm.tsx";
 
 
 export default function PageTripDetail() {
@@ -46,6 +47,7 @@ if(!tripData?.id){
                 <Typography variant="body2" sx={{color: 'text.secondary'}}>
                     Cities: {getListOfVisitedCities(tripData).join(" - ")}
                 </Typography>
+                <TripForm edit={true} trip={tripData}/>
             </Stack>
             <Divider/>
             <Stack direction="row" justifyContent="space-between">

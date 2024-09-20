@@ -10,6 +10,9 @@ import {Box, FormControl, FormLabel, TextField, Typography} from '@mui/material'
 import axios from "axios";
 import CountryCityDateInputs from "../CountryCityDateInputs.tsx";
 import {emptyInputData, InputData} from "../../model/CountryCityDateData.ts";
+import {useNavigate} from "react-router-dom";
+import {Trip} from "../../model/Trip.ts";
+import {updateTrip} from "../../util/updateTrip.ts";
 
 type DestinationsInput = {
     id: number,
@@ -17,7 +20,12 @@ type DestinationsInput = {
     inputData: InputData
 }
 
-export default function TripForm() {
+type TripFormProps = {
+    edit?: boolean,
+    trip?: Trip
+}
+
+export default function TripForm({edit, trip}: TripFormProps) {
     const [open, setOpen] = React.useState(false);
     const [destinationsInputs, setDestinationsInputs] = useState<DestinationsInput[]>([{
         id: Date.now(),
@@ -30,6 +38,8 @@ export default function TripForm() {
     const [formData, setFormData] = useState()
 
     const loggedUserId = localStorage.getItem("loggedUserId")
+
+    const navigate = useNavigate()
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -89,7 +99,7 @@ export default function TripForm() {
             try {
                 const response = await axios.post(`/api/user/${loggedUserId}/trips`, formData)
                 console.log("Trip added with success!", response.data)
-
+                navigate("/my-trips")
             } catch (err) {
                 console.log(err)
             }
@@ -117,8 +127,7 @@ export default function TripForm() {
                         zIndex: "1"
                     }}
             >
-                {/*<AddIcon/>*/}
-                add
+                {!edit ? "Add" : "Edit"}
             </Button>
             <Dialog
                 open={open}
@@ -128,27 +137,37 @@ export default function TripForm() {
                     onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
                         event.preventDefault();
                         const formData = new FormData(event.currentTarget);
-                        const combinedDestinations = [
-                            {id: Date.now(), type: 'Starting Point', inputData: startingPoint},
-                            ...destinationsInputs,
-                            {id: Date.now(), type: 'Home', inputData: home}
-                        ];
-                        const destinations = combinedDestinations.map(destination => destination.inputData)
-                        console.log(destinations)
-                        const newTrip = {
-                            title: formData.get('title'),
-                            description: formData.get('description'),
-                            reason: formData.get('reason'),
-                            destinations: destinations,
-                            events: []
+
+                        if (!edit) {
+                            const combinedDestinations = [
+                                {id: Date.now(), type: 'Starting Point', inputData: startingPoint},
+                                ...destinationsInputs,
+                                {id: Date.now(), type: 'Home', inputData: home}
+                            ];
+                            const destinations = combinedDestinations.map(destination => destination.inputData)
+                            const newTrip = {
+                                title: formData.get('title'),
+                                description: formData.get('description'),
+                                reason: formData.get('reason'),
+                                destinations: destinations,
+                                events: []
+                            }
+                            setFormData(newTrip)
+                        } else {
+                            const updatedTrip = {
+                                ...trip,
+                                title: formData.get('title'),
+                                description: formData.get('description'),
+                                reason: formData.get('reason'),
+                            }
+                            updateTrip(updatedTrip);
+                            window.location.reload()
                         }
-                        console.log(newTrip)
-                        setFormData(newTrip)
                         handleClose();
                     },
                 }}
             >
-                <DialogTitle>Add New Trip</DialogTitle>
+                <DialogTitle>{!edit ? "Add New Trip" : "Edit general Information"}</DialogTitle>
                 <DialogContent>
                     <FormControl sx={{m: "5% 0"}} fullWidth>
                         <TextField
@@ -159,6 +178,7 @@ export default function TripForm() {
                             label="Title"
                             type="text"
                             variant="outlined"
+                            defaultValue={trip?.title || ""}
                         />
                         <TextField
                             required
@@ -168,6 +188,7 @@ export default function TripForm() {
                             label="Reason"
                             type="text"
                             variant="outlined"
+                            defaultValue={trip?.reason || ""}
                         />
                         <TextField
                             required
@@ -177,32 +198,36 @@ export default function TripForm() {
                             name="description"
                             multiline
                             maxRows={4}
+                            defaultValue={trip?.description || ""}
                         />
                     </FormControl>
-                    <FormControl fullWidth>
-                        <FormLabel>
-                            <Typography variant="h5">Destinations</Typography>
-                        </FormLabel>
-                        <CountryCityDateInputs name="Starting Point"
-                                               handleInputChange={(_id, data) => handleStartingPointChange(data)}
-                        />
-                        {destinationsInputs.map((destination) =>
-                            <CountryCityDateInputs name={destination.type}
-                                                   handleInputChange={handleDestinationsInputsChange}
-                                                   handleDeleteInput={handleDeleteInput}
-                                                   key={destination.id}
-                                                   id={destination.id}
+
+                    {!edit &&
+                        <FormControl fullWidth>
+                            <FormLabel>
+                                <Typography variant="h5">Destinations</Typography>
+                            </FormLabel>
+                            <CountryCityDateInputs name="Starting Point"
+                                                   handleInputChange={(_id, data) => handleStartingPointChange(data)}
                             />
-                        )}
-                        <CountryCityDateInputs name="Home"
-                                               handleInputChange={(_id, data) => handleHomeChange(data)}
-                        />
-                        <Button onClick={handleAddNewInput}>Add Destination</Button>
-                    </FormControl>
+                            {destinationsInputs.map((destination) =>
+                                <CountryCityDateInputs name={destination.type}
+                                                       handleInputChange={handleDestinationsInputsChange}
+                                                       handleDeleteInput={handleDeleteInput}
+                                                       key={destination.id}
+                                                       id={destination.id}
+                                />
+                            )}
+                            <CountryCityDateInputs name="Home"
+                                                   handleInputChange={(_id, data) => handleHomeChange(data)}
+                            />
+                            <Button onClick={handleAddNewInput}>Add Destination</Button>
+                        </FormControl>
+                    }
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button type="submit">Add new Trip</Button>
+                    <Button type="submit">{!edit ? "Add" : "Save"}</Button>
                 </DialogActions>
             </Dialog>
         </Box>
