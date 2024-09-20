@@ -15,10 +15,10 @@ import EditIcon from '@mui/icons-material/Edit';
 type EditDestinationFormProps = {
     index?: number,
     edit?: boolean,
-    destinationType: string
+    destinationTyped?:  DestinationTyped
 }
 
-export default function DestinationForm({index, edit, destinationType}: EditDestinationFormProps) {
+export default function DestinationForm({index, edit, destinationTyped}: EditDestinationFormProps) {
     const [open, setOpen] = React.useState(false);
     const [destinationData, setDestinationData] = useState<InputData>(emptyInputData)
 
@@ -50,7 +50,7 @@ export default function DestinationForm({index, edit, destinationType}: EditDest
                     component: 'form',
                     onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
                         event.preventDefault();
-                        const typedUpdatedDestination: DestinationTyped = {...destinationData, type: destinationType}
+                        const typedUpdatedDestination: DestinationTyped = {...destinationData, type: destinationTyped.type}
 
                         if (index) {
                             handleEditTripEventDestination(index, typedUpdatedDestination)
@@ -61,9 +61,9 @@ export default function DestinationForm({index, edit, destinationType}: EditDest
                     },
                 }}
             >
-                <DialogTitle>{edit ? `Edit ${destinationType}` : "Add destination"}</DialogTitle>
+                <DialogTitle>{edit ? `Edit ${destinationTyped.type}` : "Add destination"}</DialogTitle>
                 <DialogContent>
-                    <CountryCityDateInputs handleInputChange={(_id, data) => handleDestinationChange(data)}/>
+                    <CountryCityDateInputs destinationTyped={destinationTyped} handleInputChange={(_id, data) => handleDestinationChange(data)}/>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
