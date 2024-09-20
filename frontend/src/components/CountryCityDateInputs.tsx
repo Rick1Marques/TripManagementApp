@@ -8,7 +8,7 @@ import {
     SelectChangeEvent, TextField,
     Typography
 } from "@mui/material";
-import {City, Country} from "country-state-city";
+import {City, Country, ICity} from "country-state-city";
 import {ChangeEvent, useEffect, useState} from "react";
 import {TripEventTyped} from "../model/TripEventTyped.ts";
 
@@ -37,13 +37,17 @@ export default function CountryCityDateInputs({
                                                   tripEventTyped
                                               }: TripFormDestinationInputProps) {
     const countries = Country.getAllCountries()
-    const [selectedCountry, setSelectedCountry] = useState<string>("")
+    const [selectedCountry, setSelectedCountry] = useState<string>(tripEventTyped?.countryIso || "")
     const cities = City.getCitiesOfCountry(selectedCountry)
-    const [selectedCity, setSelectedCity] = useState<string>("")
+    let city: ICity
+    if (tripEventTyped) {
+        city = cities?.find(c => c.name === tripEventTyped?.city)
+    }
+    const [selectedCity, setSelectedCity] = useState<string>(city?.name || "")
     const [selectedDate, setSelectedDate] = useState<string>(tripEventTyped?.date || "")
     const [coordinates, setCoordinates] = useState<{ latitude: string, longitude: string }>({
-        latitude: "",
-        longitude: ""
+        latitude: city.latitude,
+        longitude: city.latitude
     })
 
     useEffect(() => {
@@ -70,6 +74,8 @@ export default function CountryCityDateInputs({
 
     function handleChangeSelectedCountry(event: SelectChangeEvent<string>) {
         setSelectedCountry(event.target.value)
+        setSelectedCity("")
+        setCoordinates({latitude: "", longitude: ""})
     }
 
     function handleChangeSelectedDate(event: ChangeEvent<HTMLInputElement>) {
@@ -77,10 +83,10 @@ export default function CountryCityDateInputs({
     }
 
     function handleChangeSelectedCity(event: SelectChangeEvent<string>) {
-        const data = event.target.value.split("_")
-        const [city, latitude, longitude] = data
-        setSelectedCity(city)
-        setCoordinates({latitude: Number(latitude).toFixed(4), longitude: Number(longitude).toFixed(4)})
+        const cityName = event.target.value
+        setSelectedCity(cityName)
+        const city = cities!.find(c => c.name === cityName)
+        setCoordinates({latitude: Number(city.latitude).toFixed(4), longitude: Number(city.longitude).toFixed(4)})
     }
 
 
@@ -99,6 +105,7 @@ export default function CountryCityDateInputs({
                     id="country"
                     label="country"
                     onChange={handleChangeSelectedCountry}
+                    defaultValue={selectedCountry}
                 >
                     {countries.map(country =>
                         <MenuItem key={country.isoCode}
@@ -115,10 +122,11 @@ export default function CountryCityDateInputs({
                     id="city"
                     label="city"
                     onChange={handleChangeSelectedCity}
+                    defaultValue={selectedCity}
                 >
                     {cities!.map(city =>
                         <MenuItem key={`${city.name}_${city.latitude}_${city.longitude}`}
-                                  value={`${city.name}_${city.latitude}_${city.longitude}`}>{city.name} - {city.stateCode}</MenuItem>
+                                  value={city.name}>{city.name} - {city.stateCode}</MenuItem>
                     )}
                 </Select>
             </FormControl>
