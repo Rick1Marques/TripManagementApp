@@ -13,6 +13,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -28,14 +30,14 @@ class AppUserControllerTest {
     @DirtiesContext
     @WithMockUser(username = "test")
     void getLoggedInUser() throws Exception {
-        AppUser appUserTest = new AppUser("1", "test", "test");
+        AppUser appUserTest = new AppUser("1", "test", "test", List.of());
         appUserRepo.save(appUserTest);
 
-        mvc.perform(MockMvcRequestBuilders.get("/api/users/me"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/auth/me"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
                                                 {
-                                                        "tripId": "1",
+                                                        "id": "1",
                                                         "username":"test"
                                                 }
                         """
@@ -47,7 +49,7 @@ class AppUserControllerTest {
     @DirtiesContext
     void register() throws Exception {
         mvc.perform(MockMvcRequestBuilders
-                        .post("/api/users/register")
+                        .post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -65,7 +67,7 @@ class AppUserControllerTest {
                         """
 
                 ))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.tripId").exists());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists());
     }
 
 }
