@@ -15,10 +15,10 @@ import EditIcon from '@mui/icons-material/Edit';
 type EditDestinationFormProps = {
     index?: number,
     edit?: boolean,
-    destinationTyped?:  DestinationTyped
+    destinationType?:  string
 }
 
-export default function DestinationForm({index, edit, destinationTyped}: EditDestinationFormProps) {
+export default function DestinationForm({index, edit, destinationType}: EditDestinationFormProps) {
     const [open, setOpen] = React.useState(false);
     const [destinationData, setDestinationData] = useState<InputData>(emptyInputData)
 
@@ -50,20 +50,20 @@ export default function DestinationForm({index, edit, destinationTyped}: EditDes
                     component: 'form',
                     onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
                         event.preventDefault();
-                        const typedUpdatedDestination: DestinationTyped = {...destinationData, type: destinationTyped.type}
+                        const typedUpdatedDestination: DestinationTyped = {...destinationData, type: destinationType as string}
 
                         if (index) {
                             handleEditTripEventDestination(index, typedUpdatedDestination)
                         } else {
-                            handleAddTripEventDestination(destinationData)
+                            handleAddTripEventDestination({...destinationData, id: ""})
                         }
                         handleClose();
                     },
                 }}
             >
-                <DialogTitle>{edit ? `Edit ${destinationTyped.type}` : "Add destination"}</DialogTitle>
+                <DialogTitle>{edit ? `Edit ${destinationType}` : "Add destination"}</DialogTitle>
                 <DialogContent>
-                    <CountryCityDateInputs destinationTyped={destinationTyped} handleInputChange={(_id, data) => handleDestinationChange(data)}/>
+                    <CountryCityDateInputs destinationTyped={{...destinationData, type: ""}} handleInputChange={(_id, data) => handleDestinationChange(data)}/>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>

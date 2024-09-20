@@ -90,13 +90,13 @@ export default function TripTimeLine({edit, fullData=true}: TimeLineProps) {
                                     <Typography variant="body1"
                                                 paddingTop={0}>{`${data.countryFlag} ${data.city}`}</Typography>
                                     :
-                                    <Typography variant="body1">{`${data.title}`}</Typography>
+                                    <Typography variant="body1">{`${(data as TripEventTyped).title}`}</Typography>
 
                                 }
 
                                 {(data.type !== "event" && edit) &&
                                     <Stack maxWidth="100px" direction="row" justifyContent="space-between">
-                                        <DestinationForm index={index} edit={true} destinationTyped ={data as DestinationTyped}/>
+                                        <DestinationForm index={index} edit={true} destinationType={data.type}/>
                                         <Button variant="text"
                                                 disabled={data.type !== "destination"}
                                                 onClick={() => handleDeleteEvent(index)}><DeleteIcon/></Button>
@@ -108,7 +108,7 @@ export default function TripTimeLine({edit, fullData=true}: TimeLineProps) {
                                     <Stack maxWidth="100px" direction="row" justifyContent="space-between">
                                         <EventForm index={index}
                                                    edit={true}
-                                                   tripEventTyped={dataTimeLine[index]}/>
+                                                   tripEventTyped={dataTimeLine[index] as TripEventTyped}/>
                                         <Button variant="text"
                                                 onClick={() => handleDeleteEvent(index)}><DeleteIcon/></Button>
                                     </Stack>
