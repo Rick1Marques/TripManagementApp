@@ -40,13 +40,13 @@ type WeatherForecastProps = {
     currentDestination?: Destination
 }
 
-type WeatherForecastData = {
-    date: string,
-    temperature_2m_max: string,
-    temperature_2m_min: string,
-    daylight_duration: string,
-    uv_index_max: string,
-    precipitation_probability_max: string
+type WeatherForecastSingleData = {
+        date: string,
+        temperature_2m_max: string,
+        temperature_2m_min: string,
+        daylight_duration: string,
+        uv_index_max: string,
+        precipitation_probability_max: string
 }
 
 export default function WeatherForecast({trip, disable, currentDestination}: WeatherForecastProps) {
@@ -77,7 +77,7 @@ export default function WeatherForecast({trip, disable, currentDestination}: Wea
         daylight_duration: string,
         uv_index_max: string,
         precipitation_probability_max: string
-    ) {
+    ): WeatherForecastSingleData {
         return {
             date,
             temperature_2m_max,
@@ -88,15 +88,15 @@ export default function WeatherForecast({trip, disable, currentDestination}: Wea
         };
     }
 
-    const rows: WeatherForecastData[] = []
+    const rows: WeatherForecastSingleData[] = []
 
     date.forEach((_e: string, index: number) => {
-        const data = createData(
+        const data: WeatherForecastSingleData = createData(
             date[index],
-            `${Math.round(temperature_2m_max[index])}°`,
-            `${Math.round(temperature_2m_min[index])}°`,
-            `${Math.round(daylight_duration[index] / 60 / 60)}h`,
-            uv_index_max[index].toFixed(1).toString(),
+            `${Math.round(+temperature_2m_max[index])}°`,
+            `${Math.round(+temperature_2m_min[index])}°`,
+            `${Math.round(+daylight_duration[index] / 60 / 60)}h`,
+            (+uv_index_max[index]).toFixed(1).toString(),
             `${precipitation_probability_max[index]}%`
         )
         rows.push(data)

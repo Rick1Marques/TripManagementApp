@@ -13,6 +13,8 @@ import {emptyInputData, InputData} from "../../model/CountryCityDateData.ts";
 import {useNavigate} from "react-router-dom";
 import {Trip} from "../../model/Trip.ts";
 import {updateTrip} from "../../util/updateTrip.ts";
+import {Destination} from "../../model/Destination.ts";
+import {TripEvent} from "../../model/TripEvent.ts";
 
 type DestinationsInput = {
     id: number,
@@ -35,7 +37,7 @@ export default function TripForm({edit, trip}: TripFormProps) {
     const [destinationCounter, setDestinationCounter] = useState(1)
     const [startingPoint, setStartingPoint] = useState<InputData>(emptyInputData)
     const [home, setHome] = useState<InputData>(emptyInputData)
-    const [formData, setFormData] = useState()
+    const [formData, setFormData] = useState<Trip>()
 
     const loggedUserId = localStorage.getItem("loggedUserId")
 
@@ -145,20 +147,24 @@ export default function TripForm({edit, trip}: TripFormProps) {
                                 {id: Date.now(), type: 'Home', inputData: home}
                             ];
                             const destinations = combinedDestinations.map(destination => destination.inputData)
-                            const newTrip = {
-                                title: formData.get('title'),
-                                description: formData.get('description'),
-                                reason: formData.get('reason'),
-                                destinations: destinations,
-                                events: []
+                            const newTrip: Trip  = {
+                                title: formData.get('title') as string,
+                                description: formData.get('description') as string,
+                                reason: formData.get('reason') as string,
+                                destinations: destinations as Destination[],
+                                events: [],
+                                id: ""
                             }
                             setFormData(newTrip)
                         } else {
-                            const updatedTrip = {
+                            const updatedTrip : Trip = {
                                 ...trip,
-                                title: formData.get('title'),
-                                description: formData.get('description'),
-                                reason: formData.get('reason'),
+                                title: formData.get('title') as string,
+                                description: formData.get('description') as string,
+                                reason: formData.get('reason') as string,
+                                destinations: trip?.destinations as Destination[],
+                                events: trip?.events as TripEvent[],
+                                id: ""
                             }
                             updateTrip(updatedTrip);
                             window.location.reload()

@@ -66,7 +66,7 @@ export default function ItineraryContextProvider({children}: ItineraryContextPro
         setTripId(id)
     }
 
-    const destinationsTyped: DestinationTyped = tripData.destinations.map((destination, index) => {
+    const destinationsTyped: DestinationTyped[] = tripData.destinations.map((destination, index) => {
         let type: string;
         if (index === 0) {
             type = "starting-point"
@@ -83,7 +83,7 @@ export default function ItineraryContextProvider({children}: ItineraryContextPro
         }
     });
 
-    const tripEventsTyped: TripEventTyped = tripData.events.map(event => {
+    const tripEventsTyped: TripEventTyped[] = tripData.events.map(event => {
         return {
             ...event,
             date: event.date,
@@ -128,11 +128,16 @@ export default function ItineraryContextProvider({children}: ItineraryContextPro
     }
 
     function updateTripData(updatedList: (TripEventTyped | DestinationTyped)[]): Trip {
-        const eventsTyped: TripEventTyped[] = updatedList.filter(item => item.type === "event");
-        const destinationsTyped: DestinationTyped[] = updatedList.filter(item => item.type !== "event");
+        const eventsTyped: TripEventTyped[] = updatedList.filter((item): item is TripEventTyped => item.type === "event");
+        const destinationsTyped: DestinationTyped[] = updatedList.filter((item): item is DestinationTyped => item.type !== "event");
 
-        const tripEvents: TripEvent[] = eventsTyped.map(({ type, ...tripEvent }) => tripEvent);
-        const tripDestinations: Destination[] = destinationsTyped.map(({ type, ...tripDestination }) => tripDestination);
+        const tripEvents: TripEvent[] = eventsTyped.map(({ type, ...tripEvent }) => ({
+            ...tripEvent
+        }) as TripEvent);
+
+        const tripDestinations: Destination[] = destinationsTyped.map(({ type, ...tripDestination }) => ({
+            ...tripDestination
+        }) as Destination);
 
         return {
             ...tripData,

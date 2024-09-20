@@ -12,6 +12,7 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import {Destination} from "../../model/Destination.ts";
 
 export default function PageHome() {
     const [currentIndex, setCurrentIndex] = useState(1);
@@ -76,7 +77,7 @@ export default function PageHome() {
                     <ArrowBackIosNewIcon fontSize="large"/>
                 </IconButton>
 
-                {currentIndex === 0 && <OnGoingTrip trip={currentlyTrip} currentDestination={currentDestination}/>}
+                {currentIndex === 0 && <OnGoingTrip trip={currentlyTrip} currentDestination={currentDestination as Destination}/>}
                 {currentIndex === 1 && <TripSlideHome trip={nextTrip} type="next"/>}
                 {currentIndex === 2 && <TripSlideHome trip={lastTrip} type="last"/>}
 

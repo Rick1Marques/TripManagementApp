@@ -8,7 +8,7 @@ import {
     SelectChangeEvent, TextField,
     Typography
 } from "@mui/material";
-import {City, Country, ICity} from "country-state-city";
+import {City, Country} from "country-state-city";
 import {ChangeEvent, useEffect, useState} from "react";
 import {TripEventTyped} from "../model/TripEventTyped.ts";
 import {DestinationTyped} from "../model/DestinationTyped.ts";
@@ -48,13 +48,13 @@ export default function CountryCityDateInputs({
     }
     const [selectedCountry, setSelectedCountry] = useState<string>(country)
 
-    const cities = City.getCitiesOfCountry(selectedCountry)
-    let city: ICity
-    if (tripEventTyped) {
-        city = cities?.find(c => c.name === tripEventTyped?.city)
-    } else if(destinationTyped){
-        city = cities?.find(c => c.name === destinationTyped?.city)
-    }
+    const cities = City.getCitiesOfCountry(selectedCountry) || []
+    const city = tripEventTyped
+        ? cities.find(c => c.name === tripEventTyped?.city)
+        : destinationTyped
+            ? cities.find(c => c.name === destinationTyped?.city)
+            : undefined;
+
     const [selectedCity, setSelectedCity] = useState<string>(city?.name || "")
 
     let date = ""
@@ -102,10 +102,16 @@ export default function CountryCityDateInputs({
     }
 
     function handleChangeSelectedCity(event: SelectChangeEvent<string>) {
-        const cityName = event.target.value
-        setSelectedCity(cityName)
-        const city = cities!.find(c => c.name === cityName)
-        setCoordinates({latitude: Number(city.latitude).toFixed(4), longitude: Number(city.longitude).toFixed(4)})
+        const cityName = event.target.value;
+        setSelectedCity(cityName);
+
+        const selectedCity = cities?.find(c => c.name === cityName);
+        if (selectedCity) {
+            setCoordinates({
+                latitude: Number(selectedCity.latitude).toFixed(4),
+                longitude: Number(selectedCity.longitude).toFixed(4),
+            });
+        }
     }
 
 
@@ -165,7 +171,7 @@ export default function CountryCityDateInputs({
                     value={selectedDate}
                 />
             </FormControl>
-            {(handleDeleteInput) &&
+            {(handleDeleteInput && id !== undefined) &&
                 <Button onClick={() => handleDeleteInput(id)}>Delete</Button>
             }
         </FormControl>

@@ -66,15 +66,16 @@ export default function EventForm({index, edit, tripEventTyped}: EventFormProps)
                         const formData = new FormData(event.currentTarget);
 
                         const tripEvent: TripEvent = {
-                            title: formData.get("title"),
-                            category: formData.get("category"),
-                            description: formData.get("description"),
-                            address: formData.get("address"),
+                            title: formData.get("title") as string,
+                            category: formData.get("category") as Category,
+                            description: formData.get("description")  as string,
+                            address: formData.get("address")  as string,
                             country: countryCityDateData.country,
                             countryIso: countryCityDateData.countryIso,
                             countryFlag: countryCityDateData.countryFlag,
                             city: countryCityDateData.city,
-                            date: countryCityDateData.date
+                            date: countryCityDateData.date,
+                            id: ""
                         }
                         if (!edit) {
                             handleAddTripEventDestination(tripEvent)
