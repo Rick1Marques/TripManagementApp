@@ -11,6 +11,7 @@ import {
 import {City, Country, ICity} from "country-state-city";
 import {ChangeEvent, useEffect, useState} from "react";
 import {TripEventTyped} from "../model/TripEventTyped.ts";
+import {DestinationTyped} from "../model/DestinationTyped.ts";
 
 type InputData = {
     country: string,
@@ -26,7 +27,8 @@ type TripFormDestinationInputProps = {
     name?: string,
     handleDeleteInput?: (id: number) => void,
     handleInputChange: (id: number | null, inputData: InputData) => void,
-    tripEventTyped?: TripEventTyped
+    tripEventTyped?: TripEventTyped,
+    destinationTyped?:  DestinationTyped
 }
 
 export default function CountryCityDateInputs({
@@ -34,20 +36,37 @@ export default function CountryCityDateInputs({
                                                   name,
                                                   handleDeleteInput,
                                                   handleInputChange,
-                                                  tripEventTyped
+                                                  tripEventTyped,
+                                                  destinationTyped
                                               }: TripFormDestinationInputProps) {
     const countries = Country.getAllCountries()
-    const [selectedCountry, setSelectedCountry] = useState<string>(tripEventTyped?.countryIso || "")
+    let country = ""
+    if (tripEventTyped) {
+        country = tripEventTyped?.countryIso
+    } else if(destinationTyped){
+        country = destinationTyped?.countryIso
+    }
+    const [selectedCountry, setSelectedCountry] = useState<string>(country)
+
     const cities = City.getCitiesOfCountry(selectedCountry)
     let city: ICity
     if (tripEventTyped) {
         city = cities?.find(c => c.name === tripEventTyped?.city)
+    } else if(destinationTyped){
+        city = cities?.find(c => c.name === destinationTyped?.city)
     }
     const [selectedCity, setSelectedCity] = useState<string>(city?.name || "")
-    const [selectedDate, setSelectedDate] = useState<string>(tripEventTyped?.date || "")
+
+    let date = ""
+    if (tripEventTyped) {
+        date = tripEventTyped?.date
+    } else if(destinationTyped){
+        date = destinationTyped?.date
+    }
+    const [selectedDate, setSelectedDate] = useState<string>(date)
     const [coordinates, setCoordinates] = useState<{ latitude: string, longitude: string }>({
-        latitude: city.latitude,
-        longitude: city.latitude
+        latitude: city?.latitude || "",
+        longitude: city?.latitude || ""
     })
 
     useEffect(() => {
@@ -125,7 +144,7 @@ export default function CountryCityDateInputs({
                     defaultValue={selectedCity}
                 >
                     {cities!.map(city =>
-                        <MenuItem key={`${city.name}_${city.latitude}_${city.longitude}`}
+                        <MenuItem key={`${city.latitude}_${city.longitude}`}
                                   value={city.name}>{city.name} - {city.stateCode}</MenuItem>
                     )}
                 </Select>
