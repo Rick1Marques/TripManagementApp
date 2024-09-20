@@ -10,7 +10,6 @@ import Slide from '@mui/material/Slide';
 import {TransitionProps} from '@mui/material/transitions';
 import {useContext} from "react";
 import {ItineraryContext} from "../store/itinerary-context.tsx";
-import axios from "axios";
 import ModeEditOutlineRoundedIcon from "@mui/icons-material/ModeEditOutlineRounded";
 import {Stack} from "@mui/material";
 import TripTimeLine from "./TripTimeLine.tsx";
@@ -20,6 +19,7 @@ import DialogContent from "@mui/material/DialogContent";
 import {SpeedDial, SpeedDialAction} from "@mui/lab";
 import SaveIcon from '@mui/icons-material/Save';
 import AddIcon from '@mui/icons-material/Add';
+import {updateTrip} from "../util/updateTrip.ts";
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -33,27 +33,18 @@ const Transition = React.forwardRef(function Transition(
 export default function EditItinerary() {
     const [open, setOpen] = React.useState(false);
 
-    const loggedUserId = localStorage.getItem("loggedUserId");
-
     const {
         tripData,
     } = useContext(ItineraryContext)
-
-    async function putTripAddEvent() {
-        try {
-            const response = await axios.put(`/api/user/${loggedUserId}/trips`, tripData)
-            console.log("Event edited with success!", response.data)
-        } catch (err) {
-            console.log(err)
-        }
-    }
 
     const handleClickOpen = () => {
         setOpen(true)
     };
 
     async function handleSave() {
-        await putTripAddEvent()
+        if (tripData) {
+            await updateTrip(tripData)
+        }
         setOpen(false)
     }
 
@@ -63,8 +54,8 @@ export default function EditItinerary() {
     };
 
     const actions = [
-        { icon:  <EventForm/>, name: 'Event' },
-        { icon: <DestinationForm destinationType="destination"/>, name: 'Destination' },
+        {icon: <EventForm/>, name: 'Event'},
+        {icon: <DestinationForm destinationType="destination"/>, name: 'Destination'},
     ];
 
     return (
@@ -97,7 +88,7 @@ export default function EditItinerary() {
                     <Typography align="center" variant="h4" gutterBottom mt="0.5rem">
                         Edit Itinerary
                     </Typography>
-                        <TripTimeLine fullData={true} edit={true}/>
+                    <TripTimeLine fullData={true} edit={true}/>
                     <Stack direction="row" justifyContent="space-between">
                         <SpeedDial
                             ariaLabel="SpeedDial add"
