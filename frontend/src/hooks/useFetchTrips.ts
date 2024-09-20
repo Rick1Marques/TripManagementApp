@@ -2,15 +2,19 @@ import {useEffect, useState} from "react";
 import {Trip} from "../model/Trip.ts";
 import axios from "axios";
 
-export function useFetchTrips(){
-    const [trips, setTrips] = useState<Trip[] | null>(null)
+export function useFetchTrips() {
+    const [trips, setTrips] = useState<Trip[]>([])
+
+
+    const loggedUserId = localStorage.getItem("loggedUserId")
 
     useEffect(() => {
         async function fetchTrips() {
+
             try {
-                const response = await axios.get("/api/trips")
+                const response = await axios.get(`/api/user/${loggedUserId}/trips`)
                 if (response.status === 200) {
-                    const tripsData = await response.data
+                    const tripsData: Trip[] = await response.data
                     setTrips(tripsData)
                 }
             } catch (err) {
@@ -18,8 +22,12 @@ export function useFetchTrips(){
             }
         }
 
+        if (!loggedUserId) {
+            return;
+        }
+
         fetchTrips()
-    }, [])
+    }, [loggedUserId])
 
     return [trips]
 }

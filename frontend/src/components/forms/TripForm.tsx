@@ -29,6 +29,8 @@ export default function TripForm() {
     const [home, setHome] = useState<InputData>(emptyInputData)
     const [formData, setFormData] = useState()
 
+    const loggedUserId = localStorage.getItem("loggedUserId")
+
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -85,7 +87,7 @@ export default function TripForm() {
     useEffect(() => {
         async function postTrip() {
             try {
-                const response = await axios.post("/api/trips", formData)
+                const response = await axios.post(`/api/user/${loggedUserId}/trips`, formData)
                 console.log("Trip added with success!", response.data)
 
             } catch (err) {
@@ -132,7 +134,7 @@ export default function TripForm() {
                             {id: Date.now(), type: 'Home', inputData: home}
                         ];
                         const destinations = combinedDestinations.map(destination => destination.inputData)
-
+                        console.log(destinations)
                         const newTrip = {
                             title: formData.get('title'),
                             description: formData.get('description'),
@@ -140,6 +142,7 @@ export default function TripForm() {
                             destinations: destinations,
                             events: []
                         }
+                        console.log(newTrip)
                         setFormData(newTrip)
                         handleClose();
                     },

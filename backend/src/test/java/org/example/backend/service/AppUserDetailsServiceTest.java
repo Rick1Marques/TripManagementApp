@@ -19,7 +19,7 @@ class AppUserDetailsServiceTest {
 
     @Test
     void loadUserByUsername() {
-        AppUser appUser = new AppUser("1", "test", "test");
+        AppUser appUser = new AppUser("1", "test", "test", List.of());
 
         when(appUserService.findByUserName("test")).thenReturn(appUser);
 

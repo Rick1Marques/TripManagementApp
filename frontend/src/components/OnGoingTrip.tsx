@@ -23,7 +23,6 @@ export default function OnGoingTrip({trip, currentDestination}: OnGoingTripProps
         navigate(`/my-trips/${id}`)
     }
 
-
     return (
         <Stack alignItems="center" height="100vh" justifyContent="space-around" padding="0 .5rem .5rem">
 
@@ -56,7 +55,7 @@ export default function OnGoingTrip({trip, currentDestination}: OnGoingTripProps
             </Stack>
 
             <Stack width="100%" direction="row" justifyContent="space-between">
-                 <WeatherForecast disable={false} trip={trip}/>
+                 <WeatherForecast disable={false} trip={trip} currentDestination={currentDestination}/>
                 <Button variant="text" sx={{alignSelf: "end"}} size="small"
                         onClick={() => handleClick(trip.id)}>Details</Button>
             </Stack>

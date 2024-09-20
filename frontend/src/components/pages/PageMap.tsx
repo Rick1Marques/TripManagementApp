@@ -5,6 +5,7 @@ import {getDate} from "../../util/formatting.ts";
 
 type MarkerData = {
     city: string,
+    countryFlag: string,
     coordinates: [number, number],
     popUp: string
 }
@@ -22,6 +23,7 @@ export default function PageMap() {
         if (!acc.some(markerData => markerData.city === destination.city)) {
             acc.push({
                 city: destination.city,
+                countryFlag: destination.countryFlag,
                 coordinates: [+destination.coordinates.latitude, +destination.coordinates.longitude],
                 popUp: getDate(destination.date)
             })
@@ -39,7 +41,7 @@ export default function PageMap() {
             {mapMarkers.map(marker =>
                 <Marker key={marker.city} position={marker.coordinates}>
                     <Popup>
-                        {marker.city}
+                        {marker.countryFlag} {marker.city}
                     </Popup>
                 </Marker>
             )}

@@ -50,7 +50,6 @@ export default function TripTimeLine({edit, fullData=true}: TimeLineProps) {
         }, {} as Record<string, (DestinationTyped | TripEventTyped)[]>)
     }
 
-
     const groupedDataByDate = groupDataByDate(dataTimeLine)[getDate(new Date().toString())]
 
     let dataToRender: (DestinationTyped | TripEventTyped)[]
@@ -89,7 +88,7 @@ export default function TripTimeLine({edit, fullData=true}: TimeLineProps) {
                             <TimelineContent>
                                 {data.type !== "event" ?
                                     <Typography variant="body1"
-                                                paddingTop={0}>{`${data.country} - ${data.city}`}</Typography>
+                                                paddingTop={0}>{`${data.countryFlag} ${data.city}`}</Typography>
                                     :
                                     <Typography variant="body1">{`${data.title}`}</Typography>
 

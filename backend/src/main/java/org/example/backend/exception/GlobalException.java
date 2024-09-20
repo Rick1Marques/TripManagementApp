@@ -13,4 +13,10 @@ public class GlobalException {
         return new ErrorObject(exception.getMessage());
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorObject handleUserNotFoundException(UserNotFoundException exception){
+        return new ErrorObject(exception.getMessage());
+    }
+
 }

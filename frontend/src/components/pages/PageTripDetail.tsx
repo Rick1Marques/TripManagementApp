@@ -15,9 +15,10 @@ export default function PageTripDetail() {
 
     handleIdChange(id || "");
 
-if(!tripData){
+if(!tripData?.id){
     return <h1>Loading...</h1>
 }
+
     return (
         <Stack gap="1rem">
             <Typography gutterBottom variant="h4" alignSelf="center">
@@ -53,7 +54,7 @@ if(!tripData){
             </Typography>
                 <EditItinerary/>
             </Stack>
-            <TripTimeLine/>
+            <TripTimeLine fullData={true}/>
         </Stack>
     )
 }

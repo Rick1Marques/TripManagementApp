@@ -14,14 +14,18 @@ import axios from "axios";
 import {useNavigate} from "react-router-dom";
 
 export default function PageHome() {
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const [currentIndex, setCurrentIndex] = useState(1);
     const [trips] = useFetchTrips()
 
     const navigate = useNavigate()
 
-    if (!trips) {
+    if (trips.length === 0) {
         return (
-            <h1>Loading...</h1>
+            <Stack width="100%">
+                <h1>Add a trip...</h1>
+                <Button onClick={handleLogout}>Logout</Button>
+                <TripForm/>
+            </Stack>
         )
     }
 
@@ -37,13 +41,15 @@ export default function PageHome() {
     const {lastTrip, nextTrip} = getLastAndNextTrips(trips)
 
     const currentlyTrip = onGoingTrip[0] || null;
-    const currentDestination = getCurrentDestination(currentlyTrip.destinations)
 
     const firstPage = currentlyTrip ? 0 : 1;
 
+    const currentDestination = getCurrentDestination(currentlyTrip?.destinations || null)
+
     async function handleLogout() {
         try {
-            await axios.post("/api/users/logout")
+            await axios.post("/api/auth/logout")
+            localStorage.removeItem("loggedUserId");
             console.log("Logged out")
             navigate("/login")
         } catch (err) {

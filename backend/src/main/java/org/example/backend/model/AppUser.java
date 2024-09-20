@@ -1,11 +1,11 @@
 package org.example.backend.model;
 
-import org.springframework.data.mongodb.core.mapping.MongoId;
+import java.util.List;
 
 public record AppUser(
-        @MongoId
         String id,
         String username,
-        String password
+        String password,
+        List<Trip> trips
 ) {
 }

@@ -10,7 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AppUserController {
 
@@ -28,9 +28,8 @@ public class AppUserController {
     }
     
     @PostMapping("/login")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void login() {
-        // Trigger login process
+    public AppUserResponse login() {
+        return appUserService.getLoggedInUser();
     }
 
     @PostMapping("/logout")

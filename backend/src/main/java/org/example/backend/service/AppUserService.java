@@ -11,11 +11,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AppUserService {
     private final AppUserRepo appUserRepo;
     private final PasswordEncoder passwordEncoder;
+    private final IdService idService;
 
     public AppUser findByUserName(String username){
         return appUserRepo
@@ -30,7 +33,7 @@ public class AppUserService {
     }
 
     public AppUserResponse register(AppUserRegisterDto appUserRegisterDto){
-        AppUser appUser = new AppUser(null, appUserRegisterDto.username(), passwordEncoder.encode(appUserRegisterDto.password()));
+        AppUser appUser = new AppUser(idService.randomId(), appUserRegisterDto.username(), passwordEncoder.encode(appUserRegisterDto.password()), List.of());
         appUser = appUserRepo.save(appUser);
         return new AppUserResponse(appUser.id(), appUser.username());
     }
