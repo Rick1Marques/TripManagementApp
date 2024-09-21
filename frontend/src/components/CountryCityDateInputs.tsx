@@ -2,16 +2,14 @@ import {
     Button,
     FormControl,
     FormLabel,
-    InputLabel,
-    MenuItem,
-    Select,
-    SelectChangeEvent, TextField,
+    TextField,
     Typography
 } from "@mui/material";
-import {City, Country} from "country-state-city";
+import {City, Country, ICity, ICountry} from "country-state-city";
 import {ChangeEvent, useEffect, useState} from "react";
 import {TripEventTyped} from "../model/TripEventTyped.ts";
 import {DestinationTyped} from "../model/DestinationTyped.ts";
+import Autocomplete from '@mui/material/Autocomplete';
 
 type InputData = {
     country: string,
@@ -28,7 +26,7 @@ type TripFormDestinationInputProps = {
     handleDeleteInput?: (id: number) => void,
     handleInputChange: (id: number | null, inputData: InputData) => void,
     tripEventTyped?: TripEventTyped,
-    destinationTyped?:  DestinationTyped
+    destinationTyped?: DestinationTyped
 }
 
 export default function CountryCityDateInputs({
@@ -43,7 +41,7 @@ export default function CountryCityDateInputs({
     let country = ""
     if (tripEventTyped) {
         country = tripEventTyped?.countryIso
-    } else if(destinationTyped){
+    } else if (destinationTyped) {
         country = destinationTyped?.countryIso
     }
     const [selectedCountry, setSelectedCountry] = useState<string>(country)
@@ -60,7 +58,7 @@ export default function CountryCityDateInputs({
     let date = ""
     if (tripEventTyped) {
         date = tripEventTyped?.date
-    } else if(destinationTyped){
+    } else if (destinationTyped) {
         date = destinationTyped?.date
     }
     const [selectedDate, setSelectedDate] = useState<string>(date)
@@ -91,27 +89,9 @@ export default function CountryCityDateInputs({
         }
     }, [selectedCountry, selectedCity, selectedDate, coordinates, id]);
 
-    function handleChangeSelectedCountry(event: SelectChangeEvent<string>) {
-        setSelectedCountry(event.target.value)
-        setSelectedCity("")
-        setCoordinates({latitude: "", longitude: ""})
-    }
 
     function handleChangeSelectedDate(event: ChangeEvent<HTMLInputElement>) {
         setSelectedDate(event.target.value)
-    }
-
-    function handleChangeSelectedCity(event: SelectChangeEvent<string>) {
-        const cityName = event.target.value;
-        setSelectedCity(cityName);
-
-        const selectedCity = cities?.find(c => c.name === cityName);
-        if (selectedCity) {
-            setCoordinates({
-                latitude: Number(selectedCity.latitude).toFixed(4),
-                longitude: Number(selectedCity.longitude).toFixed(4),
-            });
-        }
     }
 
 
@@ -123,40 +103,60 @@ export default function CountryCityDateInputs({
                 </FormLabel>
             }
             <FormControl>
-                <InputLabel id="country">Country</InputLabel>
-                <Select
-                    required
-                    labelId="country"
+                <Autocomplete
                     id="country"
-                    label="country"
-                    onChange={handleChangeSelectedCountry}
-                    defaultValue={selectedCountry}
-                >
-                    {countries.map(country =>
-                        <MenuItem key={country.isoCode}
-                                  value={country.isoCode}>{country.flag} {country.name}</MenuItem>
+                    options={countries}
+                    value={Country.getCountryByCode(selectedCountry)}
+                    getOptionLabel={(option: ICountry) => `${option.flag} ${option.name}`}
+                    onChange={(_event, newValue) => {
+                        if (newValue) {
+                            setSelectedCountry(newValue.isoCode);
+                            setCoordinates({latitude: "", longitude: ""});
+                        } else {
+                            setSelectedCountry("");
+                        }
+                    }}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            label="Country"
+                        />
                     )}
-                </Select>
+                />
             </FormControl>
             <FormControl>
-                <InputLabel id="city">City</InputLabel>
-                <Select
-                    disabled={selectedCountry === ""}
-                    required
-                    labelId="city"
+                <Autocomplete
                     id="city"
-                    label="city"
-                    onChange={handleChangeSelectedCity}
-                    defaultValue={selectedCity}
-                >
-                    {cities!.map(city =>
-                        <MenuItem key={`${city.latitude}_${city.longitude}`}
-                                  value={city.name}>{city.name} - {city.stateCode}</MenuItem>
+                    disabled={!selectedCountry}
+                    options={cities}
+                    value={cities?.find(c => c.name === selectedCity)}
+                    getOptionLabel={(option: ICity) => `${option.name} - ${option.stateCode}`}
+                    onChange={(_event, newValue) => {
+                        if (newValue) {
+                            setSelectedCity(newValue.name);
+                            setCoordinates({
+                                latitude: Number(newValue.latitude).toFixed(4),
+                                longitude: Number(newValue.longitude).toFixed(4),
+                            })
+                        } else {
+                            setSelectedCity("");
+                            setCoordinates({
+                                latitude:"",
+                                longitude:""
+                            })
+                        }
+                    }}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            label="City"
+                        />
                     )}
-                </Select>
+                />
             </FormControl>
             <FormControl>
                 <TextField
+                    defaultValue={selectedDate}
                     type="datetime-local"
                     label="Date"
                     variant="standard"
@@ -168,7 +168,6 @@ export default function CountryCityDateInputs({
                         }
                     }}
                     sx={{mt: 2}}
-                    value={selectedDate}
                 />
             </FormControl>
             {(handleDeleteInput && id !== undefined) &&
