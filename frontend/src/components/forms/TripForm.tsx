@@ -63,6 +63,12 @@ export default function TripForm({edit, trip}: TripFormProps) {
         setDestinationsInputs(prevState =>
             prevState.map(destination => destination.id === id
                 ? {...destination, inputData: inputData} : destination)
+                .sort((a, b) => {
+                    const dateA = new Date(a.inputData.date)
+                    const dateB = new Date(b.inputData.date)
+
+                    return dateA.getTime() - dateB.getTime();
+                })
         )
     }
 
@@ -112,6 +118,7 @@ export default function TripForm({edit, trip}: TripFormProps) {
         }
     }, [formData])
 
+
     return (
         <Box>
             <Button variant="outlined"
@@ -147,7 +154,7 @@ export default function TripForm({edit, trip}: TripFormProps) {
                                 {id: Date.now(), type: 'Home', inputData: home}
                             ];
                             const destinations = combinedDestinations.map(destination => destination.inputData)
-                            const newTrip: Trip  = {
+                            const newTrip: Trip = {
                                 title: formData.get('title') as string,
                                 description: formData.get('description') as string,
                                 reason: formData.get('reason') as string,
@@ -157,7 +164,7 @@ export default function TripForm({edit, trip}: TripFormProps) {
                             }
                             setFormData(newTrip)
                         } else {
-                            const updatedTrip : Trip = {
+                            const updatedTrip: Trip = {
                                 ...trip,
                                 title: formData.get('title') as string,
                                 description: formData.get('description') as string,
@@ -220,6 +227,8 @@ export default function TripForm({edit, trip}: TripFormProps) {
                                 <CountryCityDateInputs name={destination.type}
                                                        handleInputChange={handleDestinationsInputsChange}
                                                        handleDeleteInput={handleDeleteInput}
+                                                       minDate={startingPoint?.date}
+                                                       maxDate={home?.date}
                                                        key={destination.id}
                                                        id={destination.id}
                                 />

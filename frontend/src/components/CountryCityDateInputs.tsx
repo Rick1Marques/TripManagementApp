@@ -26,7 +26,9 @@ type TripFormDestinationInputProps = {
     handleDeleteInput?: (id: number) => void,
     handleInputChange: (id: number | null, inputData: InputData) => void,
     tripEventTyped?: TripEventTyped,
-    destinationTyped?: DestinationTyped
+    destinationTyped?: DestinationTyped,
+    minDate?: string,
+    maxDate?: string,
 }
 
 export default function CountryCityDateInputs({
@@ -35,7 +37,9 @@ export default function CountryCityDateInputs({
                                                   handleDeleteInput,
                                                   handleInputChange,
                                                   tripEventTyped,
-                                                  destinationTyped
+                                                  destinationTyped,
+                                                  minDate,
+                                                  maxDate
                                               }: TripFormDestinationInputProps) {
     const countries = Country.getAllCountries()
     let country = ""
@@ -89,10 +93,13 @@ export default function CountryCityDateInputs({
         }
     }, [selectedCountry, selectedCity, selectedDate, coordinates, id]);
 
-
     function handleChangeSelectedDate(event: ChangeEvent<HTMLInputElement>) {
         setSelectedDate(event.target.value)
     }
+
+
+    console.log("Min Date:", minDate);
+    console.log("Max Date:", maxDate);
 
 
     return (
@@ -141,8 +148,8 @@ export default function CountryCityDateInputs({
                         } else {
                             setSelectedCity("");
                             setCoordinates({
-                                latitude:"",
-                                longitude:""
+                                latitude: "",
+                                longitude: ""
                             })
                         }
                     }}
@@ -155,6 +162,7 @@ export default function CountryCityDateInputs({
                 />
             </FormControl>
             <FormControl>
+
                 <TextField
                     defaultValue={selectedDate}
                     type="datetime-local"
@@ -165,7 +173,11 @@ export default function CountryCityDateInputs({
                     slotProps={{
                         inputLabel: {
                             shrink: true,
-                        }
+                        },
+                        htmlInput: {
+                            min: minDate,
+                            max: maxDate
+                        },
                     }}
                     sx={{mt: 2}}
                 />
