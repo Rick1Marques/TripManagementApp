@@ -96,7 +96,7 @@ export default function TripTimeLine({edit, fullData=true}: TimeLineProps) {
 
                                 {(data.type !== "event" && edit) &&
                                     <Stack maxWidth="100px" direction="row" justifyContent="space-between">
-                                        <DestinationForm index={index} edit={true} destinationType={data.type}/>
+                                        <DestinationForm index={index} edit={true} destinationTyped={data as DestinationTyped}/>
                                         <Button variant="text"
                                                 disabled={data.type !== "destination"}
                                                 onClick={() => handleDeleteEvent(index)}><DeleteIcon/></Button>
