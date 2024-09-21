@@ -55,7 +55,7 @@ export default function EditItinerary() {
 
     const actions = [
         {icon: <EventForm/>, name: 'Event'},
-        {icon: <DestinationForm destinationType="destination"/>, name: 'Destination'},
+        {icon: <DestinationForm />, name: 'Destination'},
     ];
 
     return (
