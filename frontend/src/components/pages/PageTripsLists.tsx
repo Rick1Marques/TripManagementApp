@@ -14,12 +14,12 @@ export default function PageTripsLists() {
         )
     }
 
-    const {pastTrips, onGoingTrip, futureTrips} = getTimeGroupedTrips(trips)
+    const {pastTrips, ongoingTrip, futureTrips} = getTimeGroupedTrips(trips)
 
     return (
         <Box>
             <Stack>
-                <TripsList title="On going Trip" list={onGoingTrip}/>
+                <TripsList title="On going Trip" list={ongoingTrip}/>
                 <TripsList title="Future Trips" list={futureTrips}/>
                 <TripsList title="Past Trips" list={pastTrips}/>
             </Stack>

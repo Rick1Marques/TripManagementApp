@@ -33,7 +33,7 @@ export default function TripCard({trip}: TripCardProps) {
 
 
     return (
-        <Card sx={{display: "flex", flexDirection: "column", alignItems: "center", width: "100%"}}>
+        <Card sx={{display: "flex", flexDirection: "column", alignItems: "center", margin: "5px"}}>
             <Typography gutterBottom variant="h5">
                 {trip.title}
             </Typography>
