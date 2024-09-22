@@ -38,10 +38,10 @@ export default function PageHome() {
         setCurrentIndex(currentIndex - 1);
     };
 
-    const {onGoingTrip} = getTimeGroupedTrips(trips)
+    const {ongoingTrip} = getTimeGroupedTrips(trips)
     const {lastTrip, nextTrip} = getLastAndNextTrips(trips)
 
-    const currentlyTrip = onGoingTrip[0] || null;
+    const currentlyTrip = ongoingTrip[0] || null;
 
     const firstPage = currentlyTrip ? 0 : 1;
 

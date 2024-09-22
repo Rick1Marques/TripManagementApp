@@ -17,7 +17,7 @@ export default function App() {
                     <Route path="/my-trips" element={<PageTripsLists/>}/>
                     <Route path="/my-trips/:id" element={<PageTripDetail/>}/>
                     <Route path="/home" element={<PageHome/>}/>
-                    <Route path="/map" element={<PageMap/>}/>
+                    <Route path="/map" element={<PageMap period="onGoing"/>}/>
                 </Routes>
             </ItineraryContextProvider>
     )

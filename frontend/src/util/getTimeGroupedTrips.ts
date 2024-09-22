@@ -4,7 +4,7 @@ export function getTimeGroupedTrips(trips: Trip[]){
     const currentDate = new Date()
     const pastTrips: Trip[] = []
     const futureTrips: Trip[] = []
-    const onGoingTrip: Trip[] = []
+    const ongoingTrip: Trip[] = []
 
     trips?.forEach(trip => {
         const startDate = new Date(trip.destinations[0].date)
@@ -14,10 +14,10 @@ export function getTimeGroupedTrips(trips: Trip[]){
         } else if (returnDate < currentDate) {
             pastTrips.push(trip)
         } else {
-            onGoingTrip.push(trip)
+            ongoingTrip.push(trip)
         }
     })
 
-    return {pastTrips, onGoingTrip, futureTrips}
+    return {pastTrips, ongoingTrip, futureTrips}
 
 }
