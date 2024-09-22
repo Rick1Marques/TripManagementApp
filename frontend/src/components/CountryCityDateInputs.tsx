@@ -97,11 +97,6 @@ export default function CountryCityDateInputs({
         setSelectedDate(event.target.value)
     }
 
-
-    console.log("Min Date:", minDate);
-    console.log("Max Date:", maxDate);
-
-
     return (
         <FormControl fullWidth>
             {name &&

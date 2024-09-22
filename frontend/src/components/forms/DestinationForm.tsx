@@ -15,7 +15,7 @@ import EditIcon from '@mui/icons-material/Edit';
 type EditDestinationFormProps = {
     index?: number,
     edit?: boolean,
-    destinationTyped?:  DestinationTyped
+    destinationTyped?: DestinationTyped
 }
 
 export default function DestinationForm({index, edit, destinationTyped}: EditDestinationFormProps) {
@@ -41,7 +41,7 @@ export default function DestinationForm({index, edit, destinationTyped}: EditDes
 
             <Button variant="text" onClick={handleClickOpen}>
                 {edit ? <EditIcon fontSize="small"/> :
-                        <AirlineStopsIcon fontSize="medium"/>}
+                    <AirlineStopsIcon fontSize="medium"/>}
             </Button>
             <Dialog
                 open={open}
@@ -50,12 +50,14 @@ export default function DestinationForm({index, edit, destinationTyped}: EditDes
                     component: 'form',
                     onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
                         event.preventDefault();
-                        const typedUpdatedDestination: DestinationTyped = {...destinationData, type: destinationTyped?.type as string}
-
-                        if (index) {
-                            handleEditTripEventDestination(index, typedUpdatedDestination)
-                        } else {
+                        const typedUpdatedDestination: DestinationTyped = {
+                            ...destinationData,
+                            type: destinationTyped?.type as string
+                        }
+                        if (!edit) {
                             handleAddTripEventDestination({...destinationData, id: ""})
+                        } else {
+                            handleEditTripEventDestination(index as number, typedUpdatedDestination)
                         }
                         handleClose();
                     },
@@ -63,7 +65,8 @@ export default function DestinationForm({index, edit, destinationTyped}: EditDes
             >
                 <DialogTitle>{edit ? `Edit ${destinationTyped?.type}` : "Add destination"}</DialogTitle>
                 <DialogContent>
-                    <CountryCityDateInputs destinationTyped={destinationTyped} handleInputChange={(_id, data) => handleDestinationChange(data)}/>
+                    <CountryCityDateInputs destinationTyped={destinationTyped}
+                                           handleInputChange={(_id, data) => handleDestinationChange(data)}/>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
