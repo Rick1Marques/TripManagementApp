@@ -18,7 +18,7 @@ export default function PageTripsLists() {
 
     return (
         <Box>
-            <Stack>
+            <Stack >
                 <TripsList title="On going Trip" list={ongoingTrip}/>
                 <TripsList title="Future Trips" list={futureTrips}/>
                 <TripsList title="Past Trips" list={pastTrips}/>
