@@ -11,18 +11,18 @@ type TripsListProps = {
 
 export default function TripsList({title, list}: TripsListProps) {
     return (
-        <Accordion defaultExpanded >
+        <Accordion defaultExpanded  >
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon/>}
                 aria-controls="panel1-content"
                 id="panel1-header"
             >
-                <Typography variant="h4" gutterBottom>
+                <Typography marginTop="15px" variant="h4" gutterBottom>
                     {title}
                 </Typography>
             </AccordionSummary>
             <AccordionDetails sx={{padding:"0px"}}>
-                <Stack>
+                <Stack >
                     {list.map(trip =>
                             <TripCard key={trip.id} trip={trip}/>
                     )

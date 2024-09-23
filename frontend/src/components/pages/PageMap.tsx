@@ -76,10 +76,10 @@ export default function PageMap() {
 
     return (
         <Stack height="100vh" width="100vw">
-            <Stack direction="row" height="20%" width="100%">
-                <Stack direction="column" height="100%" width="65%">
-                    <Stack width="100%" direction="row" justifyContent="center">
-                        <Stack alignItems="center" width="50%">
+            <Stack direction="row" height="20%" width="100%" padding="2%">
+                <Stack direction="column" height="100%" width="65%" gap="2%">
+                    <Stack marginLeft="30px" width="100%" direction="row" justifyContent="center">
+                        <Stack alignItems="center" width="40%">
                             <Typography variant="subtitle1">
                                 Cities
                             </Typography>
@@ -87,7 +87,7 @@ export default function PageMap() {
                                 {mapMarkers.length}
                             </Typography>
                         </Stack>
-                        <Stack alignItems="center" width="50%">
+                        <Stack alignItems="center" width="40%">
                             <Typography variant="subtitle1">
                                 Countries
                             </Typography>
