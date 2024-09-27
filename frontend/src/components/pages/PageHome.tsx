@@ -38,15 +38,15 @@ export default function PageHome() {
     const {ongoingTrip} = getTimeGroupedTrips(trips)
     const {lastTrip, nextTrip} = getLastAndNextTrips(trips)
 
-    const currentlyTrip = ongoingTrip[0] || null;
+    const currentTrip = ongoingTrip[0] || null;
 
-    const firstPage = currentlyTrip ? 0 : 1;
+    const firstPage = currentTrip ? 0 : 1;
 
-    const currentDestination = getCurrentDestination(currentlyTrip?.destinations || null)
+    const currentDestination = getCurrentDestination(currentTrip?.destinations || null)
 
     return (
         <Stack width="100%">
-            <TripForm/>
+
             <Stack width="100%" direction="row" justifyContent="center" alignItems="center" position="relative">
                 <IconButton
                     onClick={handlePrev}
@@ -55,14 +55,14 @@ export default function PageHome() {
                         position: 'absolute',
                         left: '10px',
                         zIndex: 1,
-                        top: '50%',
+                        top: '9.5vh',
                         transform: 'translateY(-50%)',
                     }}
                 >
                     <ArrowBackIosNewIcon fontSize="large"/>
                 </IconButton>
 
-                {currentIndex === 0 && <OnGoingTrip trip={currentlyTrip} currentDestination={currentDestination as Destination}/>}
+                {currentIndex === 0 && <OnGoingTrip trip={currentTrip} currentDestination={currentDestination as Destination}/>}
                 {currentIndex === 1 && <TripSlideHome trip={nextTrip} type="next"/>}
                 {currentIndex === 2 && <TripSlideHome trip={lastTrip} type="last"/>}
 
@@ -73,7 +73,7 @@ export default function PageHome() {
                         position: 'absolute',
                         right: '10px',
                         zIndex: 1,
-                        top: '50%',
+                        top: '9.5vh',
                         transform: 'translateY(-50%)',
                     }}
                 >

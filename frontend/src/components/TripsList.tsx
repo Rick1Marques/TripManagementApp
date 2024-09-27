@@ -17,7 +17,7 @@ export default function TripsList({title, list}: TripsListProps) {
                 aria-controls="panel1-content"
                 id="panel1-header"
             >
-                <Typography marginTop="15px" variant="h4" gutterBottom>
+                <Typography marginTop="1.5rem" variant="h4" gutterBottom>
                     {title}
                 </Typography>
             </AccordionSummary>
