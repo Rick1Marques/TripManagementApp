@@ -1,7 +1,7 @@
 import TripsList from "../TripsList.tsx";
 import {getTimeGroupedTrips} from "../../util/getTimeGroupedTrips.ts";
 import {useFetchTrips} from "../../hooks/useFetchTrips.ts";
-import {Box, Stack} from "@mui/material";
+import { Stack} from "@mui/material";
 
 export default function PageTripsLists() {
 
@@ -17,12 +17,10 @@ export default function PageTripsLists() {
     const {pastTrips, ongoingTrip, futureTrips} = getTimeGroupedTrips(trips)
 
     return (
-        <Box>
-            <Stack >
-                <TripsList title="On going Trip" list={ongoingTrip}/>
-                <TripsList title="Future Trips" list={futureTrips}/>
-                <TripsList title="Past Trips" list={pastTrips}/>
-            </Stack>
-        </Box>
+        <Stack>
+            <TripsList title="Ongoing Trips" list={ongoingTrip}/>
+            <TripsList title="Future Trips" list={futureTrips}/>
+            <TripsList title="Past Trips" list={pastTrips}/>
+        </Stack>
     )
 }

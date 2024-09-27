@@ -71,6 +71,8 @@ export default function CountryCityDateInputs({
         longitude: city?.latitude || ""
     })
 
+    const [tempDate, setTempDate] = useState<string>("");
+
     useEffect(() => {
         const country = Country.getCountryByCode(selectedCountry);
         const countryName = selectedCountry ? country!.name : "";
@@ -94,92 +96,98 @@ export default function CountryCityDateInputs({
     }, [selectedCountry, selectedCity, selectedDate, coordinates, id]);
 
     function handleChangeSelectedDate(event: ChangeEvent<HTMLInputElement>) {
-        setSelectedDate(event.target.value)
+        const value = event.target.value;
+        setTempDate(value);
+
+        if (value.length === 16) {
+            setSelectedDate(value);
+        }
     }
 
-    return (
-        <FormControl fullWidth>
-            {name &&
-                <FormLabel sx={{m: "2% 0"}}>
-                    <Typography variant="h6">{name}</Typography>
-                </FormLabel>
-            }
-            <FormControl>
-                <Autocomplete
-                    id="country"
-                    options={countries}
-                    value={Country.getCountryByCode(selectedCountry)}
-                    getOptionLabel={(option: ICountry) => `${option.flag} ${option.name}`}
-                    onChange={(_event, newValue) => {
-                        if (newValue) {
-                            setSelectedCountry(newValue.isoCode);
-                            setCoordinates({latitude: "", longitude: ""});
-                        } else {
-                            setSelectedCountry("");
-                        }
-                    }}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            label="Country"
-                        />
-                    )}
-                />
-            </FormControl>
-            <FormControl>
-                <Autocomplete
-                    id="city"
-                    disabled={!selectedCountry}
-                    options={cities}
-                    value={cities?.find(c => c.name === selectedCity)}
-                    getOptionLabel={(option: ICity) => `${option.name} - ${option.stateCode}`}
-                    onChange={(_event, newValue) => {
-                        if (newValue) {
-                            setSelectedCity(newValue.name);
-                            setCoordinates({
-                                latitude: Number(newValue.latitude).toFixed(4),
-                                longitude: Number(newValue.longitude).toFixed(4),
-                            })
-                        } else {
-                            setSelectedCity("");
-                            setCoordinates({
-                                latitude: "",
-                                longitude: ""
-                            })
-                        }
-                    }}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            label="City"
-                        />
-                    )}
-                />
-            </FormControl>
-            <FormControl>
+        return (
+            <FormControl fullWidth>
+                {name &&
+                    <FormLabel sx={{m: "2% 0"}}>
+                        <Typography variant="h6">{name}</Typography>
+                    </FormLabel>
+                }
+                <FormControl>
+                    <Autocomplete
+                        id="country"
+                        options={countries}
+                        value={Country.getCountryByCode(selectedCountry)}
+                        getOptionLabel={(option: ICountry) => `${option.flag} ${option.name}`}
+                        onChange={(_event, newValue) => {
+                            if (newValue) {
+                                setSelectedCountry(newValue.isoCode);
+                                setCoordinates({latitude: "", longitude: ""});
+                            } else {
+                                setSelectedCountry("");
+                            }
+                        }}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Country"
+                            />
+                        )}
+                    />
+                </FormControl>
+                <FormControl>
+                    <Autocomplete
+                        id="city"
+                        disabled={!selectedCountry}
+                        options={cities}
+                        value={cities?.find(c => c.name === selectedCity)}
+                        getOptionLabel={(option: ICity) => `${option.name} - ${option.stateCode}`}
+                        onChange={(_event, newValue) => {
+                            if (newValue) {
+                                setSelectedCity(newValue.name);
+                                setCoordinates({
+                                    latitude: Number(newValue.latitude).toFixed(4),
+                                    longitude: Number(newValue.longitude).toFixed(4),
+                                })
+                            } else {
+                                setSelectedCity("");
+                                setCoordinates({
+                                    latitude: "",
+                                    longitude: ""
+                                })
+                            }
+                        }}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="City"
+                            />
+                        )}
+                    />
+                </FormControl>
+                <FormControl>
 
-                <TextField
-                    defaultValue={selectedDate}
-                    type="datetime-local"
-                    label="Date"
-                    variant="standard"
-                    margin="dense"
-                    onChange={handleChangeSelectedDate}
-                    slotProps={{
-                        inputLabel: {
-                            shrink: true,
-                        },
-                        htmlInput: {
-                            min: minDate,
-                            max: maxDate
-                        },
-                    }}
-                    sx={{mt: 2}}
-                />
+                    <TextField
+                        defaultValue={date || ""}
+                        value={tempDate}
+                        type="datetime-local"
+                        label="Date"
+                        variant="standard"
+                        margin="dense"
+                        onChange={handleChangeSelectedDate}
+                        slotProps={{
+                            inputLabel: {
+                                shrink: true,
+                            },
+                            htmlInput: {
+                                min: minDate,
+                                max: maxDate
+                            },
+                        }}
+                        sx={{mt: 2}}
+                    />
+                </FormControl>
+                {(handleDeleteInput && id !== undefined) &&
+                    <Button onClick={() => handleDeleteInput(id)}>Delete</Button>
+                }
             </FormControl>
-            {(handleDeleteInput && id !== undefined) &&
-                <Button onClick={() => handleDeleteInput(id)}>Delete</Button>
-            }
-        </FormControl>
-    )
-}
+        )
+    }

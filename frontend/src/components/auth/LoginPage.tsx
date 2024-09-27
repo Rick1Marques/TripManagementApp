@@ -34,12 +34,13 @@ export default function LoginPage() {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <TextField required label="usename" value={username}
-                       onChange={(event) => setUsername(event.target.value)}/>
-            <TextField required type="password" label="password" value={password}
-                       onChange={(event) => setPassword(event.target.value)}/>
-            <Button type="submit">Login</Button>
-        </form>
+            <form onSubmit={handleSubmit}>
+                <TextField required label="usename" value={username}
+                           onChange={(event) => setUsername(event.target.value)}/>
+                <TextField required type="password" label="password" value={password}
+                           onChange={(event) => setPassword(event.target.value)}/>
+                <Button type="submit">Login</Button>
+            </form>
+
     )
 }

@@ -6,6 +6,7 @@ import {getListOfVisitedCities, getListOfVisitedCountries} from "../util/getList
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import WeatherForecast from "./WeatherForecast.tsx";
+import TripForm from "./forms/TripForm.tsx";
 
 type TripSlideHomeProps = {
     trip: Trip,
@@ -33,12 +34,11 @@ export default function TripSlideHome({trip, type}: TripSlideHomeProps) {
 
     if (!trip) {
         return (
-            <Stack alignItems="center" height="100vh" width="100vh" justifyContent="space-around"
-                   padding="0 .5rem .5rem">
+            <Stack alignItems="center" height="100vh" width="100vh" padding="0 .5rem">
                 <Typography variant="h4">
                     {type === "next" ? "Next Trip" : "Last Trip"}
                 </Typography>
-                <Typography variant="h5" gutterBottom >
+                <Typography variant="h5" >
                     {type === "next" ? "Plan your next trip!" : "Add a memory"}
                 </Typography>
             </Stack>
@@ -46,18 +46,23 @@ export default function TripSlideHome({trip, type}: TripSlideHomeProps) {
     }
 
     return (
-        <Stack alignItems="center" height="100vh" width="100vh" justifyContent="space-around" padding="0 .5rem .5rem">
+        <Stack alignItems="center" height="100vh" width="100vw" padding="0 .5rem">
 
-            <Typography variant="h4">
-                {type === "next" ? "Next Trip" : "Last Trip"}
-            </Typography>
+            <Stack height="20%" justifyContent="center">
+                <Typography variant="h3">
+                    {type === "next" ? "Next Trip" : "Last Trip"}
+                </Typography>
+            </Stack>
 
-            <Typography variant="h5" gutterBottom>
-                {trip.title}
-            </Typography>
+            <Stack height="15%" justifyContent="center">
+                <Typography variant="h4">
+                    {trip.title}
+                </Typography>
+            </Stack>
 
-            <Stack width="100%" direction="row">
-                <Stack alignItems="center" width="50%">
+
+            <Stack height="12%" width="100%" direction="row">
+                <Stack alignItems="center" justifyContent="center" width="50%">
                     <Typography variant="subtitle1">
                         Beginning
                     </Typography>
@@ -65,7 +70,7 @@ export default function TripSlideHome({trip, type}: TripSlideHomeProps) {
                         {getDate(trip.destinations[0].date)}
                     </Typography>
                 </Stack>
-                <Stack alignItems="center" width="50%">
+                <Stack alignItems="center" justifyContent="center" width="50%">
                     <Typography variant="subtitle1">
                         {type === "next" ? "First Stop" : "End"}
                     </Typography>
@@ -75,7 +80,7 @@ export default function TripSlideHome({trip, type}: TripSlideHomeProps) {
                 </Stack>
             </Stack>
 
-            <Stack alignItems="center">
+            <Stack height="19%" alignItems="center" justifyContent="center">
                 <Typography variant="caption">
                     Duration
                 </Typography>
@@ -85,10 +90,11 @@ export default function TripSlideHome({trip, type}: TripSlideHomeProps) {
                 <Typography variant="caption">
                     days
                 </Typography>
+
             </Stack>
 
-            <Stack width="100%" direction="row" justifyContent="center">
-                <Stack alignItems="center" width="50%">
+            <Stack height="12%" width="100%" direction="row" justifyContent="center">
+                <Stack alignItems="center" justifyContent="center" width="50%">
                     <Typography variant="subtitle1">
                         Countries
                     </Typography>
@@ -96,7 +102,7 @@ export default function TripSlideHome({trip, type}: TripSlideHomeProps) {
                         {getListOfVisitedCountries(trip).length}
                     </Typography>
                 </Stack>
-                <Stack alignItems="center" width="50%">
+                <Stack alignItems="center" justifyContent="center" width="50%">
                     <Typography variant="subtitle1">
                         Cities
                     </Typography>
@@ -108,7 +114,7 @@ export default function TripSlideHome({trip, type}: TripSlideHomeProps) {
 
 
             {type === "last" &&
-                <Stack direction="row" flexWrap="wrap" justifyContent="space-around" gap=".7rem">
+                <Stack height="20%" direction="row" flexWrap="wrap" justifyContent="space-around" alignContent="center" gap=".7rem">
                     {getListOfVisitedCities(trip).map(city =>
                         <Typography key={city} variant="caption">
                             {city}
@@ -119,14 +125,14 @@ export default function TripSlideHome({trip, type}: TripSlideHomeProps) {
 
 
             {type === "next" &&
-                <Stack direction="row" gap=".5rem">
+                <Stack height="20%" direction="row" gap="1.5rem" alignItems="center">
                     {countDownData.map((data, index) =>
                         <div key={index}>
                             <Stack alignItems="center">
-                                <Typography variant="h4" gutterBottom>
+                                <Typography variant="h4" >
                                     {data}
                                 </Typography>
-                                <Typography variant="caption" gutterBottom>
+                                <Typography variant="caption" >
                                     {countDownCaption[index]}
                                 </Typography>
                             </Stack>
@@ -137,12 +143,11 @@ export default function TripSlideHome({trip, type}: TripSlideHomeProps) {
                 </Stack>
             }
 
-            <Stack width="100%" direction="row" justifyContent="space-between">
+            <Stack height="12%" width="100%" direction="row" justifyContent="space-between" alignItems="center">
                 <WeatherForecast disable={type === "last"} trip={trip}/>
-
-                <Button variant="text" sx={{alignSelf: "end"}} size="small"
+                <TripForm/>
+                <Button variant="text" size="small"
                         onClick={handleClick}>Details</Button>
-
             </Stack>
         </Stack>
     )

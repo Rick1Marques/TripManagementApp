@@ -41,7 +41,7 @@ export default function Menu() {
     };
 
     const DrawerList = (
-        <Stack sx={{ width: 250, height: "100%", justifyContent: "space-between" }} role="presentation" onClick={toggleDrawer(false)}>
+        <Stack sx={{ width: "200px", height: "100%", justifyContent: "space-between"}} role="presentation" onClick={toggleDrawer(false)}>
             <List>
                 {[
                     { text: 'Home', icon: <HomeIcon />, path: '/home' },

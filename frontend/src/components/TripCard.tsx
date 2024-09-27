@@ -4,6 +4,8 @@ import {useNavigate} from "react-router-dom";
 import {getDate} from "../util/formatting.ts";
 import {getListOfVisitedCities, getListOfVisitedCountries} from "../util/getListOfVisited.ts";
 import axios from "axios";
+import TravelExploreIcon from '@mui/icons-material/TravelExplore';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 type TripCardProps = {
     trip: Trip
@@ -65,8 +67,8 @@ export default function TripCard({trip}: TripCardProps) {
             </CardContent>
             <CardActions sx={{width: "100%"}}>
                 <Stack width="100%" direction="row" justifyContent="space-between">
-                    <Button variant="text" size="small" onClick={() => handleClickDetails(trip.id)}>Details</Button>
-                    <Button variant="text" size="small" onClick={() => handleDelete(trip.id)}>Delete</Button>
+                    <Button variant="text" size="small" onClick={() => handleClickDetails(trip.id)}><TravelExploreIcon/></Button>
+                    <Button variant="text" size="small" onClick={() => handleDelete(trip.id)}><DeleteIcon/></Button>
                 </Stack>
             </CardActions>
         </Card>

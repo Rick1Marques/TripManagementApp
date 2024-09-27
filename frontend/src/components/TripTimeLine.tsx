@@ -62,7 +62,7 @@ export default function TripTimeLine({edit, fullData=true}: TimeLineProps) {
 
 
     if (!dataToRender) {
-        return <h1>You have nothing planed for today</h1>
+        return <Typography variant="body1">Nothing planed for today!</Typography>
     }
     return (
         <Timeline sx={{width: "100%"}}>

@@ -4,7 +4,16 @@ import {useFetchTrips} from "../../hooks/useFetchTrips.ts";
 import {getDate} from "../../util/formatting.ts";
 import {getTimeGroupedTrips} from "../../util/getTimeGroupedTrips.ts";
 import {Trip} from "../../model/Trip.ts";
-import {Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, Typography} from "@mui/material";
+import {
+    Box,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    SelectChangeEvent,
+    Stack,
+    Typography
+} from "@mui/material";
 import {useState} from "react";
 
 type MarkerData = {
@@ -76,10 +85,10 @@ export default function PageMap() {
 
     return (
         <Stack height="100vh" width="100vw">
-            <Stack direction="row" height="20%" width="100%" padding="2%">
+            <Stack direction="row" height="20%" width="100%" padding="2%" >
                 <Stack direction="column" height="100%" width="65%" gap="2%">
-                    <Stack marginLeft="30px" width="100%" direction="row" justifyContent="center">
-                        <Stack alignItems="center" width="40%">
+                    <Stack padding="0 0 0 40px" direction="row" justifyContent="space-around" >
+                        <Stack alignItems="center" >
                             <Typography variant="subtitle1">
                                 Cities
                             </Typography>
@@ -87,7 +96,7 @@ export default function PageMap() {
                                 {mapMarkers.length}
                             </Typography>
                         </Stack>
-                        <Stack alignItems="center" width="40%">
+                        <Stack alignItems="center" >
                             <Typography variant="subtitle1">
                                 Countries
                             </Typography>
@@ -111,13 +120,11 @@ export default function PageMap() {
                     </Stack>
                 </Stack>
 
-
-                <Stack direction="column" height="100%" width="35%" justifyContent="space-around">
+                <Stack direction="column" height="100%" width="35%" justifyContent="space-around" alignItems="center">
                     <FormControl
-                        variant="filled"
+                        variant="outlined"
                         sx={{
-                            width: "100%",
-                            backgroundColor: "white"
+                            width: "80%",
                         }}>
                         <InputLabel size="small" id="demo-simple-select-label">Sort by</InputLabel>
                         <Select
@@ -134,10 +141,9 @@ export default function PageMap() {
                     </FormControl>
 
                     <FormControl
-                        variant="filled"
+                        variant="outlined"
                         sx={{
-                            width: "100%",
-                            backgroundColor: "white"
+                            width: "80%",
                         }}>
                         <InputLabel size="small" id="demo-simple-select-label">Period</InputLabel>
                         <Select
@@ -155,11 +161,6 @@ export default function PageMap() {
                     </FormControl>
 
                 </Stack>
-
-
-
-
-
             </Stack>
 
 

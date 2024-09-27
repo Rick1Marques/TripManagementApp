@@ -15,6 +15,8 @@ import {Trip} from "../../model/Trip.ts";
 import {updateTrip} from "../../util/updateTrip.ts";
 import {Destination} from "../../model/Destination.ts";
 import {TripEvent} from "../../model/TripEvent.ts";
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 
 type DestinationsInput = {
     id: number,
@@ -29,14 +31,14 @@ type TripFormProps = {
 
 export default function TripForm({edit, trip}: TripFormProps) {
     const [open, setOpen] = React.useState(false);
+    const [startingPoint, setStartingPoint] = useState<InputData>(emptyInputData)
+    const [home, setHome] = useState<InputData>(emptyInputData)
     const [destinationsInputs, setDestinationsInputs] = useState<DestinationsInput[]>([{
         id: Date.now(),
         type: "1st destination",
         inputData: emptyInputData
     }])
     const [destinationCounter, setDestinationCounter] = useState(1)
-    const [startingPoint, setStartingPoint] = useState<InputData>(emptyInputData)
-    const [home, setHome] = useState<InputData>(emptyInputData)
     const [formData, setFormData] = useState<Trip>()
 
     const loggedUserId = localStorage.getItem("loggedUserId")
@@ -61,15 +63,21 @@ export default function TripForm({edit, trip}: TripFormProps) {
 
     function handleDestinationsInputsChange(id: number | null, inputData: InputData) {
         setDestinationsInputs(prevState =>
-            prevState.map(destination => destination.id === id
-                ? {...destination, inputData: inputData} : destination)
+            prevState.map((destination) => destination.id === id
+                ? {...destination, inputData: inputData}
+                : destination
+            )
                 .sort((a, b) => {
                     const dateA = new Date(a.inputData.date)
                     const dateB = new Date(b.inputData.date)
 
                     return dateA.getTime() - dateB.getTime();
                 })
-        )
+                .map((destination, index) => ({
+                    ...destination,
+                    type: `${getOrdinalSuffix(index + 1)} destination`
+                }))
+        );
     }
 
     function updateDestinationTypes(destinations: { id: number, type: string, inputData: InputData }[]) {
@@ -121,22 +129,10 @@ export default function TripForm({edit, trip}: TripFormProps) {
 
     return (
         <Box>
-            <Button variant="outlined"
+            <Button variant="text"
                     onClick={handleClickOpen}
-                    sx={{
-                        position: "absolute",
-                        width: "3.5rem",
-                        height: "3.5rem",
-                        borderRadius: '50%',
-                        minWidth: 0,
-                        padding: 0,
-                        bottom: '.5rem',
-                        left: '50%',
-                        transform: 'translate(-50%, 0%)',
-                        zIndex: "1"
-                    }}
             >
-                {!edit ? "Add" : "Edit"}
+                {!edit ? <AddIcon/> : <EditIcon/>}
             </Button>
             <Dialog
                 open={open}
@@ -180,7 +176,7 @@ export default function TripForm({edit, trip}: TripFormProps) {
                     },
                 }}
             >
-                <DialogTitle>{!edit ? "Add New Trip" : "Edit general Information"}</DialogTitle>
+                <DialogTitle>{!edit ? "Add New Trip" : "General Information"}</DialogTitle>
                 <DialogContent>
                     <FormControl sx={{m: "5% 0"}} fullWidth>
                         <TextField

@@ -1,8 +1,6 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
@@ -55,7 +53,7 @@ export default function EditItinerary() {
 
     const actions = [
         {icon: <EventForm/>, name: 'Event'},
-        {icon: <DestinationForm />, name: 'Destination'},
+        {icon: <DestinationForm/>, name: 'Destination'},
     ];
 
     return (
@@ -70,50 +68,51 @@ export default function EditItinerary() {
                 TransitionComponent={Transition}
                 scroll="paper"
             >
-                <AppBar sx={{position: 'relative'}}>
-                    <Toolbar>
-                        <Stack width="100%" direction="row" justifyContent="space-between">
-                            <IconButton
-                                edge="start"
-                                color="inherit"
-                                onClick={handleCloseCancel}
-                                aria-label="close"
-                            >
-                                <CloseIcon/>
-                            </IconButton>
-                        </Stack>
-                    </Toolbar>
-                </AppBar>
-                <DialogContent dividers={true}>
-                    <Typography align="center" variant="h4" gutterBottom mt="0.5rem">
-                        Edit Itinerary
-                    </Typography>
-                    <TripTimeLine fullData={true} edit={true}/>
-                    <Stack direction="row" justifyContent="space-between">
-                        <SpeedDial
-                            ariaLabel="SpeedDial add"
-                            icon={<AddIcon fontSize="large"/>}
-                            direction="right"
-                            FabProps={{
-                                sx: {
-                                    width: "3rem",
-                                    height: "3rem",
-                                },
-                            }}
+                <Stack>
+                    <DialogContent>
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            onClick={handleCloseCancel}
+                            aria-label="close"
+                            sx={{position: "absolute"}}
                         >
-                            {actions.map((action) => (
-                                <SpeedDialAction
-                                    key={action.name}
-                                    icon={action.icon}
-                                />
-                            ))}
-                        </SpeedDial>
-                        <Button variant="text" onClick={handleSave}>
-                            <SaveIcon fontSize="large"/>
-                        </Button>
-                    </Stack>
+                            <CloseIcon/>
+                        </IconButton>
+                        <Stack height="10vh" width="100%" direction="row" justifyContent="center" flex-start
+                               alignItems="center">
+                            <Typography variant="h4">
+                                Edit Mode
+                            </Typography>
+                        </Stack>
+                        <TripTimeLine fullData={true} edit={true}/>
+                        <Stack direction="row" justifyContent="space-between" alignSelf="end">
+                            <SpeedDial
+                                ariaLabel="SpeedDial add"
+                                icon={<AddIcon fontSize="large"/>}
+                                direction="right"
+                                FabProps={{
+                                    sx: {
+                                        width: "3rem",
+                                        height: "3rem",
+                                    },
+                                }}
+                            >
+                                {actions.map((action) => (
+                                    <SpeedDialAction
+                                        key={action.name}
+                                        icon={action.icon}
+                                    />
+                                ))}
+                            </SpeedDial>
+                            <Button variant="text" onClick={handleSave}>
+                                <SaveIcon fontSize="large"/>
+                            </Button>
+                        </Stack>
 
-                </DialogContent>
+                    </DialogContent>
+                </Stack>
+
             </Dialog>
         </React.Fragment>
     );
